@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>پلن‌ها | CompanyFlow</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7fb;
+      color: #172033;
+    }
+
+    header {
+      background: white;
+      padding: 18px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .back {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 55px 20px 35px;
+    }
+
+    .hero h1 {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: #64748b;
+      line-height: 1.8;
+    }
+
+    .plans {
+      max-width: 1150px;
+      margin: auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .plan {
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+      border: 2px solid transparent;
+    }
+
+    .plan.popular {
+      border-color: #2563eb;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .plan h2 {
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 32px;
+      font-weight: bold;
+      color: #2563eb;
+      margin: 15px 0;
+    }
+
+    .price span {
+      font-size: 14px;
+      color: #64748b;
+      font-weight: normal;
+    }
+
+    ul {
+      list-style: none;
+      margin: 20px 0;
+    }
+
+    li {
+      padding: 9px 0;
+      border-bottom: 1px solid #edf1f7;
+    }
+
+    .choose {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .choose.free {
+      background: #172033;
+    }
+
+    .note {
+      max-width: 750px;
+      margin: 35px auto;
+      background: #fff;
+      padding: 22px;
+      border-radius: 15px;
+      text-align: center;
+      color: #64748b;
+      line-height: 1.8;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <div class="logo">
+    CompanyFlow
+  </div>
+
+  <a href="dashboard.html" class="back">
+    ← داشبورد
+  </a>
+
+</header>
+
+
+<section class="hero">
+
+  <h1>
+    پلن مناسب شرکت خود را انتخاب کنید
+  </h1>
+
+  <p>
+    هر زمان خواستید می‌توانید پلن خود را ارتقا دهید.
+  </p>
+
+</section>
+
+
+<section class="plans">
+
+
+  <!-- Free -->
+
+  <div class="plan">
+
+    <h2>Free</h2>
+
+    <div class="price">
+      $0
+      <span>/ماه</span>
+    </div>
+
+    <ul>
+      <li>✓ تا 3 کارمند</li>
+      <li>✓ 1 پروژه</li>
+      <li>✓ 50 مشتری</li>
+      <li>✓ داشبورد پایه</li>
+      <li>✓ اعلان‌ها</li>
+    </ul>
+
+    <button
+      class="choose free"
+      onclick="selectPlan('Free', 0)">
+      شروع رایگان
+    </button>
+
+  </div>
+
+
+  <!-- Starter -->
+
+  <div class="plan">
+
+    <h2>Starter</h2>
+
+    <div class="price">
+      $19
+      <span>/ماه</span>
+    </div>
+
+    <ul>
+      <li>✓ تا 10 کارمند</li>
+      <li>✓ 20 پروژه</li>
+      <li>✓ 1,000 مشتری</li>
+      <li>✓ CRM</li>
+      <li>✓ حضور و غیاب</li>
+      <li>✓ فاکتور</li>
+      <li>✓ 5GB فضای ذخیره‌سازی</li>
+    </ul>
+
+    <button
+      class="choose"
+      onclick="selectPlan('Starter', 19)">
+      انتخاب Starter
+    </button>
+
+  </div>
+
+
+  <!-- Business -->
+
+  <div class="plan popular">
+
+    <span class="badge">
+      محبوب
+    </span>
+
+    <h2>Business</h2>
+
+    <div class="price">
+      $49
+      <span>/ماه</span>
+    </div>
+
+    <ul>
+      <li>✓ تا 50 کارمند</li>
+      <li>✓ پروژه نامحدود</li>
+      <li>✓ مشتری نامحدود</li>
+      <li>✓ مدیریت انبار</li>
+      <li>✓ فروش</li>
+      <li>✓ گزارش مالی</li>
+      <li>✓ 25GB فضای ذخیره‌سازی</li>
+    </ul>
+
+    <button
+      class="choose"
+      onclick="selectPlan('Business', 49)">
+      انتخاب Business
+    </button>
+
+  </div>
+
+
+  <!-- Professional -->
+
+  <div class="plan">
+
+    <h2>Professional</h2>
+
+    <div class="price">
+      $99
+      <span>/ماه</span>
+    </div>
+
+    <ul>
+      <li>✓ تا 200 کارمند</li>
+      <li>✓ AI Assistant</li>
+      <li>✓ API</li>
+      <li>✓ گزارش پیشرفته</li>
+      <li>✓ اتوماسیون</li>
+      <li>✓ 100GB فضای ذخیره‌سازی</li>
+      <li>✓ پشتیبانی اولویت‌دار</li>
+    </ul>
+
+    <button
+      class="choose"
+      onclick="selectPlan('Professional', 99)">
+      انتخاب Professional
+    </button>
+
+  </div>
+
+</section>
+
+
+<div class="note">
+
+  💳 <strong>پرداخت فعلاً دستی است.</strong>
+
+  <br>
+
+  بعد از انتخاب پلن، اطلاعات پرداخت نمایش داده می‌شود.
+  شما مبلغ را به حساب شرکت انتقال می‌دهید و رسید پرداخت را ارسال می‌کنید.
+  پس از تأیید، پلن شما توسط مدیر فعال می‌شود.
+
+</div>
+
+
+<footer>
+  © 2026 CompanyFlow
+</footer>
+
+
+<script>
+
+function selectPlan(plan, price) {
+
+  if (price === 0) {
+
+    alert(
+      "پلن Free انتخاب شد."
+    );
+
+    return;
+  }
+
+  localStorage.setItem(
+    "selectedPlan",
+    plan
+  );
+
+  localStorage.setItem(
+    "selectedPrice",
+    price
+  );
+
+  window.location.href =
+    "payment.html";
+}
+
+</script>
+
+</body>
+</html>
