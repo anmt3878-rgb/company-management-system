@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>پنل مدیریت | CompanyFlow</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7fb;
+      color: #172033;
+      min-height: 100vh;
+    }
+
+    header {
+      background: white;
+      padding: 18px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .logo {
+      color: #2563eb;
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    .admin {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .title {
+      margin-bottom: 25px;
+    }
+
+    .title h1 {
+      margin-bottom: 8px;
+    }
+
+    .title p {
+      color: #64748b;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .stat {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    .stat-icon {
+      font-size: 25px;
+      margin-bottom: 10px;
+    }
+
+    .stat h3 {
+      font-size: 25px;
+      margin-bottom: 5px;
+    }
+
+    .stat p {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
+    }
+
+    .card h2 {
+      margin-bottom: 20px;
+    }
+
+    .request {
+      border: 1px solid #e2e8f0;
+      border-radius: 13px;
+      padding: 18px;
+      margin-bottom: 15px;
+    }
+
+    .request:last-child {
+      margin-bottom: 0;
+    }
+
+    .request-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .customer {
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .plan {
+      color: #2563eb;
+      font-weight: bold;
+    }
+
+    .info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .info div {
+      background: #f8fafc;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .status {
+      display: inline-block;
+      background: #fff7ed;
+      color: #c2410c;
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .actions button {
+      flex: 1;
+      border: none;
+      padding: 12px;
+      border-radius: 9px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .approve {
+      background: #16a34a;
+      color: white;
+    }
+
+    .reject {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 35px;
+      color: #64748b;
+    }
+
+    .logout {
+      display: inline-block;
+      margin-top: 10px;
+      color: #dc2626;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    @media (max-width: 800px) {
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+    @media (max-width: 600px) {
+
+      .container {
+        margin: 20px auto;
+        padding: 15px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .stat {
+        padding: 15px;
+      }
+
+      .request-top {
+        flex-direction: column;
+      }
+
+      .info {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+  <div class="logo">
+    CompanyFlow
+  </div>
+
+  <div class="admin">
+    👤 مدیر سیستم
+  </div>
+
+</header>
+
+
+<div class="container">
+
+
+  <div class="title">
+
+    <h1>
+      ⚙️ پنل مدیریت
+    </h1>
+
+    <p>
+      مدیریت درخواست‌های اشتراک مشتریان
+    </p>
+
+  </div>
+
+
+  <!-- Statistics -->
+
+  <div class="stats">
+
+    <div class="stat">
+
+      <div class="stat-icon">
+        📋
+      </div>
+
+      <h3 id="totalRequests">
+        0
+      </h3>
+
+      <p>
+        کل درخواست‌ها
+      </p>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="stat-icon">
+        ⏳
+      </div>
+
+      <h3 id="pendingRequests">
+        0
+      </h3>
+
+      <p>
+        در انتظار بررسی
+      </p>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="stat-icon">
+        ✅
+      </div>
+
+      <h3 id="approvedRequests">
+        0
+      </h3>
+
+      <p>
+        تأیید شده
+      </p>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="stat-icon">
+        ❌
+      </div>
+
+      <h3 id="rejectedRequests">
+        0
+      </h3>
+
+      <p>
+        رد شده
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- Requests -->
+
+  <div class="card">
+
+    <h2>
+      📩 درخواست‌های اشتراک
+    </h2>
+
+    <div id="requestsContainer">
+
+    </div>
+
+  </div>
+
+
+  <a href="dashboard.html" class="logout">
+    ← بازگشت به داشبورد
+  </a>
+
+
+</div>
+
+
+<script>
+
+
+  function getRequests() {
+
+    const saved =
+      localStorage.getItem("subscriptionRequest");
+
+    if (!saved) {
+      return [];
+    }
+
+    try {
+
+      const request = JSON.parse(saved);
+
+      return [request];
+
+    } catch (error) {
+
+      return [];
+
+    }
+
+  }
+
+
+  function renderRequests() {
+
+    const requests = getRequests();
+
+    const container =
+      document.getElementById("requestsContainer");
+
+
+    let approved = 0;
+    let rejected = 0;
+    let pending = 0;
+
+
+    requests.forEach(request => {
+
+      if (request.status === "approved") {
+        approved++;
+      }
+
+      else if (request.status === "rejected") {
+        rejected++;
+      }
+
+      else {
+        pending++;
+      }
+
+    });
+
+
+    document.getElementById("totalRequests").textContent =
+      requests.length;
+
+    document.getElementById("pendingRequests").textContent =
+      pending;
+
+    document.getElementById("approvedRequests").textContent =
+      approved;
+
+    document.getElementById("rejectedRequests").textContent =
+      rejected;
+
+
+    if (requests.length === 0) {
+
+      container.innerHTML = `
+
+        <div class="empty">
+
+          📭
+
+          <br><br>
+
+          هنوز هیچ درخواست اشتراکی ثبت نشده است.
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    requests.forEach((request, index) => {
+
+      let statusText = "در انتظار بررسی";
+
+      if (request.status === "approved") {
+        statusText = "تأیید شده";
+      }
+
+      if (request.status === "rejected") {
+        statusText = "رد شده";
+      }
+
+
+      const div =
+        document.createElement("div");
+
+      div.className = "request";
+
+
+      div.innerHTML = `
+
+        <div class="request-top">
+
+          <div class="customer">
+
+            👤 ${request.customerName || "بدون نام"}
+
+          </div>
+
+          <div class="plan">
+
+            ${request.plan || "نامشخص"}
+            -
+            $${request.price || "0"}
+
+          </div>
+
+        </div>
+
+
+        <div class="status">
+
+          ${statusText}
+
+        </div>
+
+
+        <div class="info">
+
+          <div>
+            🏢 شرکت:
+            ${request.companyName || "-"}
+          </div>
+
+          <div>
+            📞 تماس:
+            ${request.phone || "-"}
+          </div>
+
+          <div>
+            📅 تاریخ:
+            ${request.date
+              ? new Date(request.date).toLocaleDateString("fa-IR")
+              : "-"
+            }
+          </div>
+
+          <div>
+            💰 مبلغ:
+            $${request.price || "0"}
+          </div>
+
+        </div>
+
+
+        <div style="
+          background:#f8fafc;
+          padding:12px;
+          border-radius:8px;
+          margin-bottom:15px;
+        ">
+
+          📝 توضیحات:
+
+          ${request.message || "توضیحی ثبت نشده است"}
+
+        </div>
+
+
+        <div class="actions">
+
+          <button
+            class="approve"
+            onclick="approveRequest(${index})"
+          >
+            ✅ تأیید درخواست
+          </button>
+
+
+          <button
+            class="reject"
+            onclick="rejectRequest(${index})"
+          >
+            ❌ رد درخواست
+          </button>
+
+        </div>
+
+      `;
+
+
+      container.appendChild(div);
+
+    });
+
+  }
+
+
+  function approveRequest(index) {
+
+    const requests = getRequests();
+
+    if (!requests[index]) {
+      return;
+    }
+
+
+    requests[index].status = "approved";
+
+
+    localStorage.setItem(
+      "subscriptionRequest",
+      JSON.stringify(requests[index])
+    );
+
+
+    alert("درخواست تأیید شد.");
+
+
+    renderRequests();
+
+  }
+
+
+  function rejectRequest(index) {
+
+    const requests = getRequests();
+
+    if (!requests[index]) {
+      return;
+    }
+
+
+    requests[index].status = "rejected";
+
+
+    localStorage.setItem(
+      "subscriptionRequest",
+      JSON.stringify(requests[index])
+    );
+
+
+    alert("درخواست رد شد.");
+
+
+    renderRequests();
+
+  }
+
+
+  renderRequests();
+
+
+</script>
+
+
+</body>
+
+</html>
