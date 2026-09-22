@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>درخواست اشتراک | CompanyFlow</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7fb;
+      color: #172033;
+      min-height: 100vh;
+    }
+
+    header {
+      background: white;
+      padding: 18px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .back {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .box {
+      background: white;
+      padding: 28px;
+      border-radius: 18px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 25px;
+      line-height: 1.8;
+    }
+
+    .selected {
+      background: #eff6ff;
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .selected p {
+      margin: 8px 0;
+    }
+
+    .selected strong {
+      color: #2563eb;
+    }
+
+    .notice {
+      background: #fff7ed;
+      color: #9a3412;
+      padding: 18px;
+      border-radius: 12px;
+      line-height: 1.9;
+      margin-bottom: 25px;
+    }
+
+    .notice strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #dbe3f0;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      font-size: 15px;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .success {
+      display: none;
+      text-align: center;
+      background: #f0fdf4;
+      color: #166534;
+      padding: 22px;
+      border-radius: 12px;
+      line-height: 2;
+      margin-top: 20px;
+    }
+
+    .success a {
+      display: inline-block;
+      margin-top: 12px;
+      color: #2563eb;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+
+      .container {
+        margin: 20px auto;
+      }
+
+      .box {
+        padding: 22px;
+      }
+
+      header {
+        padding: 16px 20px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+
+<header>
+
+  <div class="logo">
+    CompanyFlow
+  </div>
+
+  <a href="pricing.html" class="back">
+    ← بازگشت به پلن‌ها
+  </a>
+
+</header>
+
+
+<div class="container">
+
+  <div class="box">
+
+    <h1>
+      📋 درخواست اشتراک
+    </h1>
+
+    <p class="subtitle">
+      پلن موردنظر خود را بررسی کنید و درخواست خرید را ارسال کنید.
+    </p>
+
+
+    <!-- Selected Plan -->
+
+    <div class="selected">
+
+      <p>
+        پلن انتخاب‌شده:
+        <strong id="planName">-</strong>
+      </p>
+
+      <p>
+        مبلغ:
+        <strong id="planPrice">-</strong>
+      </p>
+
+      <p>
+        مدت:
+        <strong>1 ماه</strong>
+      </p>
+
+    </div>
+
+
+    <!-- Payment Notice -->
+
+    <div class="notice">
+
+      <strong>
+        💳 روش پرداخت فعلاً در حال آماده‌سازی است
+      </strong>
+
+      در حال حاضر اطلاعات بانکی برای پرداخت آنلاین در سیستم ثبت نشده است.
+      درخواست شما ثبت می‌شود و بعداً روش پرداخت به شما اعلام خواهد شد.
+
+    </div>
+
+
+    <!-- Request Form -->
+
+    <form id="paymentForm">
+
+      <label>
+        نام شما
+      </label>
+
+      <input
+        type="text"
+        id="customerName"
+        placeholder="نام و نام خانوادگی"
+        required
+      >
+
+
+      <label>
+        نام شرکت
+      </label>
+
+      <input
+        type="text"
+        id="companyName"
+        placeholder="نام شرکت"
+        required
+      >
+
+
+      <label>
+        شماره تماس یا واتساپ
+      </label>
+
+      <input
+        type="tel"
+        id="phone"
+        placeholder="شماره تماس"
+        required
+      >
+
+
+      <label>
+        توضیحات اضافی
+      </label>
+
+      <textarea
+        id="message"
+        placeholder="اگر توضیحی دارید اینجا بنویسید..."
+      ></textarea>
+
+
+      <button type="submit">
+        📩 ثبت درخواست اشتراک
+      </button>
+
+    </form>
+
+
+    <!-- Success -->
+
+    <div class="success" id="successMessage">
+
+      ✅ درخواست شما با موفقیت ثبت شد.
+
+      <br>
+
+      پلن شما فعلاً فعال نمی‌شود.
+      بعد از آماده‌شدن روش پرداخت، اطلاعات لازم به شما اعلام خواهد شد.
+
+      <br>
+
+      <a href="dashboard.html">
+        بازگشت به داشبورد
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  const plan =
+    localStorage.getItem("selectedPlan");
+
+  const price =
+    localStorage.getItem("selectedPrice");
+
+
+  document.getElementById("planName").textContent =
+    plan || "انتخاب نشده";
+
+
+  document.getElementById("planPrice").textContent =
+    price ? "$" + price : "-";
+
+
+  document
+    .getElementById("paymentForm")
+    .addEventListener("submit", function(event) {
+
+      event.preventDefault();
+
+      const request = {
+
+        plan: plan || "نامشخص",
+
+        price: price || "0",
+
+        customerName:
+          document.getElementById("customerName").value,
+
+        companyName:
+          document.getElementById("companyName").value,
+
+        phone:
+          document.getElementById("phone").value,
+
+        message:
+          document.getElementById("message").value,
+
+        date:
+          new Date().toISOString()
+
+      };
+
+
+      localStorage.setItem(
+        "subscriptionRequest",
+        JSON.stringify(request)
+      );
+
+
+      document.getElementById("paymentForm").style.display =
+        "none";
+
+
+      document.getElementById("successMessage").style.display =
+        "block";
+
+    });
+
+</script>
+
+
+</body>
+
+</html>
