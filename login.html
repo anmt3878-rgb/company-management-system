@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CompanyFlow | مدیریت شرکت</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7fb;
+      color: #172033;
+    }
+
+    nav {
+      background: #ffffff;
+      padding: 18px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    .login {
+      text-decoration: none;
+      color: #2563eb;
+      font-weight: bold;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 90px 20px 70px;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      color: #64748b;
+      font-size: 18px;
+      line-height: 1.9;
+    }
+
+    .buttons {
+      margin-top: 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 25px;
+      margin: 6px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .secondary {
+      background: white;
+      color: #2563eb;
+      border: 1px solid #dbe3f0;
+    }
+
+    .features {
+      padding: 50px 7%;
+    }
+
+    .features h2 {
+      text-align: center;
+      margin-bottom: 35px;
+      font-size: 30px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    .card h3 {
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      color: #64748b;
+      line-height: 1.7;
+    }
+
+    .pricing {
+      padding: 60px 7%;
+    }
+
+    .pricing h2 {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .price {
+      font-size: 30px;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #64748b;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="logo">CompanyFlow</div>
+    <a class="login" href="login.html">ورود</a>
+  </nav>
+
+  <section class="hero">
+    <h1>مدیریت شرکت، ساده و هوشمند</h1>
+
+    <p>
+      تمام کارهای شرکت خود را در یک سیستم مدیریت کنید؛
+      کارمندان، مشتریان، پروژه‌ها، وظایف، فروش و گزارش‌ها.
+    </p>
+
+    <div class="buttons">
+      <a class="btn primary" href="register.html">
+        شروع رایگان
+      </a>
+
+      <a class="btn secondary" href="#pricing">
+        مشاهده پلن‌ها
+      </a>
+    </div>
+  </section>
+
+  <section class="features">
+    <h2>امکانات سیستم</h2>
+
+    <div class="grid">
+
+      <div class="card">
+        <h3>👥 مدیریت کارمندان</h3>
+        <p>
+          کارمندان، وظایف، حضور و غیاب و مرخصی‌ها را مدیریت کنید.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>📋 مدیریت پروژه</h3>
+        <p>
+          پروژه‌ها و وظایف شرکت را در یک مکان مدیریت کنید.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>👨‍💼 مدیریت مشتریان</h3>
+        <p>
+          اطلاعات مشتریان و ارتباطات کاری را سازمان‌دهی کنید.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>💰 مدیریت مالی</h3>
+        <p>
+          درآمد، هزینه و فاکتورهای شرکت را مدیریت کنید.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>📊 گزارش‌ها</h3>
+        <p>
+          وضعیت شرکت را با داشبورد و گزارش‌های مدیریتی مشاهده کنید.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>🤖 دستیار هوش مصنوعی</h3>
+        <p>
+          در آینده AI به انجام کارهای روزانه و تهیه گزارش‌ها کمک می‌کند.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing">
+
+    <h2>پلن‌های اشتراک</h2>
+
+    <div class="grid">
+
+      <div class="card">
+        <h3>Free</h3>
+        <div class="price">$0</div>
+        <p>برای شروع و آزمایش سیستم</p>
+      </div>
+
+      <div class="card">
+        <h3>Starter</h3>
+        <div class="price">$19</div>
+        <p>برای شرکت‌های کوچک</p>
+      </div>
+
+      <div class="card">
+        <h3>Business</h3>
+        <div class="price">$49</div>
+        <p>برای شرکت‌های متوسط</p>
+      </div>
+
+      <div class="card">
+        <h3>Professional</h3>
+        <div class="price">$99</div>
+        <p>برای شرکت‌های بزرگ</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <footer>
+    © 2026 CompanyFlow — سیستم مدیریت شرکت
+  </footer>
+
+</body>
+</html>
