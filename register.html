@@ -1,195 +1,581 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>ثبت‌نام | CompanyFlow</title>
+  <title>Create Account | CompanyFlow</title>
 
   <style>
+
     * {
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
-      margin: 0;
       min-height: 100vh;
       background: #f5f7fb;
+      color: #172033;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 25px;
     }
 
-    .box {
+    .container {
       width: 100%;
-      max-width: 450px;
-      background: white;
-      padding: 30px;
-      border-radius: 18px;
-      box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+      max-width: 480px;
     }
 
     .logo {
       text-align: center;
-      font-size: 25px;
-      font-weight: bold;
-      color: #2563eb;
-      margin-bottom: 10px;
+      margin-bottom: 25px;
     }
 
-    h1 {
+    .logo a {
+      text-decoration: none;
+      font-size: 28px;
+      font-weight: 800;
+      color: #172033;
+    }
+
+    .logo span {
+      color: #2563eb;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow:
+        0 10px 35px rgba(15, 23, 42, 0.06);
+    }
+
+    .card h1 {
       text-align: center;
-      font-size: 25px;
+      font-size: 27px;
       margin-bottom: 8px;
     }
 
     .subtitle {
       text-align: center;
       color: #64748b;
-      margin-bottom: 25px;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 17px;
     }
 
     label {
       display: block;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 700;
       margin-bottom: 7px;
-      font-weight: bold;
     }
 
     input {
       width: 100%;
-      padding: 14px;
-      margin-bottom: 17px;
-      border: 1px solid #dbe3f0;
-      border-radius: 10px;
-      font-size: 15px;
+      padding: 13px 14px;
+
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+
+      font-size: 14px;
       outline: none;
+
+      transition: 0.2s;
     }
 
     input:focus {
       border-color: #2563eb;
+      box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
     }
 
-    button {
-      width: 100%;
-      padding: 15px;
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper input {
+      padding-right: 75px;
+    }
+
+    .show-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+
+      background: none;
       border: none;
-      border-radius: 10px;
-      background: #2563eb;
-      color: white;
-      font-size: 16px;
+
+      color: #2563eb;
+      font-size: 12px;
       font-weight: bold;
+
       cursor: pointer;
     }
 
-    button:hover {
-      opacity: 0.9;
-    }
+    .terms {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
 
-    .login {
-      text-align: center;
-      margin-top: 20px;
+      margin: 18px 0;
+
       color: #64748b;
+      font-size: 12px;
+      line-height: 1.5;
     }
 
-    .login a {
+    .terms input {
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .terms a {
       color: #2563eb;
       text-decoration: none;
-      font-weight: bold;
     }
+
+    .create-btn {
+      width: 100%;
+
+      padding: 14px;
+
+      border: none;
+      border-radius: 9px;
+
+      background: #2563eb;
+      color: white;
+
+      font-size: 15px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: 0.2s;
+    }
+
+    .create-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .message {
+      display: none;
+
+      margin-top: 16px;
+
+      padding: 12px;
+
+      border-radius: 8px;
+
+      text-align: center;
+
+      font-size: 13px;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .signin {
+      text-align: center;
+
+      margin-top: 22px;
+
+      color: #64748b;
+
+      font-size: 13px;
+    }
+
+    .signin a {
+      color: #2563eb;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .back-home {
+      display: block;
+
+      text-align: center;
+
+      margin-top: 20px;
+
+      color: #64748b;
+
+      font-size: 13px;
+
+      text-decoration: none;
+    }
+
+    .back-home:hover {
+      color: #2563eb;
+    }
+
+    .security-note {
+      margin-top: 20px;
+
+      padding: 12px;
+
+      background: #f8fafc;
+
+      border-radius: 8px;
+
+      color: #64748b;
+
+      font-size: 11px;
+
+      line-height: 1.5;
+
+      text-align: center;
+    }
+
+    @media (max-width: 500px) {
+
+      body {
+        padding: 15px;
+      }
+
+      .card {
+        padding: 24px 20px;
+      }
+
+      .card h1 {
+        font-size: 24px;
+      }
+
+    }
+
   </style>
 </head>
 
 <body>
 
-  <div class="box">
+  <div class="container">
 
-    <div class="logo">CompanyFlow</div>
+    <div class="logo">
+      <a href="index.html">
+        Company<span>Flow</span>
+      </a>
+    </div>
 
-    <h1>ساخت حساب شرکت</h1>
 
-    <p class="subtitle">
-      برای شروع مدیریت شرکت خود ثبت‌نام کنید.
-    </p>
+    <div class="card">
 
-    <form id="registerForm">
+      <h1>
+        Create Your Account
+      </h1>
 
-      <label>نام شرکت</label>
-      <input
-        type="text"
-        id="companyName"
-        placeholder="مثلاً ABC Company"
-        required
+      <p class="subtitle">
+        Start managing your business with CompanyFlow.
+      </p>
+
+
+      <form id="registerForm">
+
+        <div class="form-group">
+
+          <label for="companyName">
+            Company Name
+          </label>
+
+          <input
+            type="text"
+            id="companyName"
+            placeholder="Enter your company name"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="ownerName">
+            Owner / Manager Name
+          </label>
+
+          <input
+            type="text"
+            id="ownerName"
+            placeholder="Enter your full name"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="email">
+            Business Email
+          </label>
+
+          <input
+            type="email"
+            id="email"
+            placeholder="you@company.com"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="password">
+            Password
+          </label>
+
+          <div class="password-wrapper">
+
+            <input
+              type="password"
+              id="password"
+              placeholder="Create a password"
+              minlength="6"
+              required
+            >
+
+            <button
+              type="button"
+              class="show-password"
+              onclick="togglePassword()"
+            >
+              Show
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="terms">
+
+          <input
+            type="checkbox"
+            id="terms"
+            required
+          >
+
+          <label for="terms">
+            I agree to the CompanyFlow terms and
+            understand that account security features
+            will be connected to the secure backend
+            when the production system is launched.
+          </label>
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="create-btn"
+        >
+          Create Account
+        </button>
+
+
+        <div
+          id="message"
+          class="message"
+        ></div>
+
+      </form>
+
+
+      <div class="signin">
+
+        Already have an account?
+
+        <a href="signin.html">
+          Sign In
+        </a>
+
+      </div>
+
+
+      <a
+        href="index.html"
+        class="back-home"
       >
+        ← Back to Homepage
+      </a>
 
-      <label>نام مدیر</label>
-      <input
-        type="text"
-        id="ownerName"
-        placeholder="نام شما"
-        required
-      >
 
-      <label>ایمیل</label>
-      <input
-        type="email"
-        id="email"
-        placeholder="example@email.com"
-        required
-      >
+      <div class="security-note">
 
-      <label>رمز عبور</label>
-      <input
-        type="password"
-        id="password"
-        placeholder="حداقل 8 کاراکتر"
-        minlength="8"
-        required
-      >
+        Your account information is currently stored
+        locally for the development version.
+        Secure multi-user authentication will be
+        added with the production backend.
 
-      <button type="submit">
-        ایجاد حساب
-      </button>
+      </div>
 
-    </form>
-
-    <div class="login">
-      قبلاً حساب دارید؟
-      <a href="login.html">وارد شوید</a>
     </div>
 
   </div>
 
+
   <script>
-    document.getElementById("registerForm").addEventListener("submit", function(event) {
 
-      event.preventDefault();
-
-      const companyName =
-        document.getElementById("companyName").value;
-
-      const ownerName =
-        document.getElementById("ownerName").value;
-
-      const email =
-        document.getElementById("email").value;
+    function togglePassword() {
 
       const password =
-        document.getElementById("password").value;
+        document.getElementById("password");
 
-      if (password.length < 8) {
-        alert("رمز عبور باید حداقل 8 کاراکتر باشد.");
-        return;
+      const button =
+        document.querySelector(".show-password");
+
+      if (password.type === "password") {
+
+        password.type = "text";
+
+        button.textContent = "Hide";
+
+      } else {
+
+        password.type = "password";
+
+        button.textContent = "Show";
+
       }
 
-      alert(
-        "حساب شرکت " +
-        companyName +
-        " با موفقیت ایجاد شد."
-      );
+    }
 
-    });
+
+    document
+      .getElementById("registerForm")
+      .addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+
+        const companyName =
+          document
+            .getElementById("companyName")
+            .value
+            .trim();
+
+
+        const ownerName =
+          document
+            .getElementById("ownerName")
+            .value
+            .trim();
+
+
+        const email =
+          document
+            .getElementById("email")
+            .value
+            .trim();
+
+
+        const password =
+          document
+            .getElementById("password")
+            .value;
+
+
+        const message =
+          document.getElementById("message");
+
+
+        if (
+          !companyName ||
+          !ownerName ||
+          !email ||
+          !password
+        ) {
+
+          message.className =
+            "message error";
+
+          message.textContent =
+            "Please complete all required fields.";
+
+          message.style.display =
+            "block";
+
+          return;
+
+        }
+
+
+        if (password.length < 6) {
+
+          message.className =
+            "message error";
+
+          message.textContent =
+            "Password must be at least 6 characters.";
+
+          message.style.display =
+            "block";
+
+          return;
+
+        }
+
+
+        /*
+          Development version:
+          Save basic account information locally.
+        */
+
+        localStorage.setItem(
+          "companyName",
+          companyName
+        );
+
+        localStorage.setItem(
+          "ownerName",
+          ownerName
+        );
+
+        localStorage.setItem(
+          "userEmail",
+          email
+        );
+
+
+        message.className =
+          "message success";
+
+        message.textContent =
+          "Account created successfully. Opening your dashboard...";
+
+        message.style.display =
+          "block";
+
+
+        setTimeout(function() {
+
+          window.location.href =
+            "dashboard.html";
+
+        }, 900);
+
+      });
+
   </script>
 
 </body>
