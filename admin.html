@@ -1,639 +1,573 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
-
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>پنل مدیریت | CompanyFlow</title>
+<title>Admin Panel | CompanyFlow</title>
 
-  <style>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
+body {
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+header {
+    background: #0f172a;
+    color: white;
+    padding: 18px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: #60a5fa;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.admin-label {
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 22px;
+}
+
+.stat-title {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 800;
+}
+
+/* REQUEST */
+
+.request-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 25px;
+}
+
+.request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.request-header h2 {
+    font-size: 20px;
+}
+
+.status {
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.approved {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.info {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 9px;
+}
+
+.info-label {
+    color: #64748b;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.message {
+    margin-top: 18px;
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 9px;
+    line-height: 1.6;
+    color: #475569;
+}
+
+/* BUTTONS */
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+button {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.approve {
+    background: #16a34a;
+    color: white;
+}
+
+.reject {
+    background: #dc2626;
+    color: white;
+}
+
+.clear {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: #64748b;
+}
+
+footer {
+    text-align: center;
+    color: #64748b;
+    padding: 30px;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    body {
-      background: #f5f7fb;
-      color: #172033;
-      min-height: 100vh;
+    .info-grid {
+        grid-template-columns: 1fr;
     }
+}
+
+@media (max-width: 550px) {
 
     header {
-      background: white;
-      padding: 18px 6%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    }
-
-    .logo {
-      color: #2563eb;
-      font-size: 23px;
-      font-weight: bold;
-    }
-
-    .admin {
-      color: #64748b;
-      font-size: 14px;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 30px auto;
-      padding: 20px;
-    }
-
-    .title {
-      margin-bottom: 25px;
-    }
-
-    .title h1 {
-      margin-bottom: 8px;
-    }
-
-    .title p {
-      color: #64748b;
+        padding: 16px 20px;
     }
 
     .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      margin-bottom: 25px;
+        grid-template-columns: 1fr;
     }
 
-    .stat {
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    }
-
-    .stat-icon {
-      font-size: 25px;
-      margin-bottom: 10px;
-    }
-
-    .stat h3 {
-      font-size: 25px;
-      margin-bottom: 5px;
-    }
-
-    .stat p {
-      color: #64748b;
-      font-size: 14px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 18px;
-      padding: 25px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-      margin-bottom: 25px;
-    }
-
-    .card h2 {
-      margin-bottom: 20px;
-    }
-
-    .request {
-      border: 1px solid #e2e8f0;
-      border-radius: 13px;
-      padding: 18px;
-      margin-bottom: 15px;
-    }
-
-    .request:last-child {
-      margin-bottom: 0;
-    }
-
-    .request-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 15px;
-    }
-
-    .customer {
-      font-weight: bold;
-      font-size: 17px;
-    }
-
-    .plan {
-      color: #2563eb;
-      font-weight: bold;
-    }
-
-    .info {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .info div {
-      background: #f8fafc;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    .status {
-      display: inline-block;
-      background: #fff7ed;
-      color: #c2410c;
-      padding: 7px 12px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: bold;
-      margin-bottom: 15px;
+    .request-header {
+        align-items: flex-start;
+        gap: 10px;
+        flex-direction: column;
     }
 
     .actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .actions button {
-      flex: 1;
-      border: none;
-      padding: 12px;
-      border-radius: 9px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .approve {
-      background: #16a34a;
-      color: white;
-    }
-
-    .reject {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 35px;
-      color: #64748b;
-    }
-
-    .logout {
-      display: inline-block;
-      margin-top: 10px;
-      color: #dc2626;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    @media (max-width: 800px) {
-
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-    }
-
-    @media (max-width: 600px) {
-
-      .container {
-        margin: 20px auto;
-        padding: 15px;
-      }
-
-      .stats {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-
-      .stat {
-        padding: 15px;
-      }
-
-      .request-top {
         flex-direction: column;
-      }
-
-      .info {
-        grid-template-columns: 1fr;
-      }
-
-      .actions {
-        flex-direction: column;
-      }
-
     }
 
-  </style>
-
+    button {
+        width: 100%;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
-
 <header>
 
-  <div class="logo">
-    CompanyFlow
-  </div>
+    <div class="logo">
+        CompanyFlow
+    </div>
 
-  <div class="admin">
-    👤 مدیر سیستم
-  </div>
+    <div class="admin-label">
+        Admin Panel
+    </div>
 
 </header>
 
 
 <div class="container">
 
-
-  <div class="title">
-
     <h1>
-      ⚙️ پنل مدیریت
+        Subscription Management
     </h1>
 
-    <p>
-      مدیریت درخواست‌های اشتراک مشتریان
+    <p class="subtitle">
+        Review and manage customer subscription requests.
     </p>
 
-  </div>
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Total Requests
+            </div>
+
+            <div class="stat-value" id="totalRequests">
+                0
+            </div>
+
+        </div>
 
 
-  <!-- Statistics -->
+        <div class="stat">
 
-  <div class="stats">
+            <div class="stat-title">
+                Pending
+            </div>
 
-    <div class="stat">
+            <div class="stat-value" id="pendingRequests">
+                0
+            </div>
 
-      <div class="stat-icon">
-        📋
-      </div>
-
-      <h3 id="totalRequests">
-        0
-      </h3>
-
-      <p>
-        کل درخواست‌ها
-      </p>
-
-    </div>
+        </div>
 
 
-    <div class="stat">
+        <div class="stat">
 
-      <div class="stat-icon">
-        ⏳
-      </div>
+            <div class="stat-title">
+                Approved
+            </div>
 
-      <h3 id="pendingRequests">
-        0
-      </h3>
+            <div class="stat-value" id="approvedRequests">
+                0
+            </div>
 
-      <p>
-        در انتظار بررسی
-      </p>
-
-    </div>
+        </div>
 
 
-    <div class="stat">
+        <div class="stat">
 
-      <div class="stat-icon">
-        ✅
-      </div>
+            <div class="stat-title">
+                Rejected
+            </div>
 
-      <h3 id="approvedRequests">
-        0
-      </h3>
+            <div class="stat-value" id="rejectedRequests">
+                0
+            </div>
 
-      <p>
-        تأیید شده
-      </p>
-
-    </div>
-
-
-    <div class="stat">
-
-      <div class="stat-icon">
-        ❌
-      </div>
-
-      <h3 id="rejectedRequests">
-        0
-      </h3>
-
-      <p>
-        رد شده
-      </p>
+        </div>
 
     </div>
 
-  </div>
 
+    <!-- REQUEST -->
 
-  <!-- Requests -->
-
-  <div class="card">
-
-    <h2>
-      📩 درخواست‌های اشتراک
-    </h2>
-
-    <div id="requestsContainer">
-
-    </div>
-
-  </div>
-
-
-  <a href="dashboard.html" class="logout">
-    ← بازگشت به داشبورد
-  </a>
-
+    <div id="requestContainer"></div>
 
 </div>
 
 
+<footer>
+    © 2026 CompanyFlow. Admin Panel
+</footer>
+
+
 <script>
 
-
-  function getRequests() {
+function loadRequest() {
 
     const saved =
-      localStorage.getItem("subscriptionRequest");
-
-    if (!saved) {
-      return [];
-    }
-
-    try {
-
-      const request = JSON.parse(saved);
-
-      return [request];
-
-    } catch (error) {
-
-      return [];
-
-    }
-
-  }
-
-
-  function renderRequests() {
-
-    const requests = getRequests();
+        localStorage.getItem("subscriptionRequest");
 
     const container =
-      document.getElementById("requestsContainer");
+        document.getElementById("requestContainer");
+
+    if (!saved) {
+
+        document.getElementById("totalRequests").textContent = "0";
+        document.getElementById("pendingRequests").textContent = "0";
+        document.getElementById("approvedRequests").textContent = "0";
+        document.getElementById("rejectedRequests").textContent = "0";
+
+        container.innerHTML = `
+            <div class="request-card empty">
+                <h2>No subscription requests yet</h2>
+                <p>
+                    New customer requests will appear here.
+                </p>
+            </div>
+        `;
+
+        return;
+    }
 
 
-    let approved = 0;
-    let rejected = 0;
-    let pending = 0;
+    const request = JSON.parse(saved);
+
+    let status =
+        request.status || "pending";
 
 
-    requests.forEach(request => {
-
-      if (request.status === "approved") {
-        approved++;
-      }
-
-      else if (request.status === "rejected") {
-        rejected++;
-      }
-
-      else {
-        pending++;
-      }
-
-    });
-
-
-    document.getElementById("totalRequests").textContent =
-      requests.length;
+    document.getElementById("totalRequests").textContent = "1";
 
     document.getElementById("pendingRequests").textContent =
-      pending;
+        status === "pending" ? "1" : "0";
 
     document.getElementById("approvedRequests").textContent =
-      approved;
+        status === "approved" ? "1" : "0";
 
     document.getElementById("rejectedRequests").textContent =
-      rejected;
+        status === "rejected" ? "1" : "0";
 
 
-    if (requests.length === 0) {
+    const date = request.createdAt
+        ? new Date(request.createdAt).toLocaleString()
+        : "Not available";
 
-      container.innerHTML = `
 
-        <div class="empty">
+    container.innerHTML = `
 
-          📭
+        <div class="request-card">
 
-          <br><br>
+            <div class="request-header">
 
-          هنوز هیچ درخواست اشتراکی ثبت نشده است.
+                <h2>
+                    Subscription Request
+                </h2>
+
+                <span class="status ${status}">
+                    ${status.toUpperCase()}
+                </span>
+
+            </div>
+
+
+            <div class="info-grid">
+
+                <div class="info">
+
+                    <div class="info-label">
+                        Customer Name
+                    </div>
+
+                    <div class="info-value">
+                        ${request.name || "-"}
+                    </div>
+
+                </div>
+
+
+                <div class="info">
+
+                    <div class="info-label">
+                        Company
+                    </div>
+
+                    <div class="info-value">
+                        ${request.company || "-"}
+                    </div>
+
+                </div>
+
+
+                <div class="info">
+
+                    <div class="info-label">
+                        Phone / WhatsApp
+                    </div>
+
+                    <div class="info-value">
+                        ${request.phone || "-"}
+                    </div>
+
+                </div>
+
+
+                <div class="info">
+
+                    <div class="info-label">
+                        Selected Plan
+                    </div>
+
+                    <div class="info-value">
+                        ${request.plan || "-"}
+                    </div>
+
+                </div>
+
+
+                <div class="info">
+
+                    <div class="info-label">
+                        Price
+                    </div>
+
+                    <div class="info-value">
+                        $${request.price || "0"} / month
+                    </div>
+
+                </div>
+
+
+                <div class="info">
+
+                    <div class="info-label">
+                        Submitted
+                    </div>
+
+                    <div class="info-value">
+                        ${date}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="message">
+
+                <strong>Customer Message:</strong><br>
+
+                ${request.message || "No message provided."}
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    class="approve"
+                    onclick="updateStatus('approved')">
+                    Approve Request
+                </button>
+
+                <button
+                    class="reject"
+                    onclick="updateStatus('rejected')">
+                    Reject Request
+                </button>
+
+                <button
+                    class="clear"
+                    onclick="clearRequest()">
+                    Clear Request
+                </button>
+
+            </div>
 
         </div>
 
-      `;
+    `;
 
-      return;
-
-    }
+}
 
 
-    container.innerHTML = "";
+function updateStatus(newStatus) {
 
+    const saved =
+        localStorage.getItem("subscriptionRequest");
 
-    requests.forEach((request, index) => {
+    if (!saved) return;
 
-      let statusText = "در انتظار بررسی";
+    const request =
+        JSON.parse(saved);
 
-      if (request.status === "approved") {
-        statusText = "تأیید شده";
-      }
-
-      if (request.status === "rejected") {
-        statusText = "رد شده";
-      }
-
-
-      const div =
-        document.createElement("div");
-
-      div.className = "request";
-
-
-      div.innerHTML = `
-
-        <div class="request-top">
-
-          <div class="customer">
-
-            👤 ${request.customerName || "بدون نام"}
-
-          </div>
-
-          <div class="plan">
-
-            ${request.plan || "نامشخص"}
-            -
-            $${request.price || "0"}
-
-          </div>
-
-        </div>
-
-
-        <div class="status">
-
-          ${statusText}
-
-        </div>
-
-
-        <div class="info">
-
-          <div>
-            🏢 شرکت:
-            ${request.companyName || "-"}
-          </div>
-
-          <div>
-            📞 تماس:
-            ${request.phone || "-"}
-          </div>
-
-          <div>
-            📅 تاریخ:
-            ${request.date
-              ? new Date(request.date).toLocaleDateString("fa-IR")
-              : "-"
-            }
-          </div>
-
-          <div>
-            💰 مبلغ:
-            $${request.price || "0"}
-          </div>
-
-        </div>
-
-
-        <div style="
-          background:#f8fafc;
-          padding:12px;
-          border-radius:8px;
-          margin-bottom:15px;
-        ">
-
-          📝 توضیحات:
-
-          ${request.message || "توضیحی ثبت نشده است"}
-
-        </div>
-
-
-        <div class="actions">
-
-          <button
-            class="approve"
-            onclick="approveRequest(${index})"
-          >
-            ✅ تأیید درخواست
-          </button>
-
-
-          <button
-            class="reject"
-            onclick="rejectRequest(${index})"
-          >
-            ❌ رد درخواست
-          </button>
-
-        </div>
-
-      `;
-
-
-      container.appendChild(div);
-
-    });
-
-  }
-
-
-  function approveRequest(index) {
-
-    const requests = getRequests();
-
-    if (!requests[index]) {
-      return;
-    }
-
-
-    requests[index].status = "approved";
-
+    request.status = newStatus;
 
     localStorage.setItem(
-      "subscriptionRequest",
-      JSON.stringify(requests[index])
+        "subscriptionRequest",
+        JSON.stringify(request)
     );
 
+    loadRequest();
 
-    alert("درخواست تأیید شد.");
-
-
-    renderRequests();
-
-  }
+}
 
 
-  function rejectRequest(index) {
+function clearRequest() {
 
-    const requests = getRequests();
+    const confirmed =
+        confirm(
+            "Are you sure you want to clear this request?"
+        );
 
-    if (!requests[index]) {
-      return;
-    }
+    if (!confirmed) return;
 
-
-    requests[index].status = "rejected";
-
-
-    localStorage.setItem(
-      "subscriptionRequest",
-      JSON.stringify(requests[index])
+    localStorage.removeItem(
+        "subscriptionRequest"
     );
 
+    loadRequest();
 
-    alert("درخواست رد شد.");
-
-
-    renderRequests();
-
-  }
+}
 
 
-  renderRequests();
-
+loadRequest();
 
 </script>
 
-
 </body>
-
 </html>
