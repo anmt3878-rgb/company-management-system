@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notifications - CompanyFlow</title>
+  <title>Notifications | CompanyFlow</title>
 
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
       background: #f5f7fb;
-      color: #172033;
+      color: #1f2937;
     }
 
     .sidebar {
@@ -26,29 +26,28 @@
       height: 100vh;
       background: #111827;
       color: white;
-      padding: 25px 15px;
+      padding: 24px 16px;
       overflow-y: auto;
     }
 
     .logo {
-      font-size: 23px;
+      font-size: 22px;
       font-weight: bold;
-      margin-bottom: 35px;
-      padding-left: 10px;
+      margin-bottom: 30px;
+      padding: 0 10px;
     }
 
     .logo span {
-      color: #4f8cff;
+      color: #60a5fa;
     }
 
     .nav a {
       display: block;
       color: #cbd5e1;
       text-decoration: none;
-      padding: 13px 15px;
+      padding: 12px 14px;
       border-radius: 8px;
       margin-bottom: 5px;
-      font-size: 14px;
     }
 
     .nav a:hover,
@@ -63,7 +62,7 @@
     }
 
     .topbar {
-      height: 75px;
+      height: 72px;
       background: white;
       border-bottom: 1px solid #e5e7eb;
       display: flex;
@@ -77,103 +76,91 @@
     }
 
     .user {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #2563eb;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
-
-    .content {
-      padding: 30px;
-      max-width: 1100px;
-    }
-
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 25px;
-      gap: 15px;
-    }
-
-    .page-header h2 {
-      font-size: 26px;
-      margin-bottom: 6px;
-    }
-
-    .page-header p {
       color: #64748b;
       font-size: 14px;
     }
 
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+    .content {
+      padding: 30px;
     }
 
-    button {
-      border: none;
-      cursor: pointer;
-      border-radius: 8px;
-      padding: 11px 15px;
-      font-weight: bold;
-    }
-
-    .primary-btn {
-      background: #2563eb;
-      color: white;
-    }
-
-    .primary-btn:hover {
-      background: #1d4ed8;
-    }
-
-    .secondary-btn {
-      background: #e5e7eb;
-      color: #334155;
-    }
-
-    .secondary-btn:hover {
-      background: #dbe1e8;
-    }
-
-    .stats {
+    .summary {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 18px;
       margin-bottom: 25px;
     }
 
-    .stat-card {
+    .summary-card {
       background: white;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
       padding: 20px;
     }
 
-    .stat-card p {
+    .summary-card h3 {
       color: #64748b;
       font-size: 13px;
+      font-weight: normal;
       margin-bottom: 10px;
     }
 
-    .stat-card h3 {
-      font-size: 27px;
+    .summary-card p {
+      font-size: 26px;
+      font-weight: bold;
     }
 
-    .notification-list {
+    .toolbar {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search {
+      flex: 1;
+      min-width: 220px;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .filter {
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: white;
+    }
+
+    .btn {
+      border: none;
+      background: #2563eb;
+      color: white;
+      padding: 12px 17px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .notifications {
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -185,13 +172,8 @@
       border-radius: 12px;
       padding: 18px;
       display: flex;
-      gap: 15px;
       align-items: flex-start;
-      transition: 0.2s;
-    }
-
-    .notification:hover {
-      border-color: #cbd5e1;
+      gap: 15px;
     }
 
     .notification.unread {
@@ -202,14 +184,14 @@
     .notification-icon {
       width: 42px;
       height: 42px;
-      min-width: 42px;
-      border-radius: 10px;
+      border-radius: 50%;
       background: #eff6ff;
       color: #2563eb;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 19px;
+      flex-shrink: 0;
     }
 
     .notification-body {
@@ -223,14 +205,14 @@
 
     .notification-body p {
       color: #64748b;
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1.5;
     }
 
     .notification-time {
       color: #94a3b8;
       font-size: 12px;
-      margin-top: 8px;
+      margin-top: 7px;
     }
 
     .notification-actions {
@@ -240,14 +222,16 @@
     }
 
     .small-btn {
-      padding: 8px 10px;
-      font-size: 11px;
-      background: #f1f5f9;
-      color: #334155;
+      border: none;
+      padding: 7px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
     }
 
-    .small-btn:hover {
-      background: #e2e8f0;
+    .read-btn {
+      background: #dbeafe;
+      color: #1d4ed8;
     }
 
     .delete-btn {
@@ -255,56 +239,121 @@
       color: #b91c1c;
     }
 
-    .delete-btn:hover {
-      background: #fecaca;
-    }
-
     .empty {
       background: white;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
-      padding: 50px 20px;
       text-align: center;
+      padding: 50px 20px;
       color: #64748b;
     }
 
-    .empty-icon {
-      font-size: 40px;
-      margin-bottom: 12px;
+    .settings {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 22px;
+      margin-top: 25px;
     }
 
-    @media (max-width: 800px) {
-      .sidebar {
-        width: 190px;
-      }
-
-      .main {
-        margin-left: 190px;
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .page-header {
-        flex-direction: column;
-      }
+    .settings h2 {
+      margin-bottom: 18px;
+      font-size: 19px;
     }
 
-    @media (max-width: 650px) {
-      .sidebar {
-        position: static;
-        width: 100%;
-        height: auto;
-      }
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
 
-      .main {
-        margin-left: 0;
-      }
+    .setting-row:last-child {
+      border-bottom: none;
+    }
 
-      .nav {
-        display: grid;
+    .setting-info strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .setting-info span {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #cbd5e1;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .slider:before {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 3px;
+      top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: .2s;
+    }
+
+    .switch input:checked + .slider {
+      background: #2563eb;
+    }
+
+    .switch input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    @media (max-width: 1050px) {
+      .summary {
         grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 750px) {
+      .sidebar {
+        width: 70px;
+        padding: 20px 8px;
+      }
+
+      .logo {
+        font-size: 0;
+        text-align: center;
+      }
+
+      .logo span {
+        font-size: 22px;
+      }
+
+      .nav a {
+        font-size: 0;
+        text-align: center;
+        padding: 12px 5px;
+      }
+
+      .main {
+        margin-left: 70px;
       }
 
       .topbar {
@@ -324,13 +373,21 @@
       }
     }
 
-    @media (max-width: 430px) {
-      .nav {
+    @media (max-width: 500px) {
+      .summary {
         grid-template-columns: 1fr;
       }
 
       .topbar h1 {
-        font-size: 19px;
+        font-size: 20px;
+      }
+
+      .user {
+        display: none;
+      }
+
+      .setting-row {
+        align-items: flex-start;
       }
     }
   </style>
@@ -354,6 +411,7 @@
       <a href="inventory.html">Inventory</a>
       <a href="documents.html">Documents</a>
       <a href="reports.html">Reports</a>
+      <a href="roles.html">Roles</a>
       <a href="notifications.html" class="active">Notifications</a>
       <a href="settings.html">Settings</a>
     </nav>
@@ -367,9 +425,8 @@
 
       <h1>Notifications</h1>
 
-      <div class="user">
-        <span id="ownerName">Owner</span>
-        <div class="avatar" id="avatar">O</div>
+      <div class="user" id="userName">
+        Company Owner
       </div>
 
     </header>
@@ -377,57 +434,172 @@
 
     <section class="content">
 
-      <div class="page-header">
+      <!-- Summary -->
 
-        <div>
-          <h2>Notifications Center</h2>
-          <p>
-            Stay updated with important company activities.
-          </p>
+      <div class="summary">
+
+        <div class="summary-card">
+          <h3>Total Notifications</h3>
+          <p id="totalNotifications">0</p>
         </div>
 
-        <div class="actions">
+        <div class="summary-card">
+          <h3>Unread</h3>
+          <p id="unreadNotifications">0</p>
+        </div>
 
-          <button
-            class="secondary-btn"
-            onclick="markAllRead()"
-          >
-            Mark All Read
-          </button>
+        <div class="summary-card">
+          <h3>Read</h3>
+          <p id="readNotifications">0</p>
+        </div>
 
-          <button
-            class="primary-btn"
-            onclick="clearAll()"
-          >
-            Clear All
-          </button>
-
+        <div class="summary-card">
+          <h3>Alerts</h3>
+          <p id="alertNotifications">0</p>
         </div>
 
       </div>
 
 
-      <div class="stats">
+      <!-- Toolbar -->
 
-        <div class="stat-card">
-          <p>Total Notifications</p>
-          <h3 id="totalCount">0</h3>
-        </div>
+      <div class="toolbar">
 
-        <div class="stat-card">
-          <p>Unread</p>
-          <h3 id="unreadCount">0</h3>
-        </div>
+        <input
+          class="search"
+          id="searchInput"
+          type="text"
+          placeholder="Search notifications..."
+          oninput="renderNotifications()"
+        >
 
-        <div class="stat-card">
-          <p>Read</p>
-          <h3 id="readCount">0</h3>
-        </div>
+        <select
+          class="filter"
+          id="filterType"
+          onchange="renderNotifications()"
+        >
+          <option value="all">All notifications</option>
+          <option value="task">Tasks</option>
+          <option value="customer">Customers</option>
+          <option value="inventory">Inventory</option>
+          <option value="finance">Finance</option>
+          <option value="project">Projects</option>
+          <option value="system">System</option>
+        </select>
+
+        <button
+          class="btn btn-secondary"
+          onclick="markAllRead()"
+        >
+          Mark All Read
+        </button>
+
+        <button
+          class="btn"
+          onclick="createSampleNotification()"
+        >
+          + Add Notification
+        </button>
 
       </div>
 
 
-      <div id="notificationList"></div>
+      <!-- Notifications -->
+
+      <div id="notificationsList" class="notifications"></div>
+
+
+      <!-- Notification Settings -->
+
+      <div class="settings">
+
+        <h2>Notification Preferences</h2>
+
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+            <strong>Task Deadline Alerts</strong>
+            <span>
+              Get notified when important tasks are approaching their deadlines.
+            </span>
+          </div>
+
+          <label class="switch">
+            <input
+              type="checkbox"
+              id="taskAlerts"
+              onchange="savePreferences()"
+            >
+            <span class="slider"></span>
+          </label>
+
+        </div>
+
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+            <strong>Low Inventory Alerts</strong>
+            <span>
+              Receive alerts when products reach their stock threshold.
+            </span>
+          </div>
+
+          <label class="switch">
+            <input
+              type="checkbox"
+              id="inventoryAlerts"
+              onchange="savePreferences()"
+            >
+            <span class="slider"></span>
+          </label>
+
+        </div>
+
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+            <strong>Customer Updates</strong>
+            <span>
+              Receive notifications about new customers and leads.
+            </span>
+          </div>
+
+          <label class="switch">
+            <input
+              type="checkbox"
+              id="customerAlerts"
+              onchange="savePreferences()"
+            >
+            <span class="slider"></span>
+          </label>
+
+        </div>
+
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+            <strong>Finance Alerts</strong>
+            <span>
+              Receive notifications about financial activity.
+            </span>
+          </div>
+
+          <label class="switch">
+            <input
+              type="checkbox"
+              id="financeAlerts"
+              onchange="savePreferences()"
+            >
+            <span class="slider"></span>
+          </label>
+
+        </div>
+
+      </div>
 
     </section>
 
@@ -436,19 +608,16 @@
 
   <script>
 
-    const owner =
-      localStorage.getItem("ownerName") || "Owner";
-
-    document.getElementById("ownerName").textContent =
-      owner;
-
-    document.getElementById("avatar").textContent =
-      owner.charAt(0).toUpperCase();
+    let notifications =
+      JSON.parse(
+        localStorage.getItem("notifications") || "[]"
+      );
 
 
-    let notifications = JSON.parse(
-      localStorage.getItem("notifications") || "[]"
-    );
+    let preferences =
+      JSON.parse(
+        localStorage.getItem("notificationPreferences") || "{}"
+      );
 
 
     function saveNotifications() {
@@ -461,183 +630,226 @@
     }
 
 
-    function createNotification(
-      title,
-      message,
-      icon
-    ) {
-
-      notifications.unshift({
-
-        id: Date.now(),
-
-        title: title,
-
-        message: message,
-
-        icon: icon,
-
-        read: false,
-
-        createdAt: new Date().toISOString()
-
-      });
-
-      saveNotifications();
-
-      renderNotifications();
-
-    }
-
-
     function renderNotifications() {
 
       const list =
-        document.getElementById("notificationList");
+        document.getElementById(
+          "notificationsList"
+        );
+
+      const search =
+        document.getElementById(
+          "searchInput"
+        ).value.toLowerCase();
+
+      const filter =
+        document.getElementById(
+          "filterType"
+        ).value;
+
+
+      const filtered =
+        notifications.filter(notification => {
+
+          const matchesSearch =
+            notification.title
+              .toLowerCase()
+              .includes(search) ||
+            notification.message
+              .toLowerCase()
+              .includes(search);
+
+
+          const matchesType =
+            filter === "all" ||
+            notification.type === filter;
+
+
+          return matchesSearch && matchesType;
+
+        });
+
 
       list.innerHTML = "";
 
 
-      if (notifications.length === 0) {
+      if (filtered.length === 0) {
 
         list.innerHTML = `
           <div class="empty">
-            <div class="empty-icon">🔔</div>
-            <h3>No notifications</h3>
-            <p>You are all caught up.</p>
+            <h3>No notifications found</h3>
+            <p style="margin-top:8px;">
+              You're all caught up.
+            </p>
           </div>
         `;
 
-        updateStats();
+      } else {
 
-        return;
+        filtered.forEach(notification => {
+
+          const item =
+            document.createElement("div");
+
+          item.className =
+            "notification " +
+            (!notification.read ? "unread" : "");
+
+
+          item.innerHTML = `
+
+            <div class="notification-icon">
+              ${getIcon(notification.type)}
+            </div>
+
+            <div class="notification-body">
+
+              <h3>
+                ${escapeHTML(notification.title)}
+              </h3>
+
+              <p>
+                ${escapeHTML(notification.message)}
+              </p>
+
+              <div class="notification-time">
+                ${escapeHTML(notification.time)}
+              </div>
+
+            </div>
+
+            <div class="notification-actions">
+
+              ${
+                !notification.read
+                ? `
+                  <button
+                    class="small-btn read-btn"
+                    onclick="markRead(${notification.id})">
+                    Mark Read
+                  </button>
+                `
+                : ""
+              }
+
+              <button
+                class="small-btn delete-btn"
+                onclick="deleteNotification(${notification.id})">
+                Delete
+              </button>
+
+            </div>
+
+          `;
+
+
+          list.appendChild(item);
+
+        });
 
       }
 
 
-      notifications.forEach(notification => {
-
-        const item =
-          document.createElement("div");
-
-        item.className =
-          "notification" +
-          (notification.read ? "" : " unread");
-
-
-        item.innerHTML = `
-
-          <div class="notification-icon">
-            ${escapeHtml(notification.icon || "🔔")}
-          </div>
-
-          <div class="notification-body">
-
-            <h3>
-              ${escapeHtml(notification.title)}
-            </h3>
-
-            <p>
-              ${escapeHtml(notification.message)}
-            </p>
-
-            <div class="notification-time">
-              ${formatTime(notification.createdAt)}
-            </div>
-
-          </div>
-
-          <div class="notification-actions">
-
-            ${
-              notification.read
-              ? ""
-              : `
-                <button
-                  class="small-btn"
-                  onclick="markRead(${notification.id})"
-                >
-                  Mark Read
-                </button>
-              `
-            }
-
-            <button
-              class="small-btn delete-btn"
-              onclick="deleteNotification(${notification.id})"
-            >
-              Delete
-            </button>
-
-          </div>
-
-        `;
-
-        list.appendChild(item);
-
-      });
-
-
-      updateStats();
+      updateSummary();
 
     }
 
 
-    function updateStats() {
+    function updateSummary() {
 
       const total =
         notifications.length;
 
       const unread =
         notifications.filter(
-          item => !item.read
+          notification => !notification.read
         ).length;
 
       const read =
-        total - unread;
+        notifications.filter(
+          notification => notification.read
+        ).length;
 
-      document.getElementById("totalCount")
-        .textContent = total;
+      const alerts =
+        notifications.filter(
+          notification =>
+            notification.type === "inventory" ||
+            notification.type === "finance"
+        ).length;
 
-      document.getElementById("unreadCount")
-        .textContent = unread;
 
-      document.getElementById("readCount")
-        .textContent = read;
+      document.getElementById(
+        "totalNotifications"
+      ).textContent = total;
+
+      document.getElementById(
+        "unreadNotifications"
+      ).textContent = unread;
+
+      document.getElementById(
+        "readNotifications"
+      ).textContent = read;
+
+      document.getElementById(
+        "alertNotifications"
+      ).textContent = alerts;
+
+    }
+
+
+    function getIcon(type) {
+
+      const icons = {
+
+        task: "✓",
+
+        customer: "👤",
+
+        inventory: "📦",
+
+        finance: "$",
+
+        project: "📁",
+
+        system: "⚙"
+
+      };
+
+
+      return icons[type] || "🔔";
 
     }
 
 
     function markRead(id) {
 
-      notifications =
-        notifications.map(item => {
+      const notification =
+        notifications.find(
+          item => item.id === id
+        );
 
-          if (item.id === id) {
-            return {
-              ...item,
-              read: true
-            };
-          }
 
-          return item;
+      if (notification) {
 
-        });
+        notification.read = true;
 
-      saveNotifications();
+        saveNotifications();
 
-      renderNotifications();
+        renderNotifications();
+
+      }
 
     }
 
 
     function markAllRead() {
 
-      notifications =
-        notifications.map(item => ({
-          ...item,
-          read: true
-        }));
+      notifications.forEach(
+        notification => {
+          notification.read = true;
+        }
+      );
+
 
       saveNotifications();
 
@@ -648,62 +860,175 @@
 
     function deleteNotification(id) {
 
-      notifications =
-        notifications.filter(
-          item => item.id !== id
-        );
+      if (
+        confirm(
+          "Are you sure you want to delete this notification?"
+        )
+      ) {
 
-      saveNotifications();
+        notifications =
+          notifications.filter(
+            notification =>
+              notification.id !== id
+          );
 
-      renderNotifications();
+
+        saveNotifications();
+
+        renderNotifications();
+
+      }
 
     }
 
 
-    function clearAll() {
+    function createSampleNotification() {
 
-      if (notifications.length === 0) {
-        return;
-      }
+      const samples = [
 
-      if (!confirm("Clear all notifications?")) {
-        return;
-      }
-
-      notifications = [];
-
-      saveNotifications();
-
-      renderNotifications();
-
-    }
-
-
-    function formatTime(dateString) {
-
-      if (!dateString) {
-        return "";
-      }
-
-      const date =
-        new Date(dateString);
-
-      if (isNaN(date.getTime())) {
-        return "";
-      }
-
-      return date.toLocaleString(
-        "en-US",
         {
-          dateStyle: "medium",
-          timeStyle: "short"
+          title: "Task Deadline",
+          message:
+            "A task is approaching its deadline.",
+          type: "task"
+        },
+
+        {
+          title: "New Customer",
+          message:
+            "A new customer has been added to your company.",
+          type: "customer"
+        },
+
+        {
+          title: "Inventory Alert",
+          message:
+            "A product has reached its low-stock threshold.",
+          type: "inventory"
+        },
+
+        {
+          title: "Finance Update",
+          message:
+            "A new financial transaction has been recorded.",
+          type: "finance"
+        },
+
+        {
+          title: "Project Update",
+          message:
+            "A project status has been updated.",
+          type: "project"
+        },
+
+        {
+          title: "System Notification",
+          message:
+            "Your CompanyFlow system has been updated.",
+          type: "system"
         }
+
+      ];
+
+
+      const sample =
+        samples[
+          Math.floor(
+            Math.random() * samples.length
+          )
+        ];
+
+
+      notifications.unshift({
+
+        id: Date.now(),
+
+        title: sample.title,
+
+        message: sample.message,
+
+        type: sample.type,
+
+        read: false,
+
+        time: new Date().toLocaleString(
+          "en-US"
+        )
+
+      });
+
+
+      saveNotifications();
+
+      renderNotifications();
+
+    }
+
+
+    function savePreferences() {
+
+      preferences = {
+
+        taskAlerts:
+          document.getElementById(
+            "taskAlerts"
+          ).checked,
+
+        inventoryAlerts:
+          document.getElementById(
+            "inventoryAlerts"
+          ).checked,
+
+        customerAlerts:
+          document.getElementById(
+            "customerAlerts"
+          ).checked,
+
+        financeAlerts:
+          document.getElementById(
+            "financeAlerts"
+          ).checked
+
+      };
+
+
+      localStorage.setItem(
+        "notificationPreferences",
+        JSON.stringify(preferences)
       );
 
     }
 
 
-    function escapeHtml(value) {
+    function loadPreferences() {
+
+      document.getElementById(
+        "taskAlerts"
+      ).checked =
+        preferences.taskAlerts !== false;
+
+
+      document.getElementById(
+        "inventoryAlerts"
+      ).checked =
+        preferences.inventoryAlerts !== false;
+
+
+      document.getElementById(
+        "customerAlerts"
+      ).checked =
+        preferences.customerAlerts !== false;
+
+
+      document.getElementById(
+        "financeAlerts"
+      ).checked =
+        preferences.financeAlerts !== false;
+
+    }
+
+
+    function escapeHTML(value) {
 
       return String(value)
         .replace(/&/g, "&amp;")
@@ -715,105 +1040,23 @@
     }
 
 
-    /*
-      Create a few useful notifications automatically
-      when the company has relevant data.
-    */
-
-    function generateAutomaticNotifications() {
-
-      const generatedKey =
-        "companyflow_auto_notifications";
-
-      const alreadyGenerated =
-        localStorage.getItem(generatedKey);
-
-      if (alreadyGenerated) {
-        return;
-      }
-
-
-      const tasks =
-        JSON.parse(
-          localStorage.getItem("tasks") || "[]"
-        );
-
-
-      const products =
-        JSON.parse(
-          localStorage.getItem("products") || "[]"
-        );
-
-
-      const employees =
-        JSON.parse(
-          localStorage.getItem("employees") || "[]"
-        );
-
-
-      if (tasks.length > 0) {
-
-        createNotification(
-          "Task Management",
-          `You currently have ${tasks.length} task(s) in your workspace.`,
-          "✅"
-        );
-
-      }
-
-
-      if (products.length > 0) {
-
-        const lowStock =
-          products.filter(item => {
-
-            const stock =
-              Number(item.stock) || 0;
-
-            const minimum =
-              Number(
-                item.lowStockAlert ||
-                item.lowStock ||
-                0
-              );
-
-            return stock <= minimum;
-
-          });
-
-        if (lowStock.length > 0) {
-
-          createNotification(
-            "Low Stock Alert",
-            `${lowStock.length} product(s) may need restocking.`,
-            "📦"
-          );
-
-        }
-
-      }
-
-
-      if (employees.length > 0) {
-
-        createNotification(
-          "Employee Management",
-          `Your company currently has ${employees.length} employee record(s).`,
-          "👥"
-        );
-
-      }
-
-
-      localStorage.setItem(
-        generatedKey,
-        "true"
+    const ownerName =
+      localStorage.getItem(
+        "ownerName"
       );
+
+
+    if (ownerName) {
+
+      document.getElementById(
+        "userName"
+      ).textContent =
+        ownerName;
 
     }
 
 
-    generateAutomaticNotifications();
+    loadPreferences();
 
     renderNotifications();
 
