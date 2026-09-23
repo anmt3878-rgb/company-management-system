@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CompanyFlow</title>
+
+  <title>CompanyFlow | Business Management Platform</title>
 
   <style>
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -35,7 +37,7 @@
     }
 
     nav a {
-      margin-right: 15px;
+      margin-left: 20px;
       text-decoration: none;
       color: #334155;
       font-weight: bold;
@@ -43,12 +45,13 @@
 
     .hero {
       text-align: center;
-      padding: 80px 20px;
+      padding: 90px 20px;
     }
 
     .hero h1 {
-      font-size: 42px;
-      margin-bottom: 20px;
+      font-size: 48px;
+      line-height: 1.2;
+      margin-bottom: 22px;
     }
 
     .hero h1 span {
@@ -56,20 +59,20 @@
     }
 
     .hero p {
-      max-width: 650px;
+      max-width: 700px;
       margin: auto;
       color: #64748b;
-      line-height: 2;
+      line-height: 1.8;
       font-size: 18px;
     }
 
     .buttons {
-      margin-top: 30px;
+      margin-top: 32px;
     }
 
     .btn {
       display: inline-block;
-      padding: 14px 25px;
+      padding: 14px 26px;
       border-radius: 10px;
       text-decoration: none;
       margin: 5px;
@@ -88,37 +91,49 @@
     }
 
     .features {
-      max-width: 1000px;
+      max-width: 1050px;
       margin: auto;
-      padding: 30px 20px 70px;
+      padding: 20px 20px 80px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      gap: 20px;
     }
 
     .feature {
       background: white;
-      padding: 25px;
+      padding: 28px;
       border-radius: 16px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
 
+    .icon {
+      font-size: 30px;
+    }
+
     .feature h3 {
-      margin: 12px 0;
+      margin: 14px 0 10px;
     }
 
     .feature p {
       color: #64748b;
-      line-height: 1.8;
+      line-height: 1.7;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px;
+      background: white;
+      color: #64748b;
     }
 
     @media (max-width: 700px) {
+
       .features {
         grid-template-columns: 1fr;
       }
 
       .hero h1 {
-        font-size: 32px;
+        font-size: 34px;
       }
 
       header {
@@ -126,13 +141,19 @@
       }
 
       nav a {
+        margin-left: 8px;
         font-size: 13px;
       }
+
     }
+
   </style>
+
 </head>
 
+
 <body>
+
 
 <header>
 
@@ -141,90 +162,170 @@
   </div>
 
   <nav>
-    <a href="pricing.html">قیمت‌ها</a>
-    <a href="signin.html">ورود</a>
+
+    <a href="pricing.html">
+      Pricing
+    </a>
+
+    <a href="signin.html">
+      Sign In
+    </a>
+
   </nav>
 
 </header>
 
+
 <section class="hero">
 
   <h1>
-    مدیریت شرکت،
-    <span>ساده و هوشمند</span>
+    Run Your Business
+    <span>Smarter</span>
   </h1>
 
   <p>
-    CompanyFlow یک سیستم مدیریت شرکت است که به کسب‌وکارها
-    کمک می‌کند کارکنان، مشتریان، پروژه‌ها، مالی، انبار و گزارش‌ها
-    را در یک سیستم مدیریت کنند.
+    CompanyFlow is an all-in-one business management platform
+    designed to help companies manage employees, customers,
+    projects, finances, inventory, and reports from one place.
   </p>
+
 
   <div class="buttons">
 
     <a href="register.html" class="btn primary">
-      شروع رایگان
+      Start Free
     </a>
 
     <a href="pricing.html" class="btn secondary">
-      مشاهده پلن‌ها
+      View Pricing
     </a>
 
   </div>
 
 </section>
 
+
 <section class="features">
 
-  <div class="feature">
-    <div>👥</div>
-    <h3>مدیریت کارکنان</h3>
-    <p>
-      مدیریت کارکنان، وظایف، حضور و غیاب و مرخصی.
-    </p>
-  </div>
 
   <div class="feature">
-    <div>📊</div>
-    <h3>مدیریت پروژه</h3>
+
+    <div class="icon">
+      👥
+    </div>
+
+    <h3>
+      Employee Management
+    </h3>
+
     <p>
-      پروژه‌ها و وظایف شرکت را در یک سیستم مدیریت کنید.
+      Manage employees, tasks, attendance,
+      leave requests, and performance.
     </p>
+
   </div>
 
-  <div class="feature">
-    <div>💰</div>
-    <h3>مدیریت مالی</h3>
-    <p>
-      درآمد، هزینه، فاکتورها و گزارش‌های مالی.
-    </p>
-  </div>
 
   <div class="feature">
-    <div>👤</div>
-    <h3>مدیریت مشتریان</h3>
+
+    <div class="icon">
+      📊
+    </div>
+
+    <h3>
+      Project Management
+    </h3>
+
     <p>
-      اطلاعات مشتریان و ارتباطات کسب‌وکار را مدیریت کنید.
+      Organize projects, assign tasks,
+      track progress, and manage deadlines.
     </p>
+
   </div>
 
-  <div class="feature">
-    <div>📦</div>
-    <h3>مدیریت انبار</h3>
-    <p>
-      کالاها و موجودی انبار را مدیریت کنید.
-    </p>
-  </div>
 
   <div class="feature">
-    <div>🤖</div>
-    <h3>دستیار هوش مصنوعی</h3>
+
+    <div class="icon">
+      💰
+    </div>
+
+    <h3>
+      Financial Management
+    </h3>
+
     <p>
-      در مراحل بعدی، گزارش‌ها و کارهای مدیریتی با AI انجام می‌شود.
+      Track revenue, expenses, invoices,
+      and financial reports.
     </p>
+
   </div>
+
+
+  <div class="feature">
+
+    <div class="icon">
+      👤
+    </div>
+
+    <h3>
+      Customer Management
+    </h3>
+
+    <p>
+      Manage customer information,
+      relationships, and business activity.
+    </p>
+
+  </div>
+
+
+  <div class="feature">
+
+    <div class="icon">
+      📦
+    </div>
+
+    <h3>
+      Inventory Management
+    </h3>
+
+    <p>
+      Track products, inventory levels,
+      and stock movements.
+    </p>
+
+  </div>
+
+
+  <div class="feature">
+
+    <div class="icon">
+      🤖
+    </div>
+
+    <h3>
+      AI Assistant
+    </h3>
+
+    <p>
+      Generate reports, summaries,
+      business insights, and more with AI.
+    </p>
+
+  </div>
+
 
 </section>
 
+
+<div class="footer">
+
+  © 2026 CompanyFlow. All rights reserved.
+
+</div>
+
+
 </body>
+
 </html>
