@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CompanyFlow</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7fb;
+      color: #172033;
+    }
+
+    header {
+      background: white;
+      padding: 18px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .logo {
+      color: #2563eb;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    nav a {
+      margin-right: 15px;
+      text-decoration: none;
+      color: #334155;
+      font-weight: bold;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: #2563eb;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      color: #64748b;
+      line-height: 2;
+      font-size: 18px;
+    }
+
+    .buttons {
+      margin-top: 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 25px;
+      border-radius: 10px;
+      text-decoration: none;
+      margin: 5px;
+      font-weight: bold;
+    }
+
+    .primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .secondary {
+      background: white;
+      color: #2563eb;
+      border: 1px solid #2563eb;
+    }
+
+    .features {
+      max-width: 1000px;
+      margin: auto;
+      padding: 30px 20px 70px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .feature {
+      background: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    .feature h3 {
+      margin: 12px 0;
+    }
+
+    .feature p {
+      color: #64748b;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 700px) {
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      header {
+        padding: 16px 20px;
+      }
+
+      nav a {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <div class="logo">
+    CompanyFlow
+  </div>
+
+  <nav>
+    <a href="pricing.html">قیمت‌ها</a>
+    <a href="signin.html">ورود</a>
+  </nav>
+
+</header>
+
+<section class="hero">
+
+  <h1>
+    مدیریت شرکت،
+    <span>ساده و هوشمند</span>
+  </h1>
+
+  <p>
+    CompanyFlow یک سیستم مدیریت شرکت است که به کسب‌وکارها
+    کمک می‌کند کارکنان، مشتریان، پروژه‌ها، مالی، انبار و گزارش‌ها
+    را در یک سیستم مدیریت کنند.
+  </p>
+
+  <div class="buttons">
+
+    <a href="register.html" class="btn primary">
+      شروع رایگان
+    </a>
+
+    <a href="pricing.html" class="btn secondary">
+      مشاهده پلن‌ها
+    </a>
+
+  </div>
+
+</section>
+
+<section class="features">
+
+  <div class="feature">
+    <div>👥</div>
+    <h3>مدیریت کارکنان</h3>
+    <p>
+      مدیریت کارکنان، وظایف، حضور و غیاب و مرخصی.
+    </p>
+  </div>
+
+  <div class="feature">
+    <div>📊</div>
+    <h3>مدیریت پروژه</h3>
+    <p>
+      پروژه‌ها و وظایف شرکت را در یک سیستم مدیریت کنید.
+    </p>
+  </div>
+
+  <div class="feature">
+    <div>💰</div>
+    <h3>مدیریت مالی</h3>
+    <p>
+      درآمد، هزینه، فاکتورها و گزارش‌های مالی.
+    </p>
+  </div>
+
+  <div class="feature">
+    <div>👤</div>
+    <h3>مدیریت مشتریان</h3>
+    <p>
+      اطلاعات مشتریان و ارتباطات کسب‌وکار را مدیریت کنید.
+    </p>
+  </div>
+
+  <div class="feature">
+    <div>📦</div>
+    <h3>مدیریت انبار</h3>
+    <p>
+      کالاها و موجودی انبار را مدیریت کنید.
+    </p>
+  </div>
+
+  <div class="feature">
+    <div>🤖</div>
+    <h3>دستیار هوش مصنوعی</h3>
+    <p>
+      در مراحل بعدی، گزارش‌ها و کارهای مدیریتی با AI انجام می‌شود.
+    </p>
+  </div>
+
+</section>
+
+</body>
+</html>
