@@ -1,331 +1,451 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>CompanyFlow | Business Management Platform</title>
+<title>CompanyFlow | All-in-One Business Management</title>
 
-  <style>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+body {
+    background: #f8fafc;
+    color: #0f172a;
+}
 
-    body {
-      background: #f5f7fb;
-      color: #172033;
-    }
+header {
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 18px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: 800;
+    color: #2563eb;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #334155;
+    font-weight: 600;
+}
+
+.nav-button {
+    background: #2563eb;
+    color: white !important;
+    padding: 11px 20px;
+    border-radius: 8px;
+}
+
+.hero {
+    padding: 100px 20px 80px;
+    text-align: center;
+    background: linear-gradient(135deg, #eff6ff, #ffffff);
+}
+
+.badge {
+    display: inline-block;
+    background: #dbeafe;
+    color: #1d4ed8;
+    padding: 8px 15px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 22px;
+}
+
+.hero h1 {
+    max-width: 900px;
+    margin: auto;
+    font-size: 58px;
+    line-height: 1.1;
+    font-weight: 800;
+}
+
+.hero h1 span {
+    color: #2563eb;
+}
+
+.hero p {
+    max-width: 720px;
+    margin: 25px auto;
+    color: #64748b;
+    font-size: 19px;
+    line-height: 1.8;
+}
+
+.buttons {
+    margin-top: 32px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 15px 28px;
+    margin: 6px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.primary {
+    background: #2563eb;
+    color: white;
+}
+
+.secondary {
+    background: white;
+    color: #2563eb;
+    border: 1px solid #2563eb;
+}
+
+.section {
+    padding: 80px 7%;
+}
+
+.section-title {
+    text-align: center;
+    max-width: 700px;
+    margin: auto auto 45px;
+}
+
+.section-title h2 {
+    font-size: 38px;
+    margin-bottom: 15px;
+}
+
+.section-title p {
+    color: #64748b;
+    line-height: 1.7;
+}
+
+.features {
+    max-width: 1150px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid #e5e7eb;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+.icon {
+    font-size: 35px;
+    margin-bottom: 18px;
+}
+
+.card h3 {
+    margin-bottom: 12px;
+    font-size: 20px;
+}
+
+.card p {
+    color: #64748b;
+    line-height: 1.7;
+}
+
+.cta {
+    margin: 30px auto 80px;
+    max-width: 1100px;
+    padding: 65px 30px;
+    text-align: center;
+    background: #2563eb;
+    color: white;
+    border-radius: 20px;
+}
+
+.cta h2 {
+    font-size: 38px;
+    margin-bottom: 15px;
+}
+
+.cta p {
+    margin-bottom: 25px;
+    opacity: 0.9;
+}
+
+.cta a {
+    display: inline-block;
+    background: white;
+    color: #2563eb;
+    padding: 14px 27px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer {
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+footer strong {
+    color: white;
+}
+
+@media (max-width: 800px) {
 
     header {
-      background: white;
-      padding: 18px 7%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        padding: 16px 20px;
     }
 
-    .logo {
-      color: #2563eb;
-      font-size: 24px;
-      font-weight: bold;
+    nav {
+        gap: 10px;
     }
 
-    nav a {
-      margin-left: 20px;
-      text-decoration: none;
-      color: #334155;
-      font-weight: bold;
+    nav a:not(.nav-button) {
+        display: none;
     }
 
     .hero {
-      text-align: center;
-      padding: 90px 20px;
+        padding: 70px 20px;
     }
 
     .hero h1 {
-      font-size: 48px;
-      line-height: 1.2;
-      margin-bottom: 22px;
-    }
-
-    .hero h1 span {
-      color: #2563eb;
+        font-size: 38px;
     }
 
     .hero p {
-      max-width: 700px;
-      margin: auto;
-      color: #64748b;
-      line-height: 1.8;
-      font-size: 18px;
-    }
-
-    .buttons {
-      margin-top: 32px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 14px 26px;
-      border-radius: 10px;
-      text-decoration: none;
-      margin: 5px;
-      font-weight: bold;
-    }
-
-    .primary {
-      background: #2563eb;
-      color: white;
-    }
-
-    .secondary {
-      background: white;
-      color: #2563eb;
-      border: 1px solid #2563eb;
+        font-size: 17px;
     }
 
     .features {
-      max-width: 1050px;
-      margin: auto;
-      padding: 20px 20px 80px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .feature {
-      background: white;
-      padding: 28px;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    }
-
-    .icon {
-      font-size: 30px;
-    }
-
-    .feature h3 {
-      margin: 14px 0 10px;
-    }
-
-    .feature p {
-      color: #64748b;
-      line-height: 1.7;
-    }
-
-    .footer {
-      text-align: center;
-      padding: 30px;
-      background: white;
-      color: #64748b;
-    }
-
-    @media (max-width: 700px) {
-
-      .features {
         grid-template-columns: 1fr;
-      }
-
-      .hero h1 {
-        font-size: 34px;
-      }
-
-      header {
-        padding: 16px 20px;
-      }
-
-      nav a {
-        margin-left: 8px;
-        font-size: 13px;
-      }
-
     }
 
-  </style>
+    .section-title h2 {
+        font-size: 30px;
+    }
 
+    .cta h2 {
+        font-size: 30px;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
-
 <header>
 
-  <div class="logo">
-    CompanyFlow
-  </div>
+    <div class="logo">
+        CompanyFlow
+    </div>
 
-  <nav>
-
-    <a href="pricing.html">
-      Pricing
-    </a>
-
-    <a href="signin.html">
-      Sign In
-    </a>
-
-  </nav>
+    <nav>
+        <a href="pricing.html">Pricing</a>
+        <a href="signin.html">Sign In</a>
+        <a href="register.html" class="nav-button">Get Started</a>
+    </nav>
 
 </header>
 
 
 <section class="hero">
 
-  <h1>
-    Run Your Business
-    <span>Smarter</span>
-  </h1>
+    <div class="badge">
+        All-in-One Business Management Platform
+    </div>
 
-  <p>
-    CompanyFlow is an all-in-one business management platform
-    designed to help companies manage employees, customers,
-    projects, finances, inventory, and reports from one place.
-  </p>
+    <h1>
+        Run Your Business
+        <span>Smarter</span>
+    </h1>
 
+    <p>
+        CompanyFlow helps growing businesses manage employees,
+        customers, projects, finances, inventory, documents,
+        and reports from one powerful platform.
+    </p>
 
-  <div class="buttons">
+    <div class="buttons">
+        <a href="register.html" class="btn primary">
+            Start Free
+        </a>
 
-    <a href="register.html" class="btn primary">
-      Start Free
-    </a>
-
-    <a href="pricing.html" class="btn secondary">
-      View Pricing
-    </a>
-
-  </div>
+        <a href="pricing.html" class="btn secondary">
+            View Pricing
+        </a>
+    </div>
 
 </section>
 
 
-<section class="features">
+<section class="section">
 
+    <div class="section-title">
 
-  <div class="feature">
+        <h2>
+            Everything Your Business Needs
+        </h2>
 
-    <div class="icon">
-      👥
+        <p>
+            Manage your company's daily operations from one
+            simple and powerful platform.
+        </p>
+
     </div>
 
-    <h3>
-      Employee Management
-    </h3>
 
-    <p>
-      Manage employees, tasks, attendance,
-      leave requests, and performance.
-    </p>
+    <div class="features">
 
-  </div>
+        <div class="card">
+
+            <div class="icon">👥</div>
+
+            <h3>
+                Employee Management
+            </h3>
+
+            <p>
+                Manage employees, attendance, leave requests,
+                tasks, salaries, and performance.
+            </p>
+
+        </div>
 
 
-  <div class="feature">
+        <div class="card">
 
-    <div class="icon">
-      📊
+            <div class="icon">📊</div>
+
+            <h3>
+                Project Management
+            </h3>
+
+            <p>
+                Create projects, assign tasks, track progress,
+                and manage deadlines.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">💰</div>
+
+            <h3>
+                Finance
+            </h3>
+
+            <p>
+                Track income, expenses, invoices, payments,
+                and financial reports.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">🤝</div>
+
+            <h3>
+                CRM & Customers
+            </h3>
+
+            <p>
+                Organize customer information and manage
+                business relationships efficiently.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">📦</div>
+
+            <h3>
+                Inventory
+            </h3>
+
+            <p>
+                Track products, stock levels, inventory
+                movements, and business assets.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">🤖</div>
+
+            <h3>
+                AI Assistant
+            </h3>
+
+            <p>
+                Generate summaries, reports, business insights,
+                and professional content with AI.
+            </p>
+
+        </div>
+
     </div>
-
-    <h3>
-      Project Management
-    </h3>
-
-    <p>
-      Organize projects, assign tasks,
-      track progress, and manage deadlines.
-    </p>
-
-  </div>
-
-
-  <div class="feature">
-
-    <div class="icon">
-      💰
-    </div>
-
-    <h3>
-      Financial Management
-    </h3>
-
-    <p>
-      Track revenue, expenses, invoices,
-      and financial reports.
-    </p>
-
-  </div>
-
-
-  <div class="feature">
-
-    <div class="icon">
-      👤
-    </div>
-
-    <h3>
-      Customer Management
-    </h3>
-
-    <p>
-      Manage customer information,
-      relationships, and business activity.
-    </p>
-
-  </div>
-
-
-  <div class="feature">
-
-    <div class="icon">
-      📦
-    </div>
-
-    <h3>
-      Inventory Management
-    </h3>
-
-    <p>
-      Track products, inventory levels,
-      and stock movements.
-    </p>
-
-  </div>
-
-
-  <div class="feature">
-
-    <div class="icon">
-      🤖
-    </div>
-
-    <h3>
-      AI Assistant
-    </h3>
-
-    <p>
-      Generate reports, summaries,
-      business insights, and more with AI.
-    </p>
-
-  </div>
-
 
 </section>
 
 
-<div class="footer">
+<section class="cta">
 
-  © 2026 CompanyFlow. All rights reserved.
+    <h2>
+        Ready to Manage Your Business Better?
+    </h2>
 
-</div>
+    <p>
+        Start with CompanyFlow and bring your business
+        operations together in one place.
+    </p>
 
+    <a href="register.html">
+        Create Your Account
+    </a>
+
+</section>
+
+
+<footer>
+
+    <p>
+        © 2026 <strong>CompanyFlow</strong>.
+        All rights reserved.
+    </p>
+
+</footer>
 
 </body>
-
 </html>
