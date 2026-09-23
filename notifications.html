@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications - CompanyFlow</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7fb;
+      color: #172033;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 240px;
+      height: 100vh;
+      background: #111827;
+      color: white;
+      padding: 25px 15px;
+      overflow-y: auto;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+      margin-bottom: 35px;
+      padding-left: 10px;
+    }
+
+    .logo span {
+      color: #4f8cff;
+    }
+
+    .nav a {
+      display: block;
+      color: #cbd5e1;
+      text-decoration: none;
+      padding: 13px 15px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .main {
+      margin-left: 240px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 75px;
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+    }
+
+    .topbar h1 {
+      font-size: 24px;
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #2563eb;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .content {
+      padding: 30px;
+      max-width: 1100px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 25px;
+      gap: 15px;
+    }
+
+    .page-header h2 {
+      font-size: 26px;
+      margin-bottom: 6px;
+    }
+
+    .page-header p {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-weight: bold;
+    }
+
+    .primary-btn {
+      background: #2563eb;
+      color: white;
+    }
+
+    .primary-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .secondary-btn {
+      background: #e5e7eb;
+      color: #334155;
+    }
+
+    .secondary-btn:hover {
+      background: #dbe1e8;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .stat-card p {
+      color: #64748b;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .stat-card h3 {
+      font-size: 27px;
+    }
+
+    .notification-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .notification {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+      transition: 0.2s;
+    }
+
+    .notification:hover {
+      border-color: #cbd5e1;
+    }
+
+    .notification.unread {
+      border-left: 4px solid #2563eb;
+      background: #f8fbff;
+    }
+
+    .notification-icon {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      border-radius: 10px;
+      background: #eff6ff;
+      color: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .notification-body {
+      flex: 1;
+    }
+
+    .notification-body h3 {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .notification-body p {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .notification-time {
+      color: #94a3b8;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .notification-actions {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      padding: 8px 10px;
+      font-size: 11px;
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    .small-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .delete-btn {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .delete-btn:hover {
+      background: #fecaca;
+    }
+
+    .empty {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 50px 20px;
+      text-align: center;
+      color: #64748b;
+    }
+
+    .empty-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 800px) {
+      .sidebar {
+        width: 190px;
+      }
+
+      .main {
+        margin-left: 190px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .topbar {
+        padding: 0 15px;
+      }
+
+      .content {
+        padding: 18px;
+      }
+
+      .notification {
+        flex-direction: column;
+      }
+
+      .notification-actions {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .nav {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar h1 {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <aside class="sidebar">
+
+    <div class="logo">
+      Company<span>Flow</span>
+    </div>
+
+    <nav class="nav">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="employees.html">Employees</a>
+      <a href="customers.html">Customers</a>
+      <a href="projects.html">Projects</a>
+      <a href="tasks.html">Tasks</a>
+      <a href="finance.html">Finance</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="documents.html">Documents</a>
+      <a href="reports.html">Reports</a>
+      <a href="notifications.html" class="active">Notifications</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <h1>Notifications</h1>
+
+      <div class="user">
+        <span id="ownerName">Owner</span>
+        <div class="avatar" id="avatar">O</div>
+      </div>
+
+    </header>
+
+
+    <section class="content">
+
+      <div class="page-header">
+
+        <div>
+          <h2>Notifications Center</h2>
+          <p>
+            Stay updated with important company activities.
+          </p>
+        </div>
+
+        <div class="actions">
+
+          <button
+            class="secondary-btn"
+            onclick="markAllRead()"
+          >
+            Mark All Read
+          </button>
+
+          <button
+            class="primary-btn"
+            onclick="clearAll()"
+          >
+            Clear All
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="stats">
+
+        <div class="stat-card">
+          <p>Total Notifications</p>
+          <h3 id="totalCount">0</h3>
+        </div>
+
+        <div class="stat-card">
+          <p>Unread</p>
+          <h3 id="unreadCount">0</h3>
+        </div>
+
+        <div class="stat-card">
+          <p>Read</p>
+          <h3 id="readCount">0</h3>
+        </div>
+
+      </div>
+
+
+      <div id="notificationList"></div>
+
+    </section>
+
+  </main>
+
+
+  <script>
+
+    const owner =
+      localStorage.getItem("ownerName") || "Owner";
+
+    document.getElementById("ownerName").textContent =
+      owner;
+
+    document.getElementById("avatar").textContent =
+      owner.charAt(0).toUpperCase();
+
+
+    let notifications = JSON.parse(
+      localStorage.getItem("notifications") || "[]"
+    );
+
+
+    function saveNotifications() {
+
+      localStorage.setItem(
+        "notifications",
+        JSON.stringify(notifications)
+      );
+
+    }
+
+
+    function createNotification(
+      title,
+      message,
+      icon
+    ) {
+
+      notifications.unshift({
+
+        id: Date.now(),
+
+        title: title,
+
+        message: message,
+
+        icon: icon,
+
+        read: false,
+
+        createdAt: new Date().toISOString()
+
+      });
+
+      saveNotifications();
+
+      renderNotifications();
+
+    }
+
+
+    function renderNotifications() {
+
+      const list =
+        document.getElementById("notificationList");
+
+      list.innerHTML = "";
+
+
+      if (notifications.length === 0) {
+
+        list.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">🔔</div>
+            <h3>No notifications</h3>
+            <p>You are all caught up.</p>
+          </div>
+        `;
+
+        updateStats();
+
+        return;
+
+      }
+
+
+      notifications.forEach(notification => {
+
+        const item =
+          document.createElement("div");
+
+        item.className =
+          "notification" +
+          (notification.read ? "" : " unread");
+
+
+        item.innerHTML = `
+
+          <div class="notification-icon">
+            ${escapeHtml(notification.icon || "🔔")}
+          </div>
+
+          <div class="notification-body">
+
+            <h3>
+              ${escapeHtml(notification.title)}
+            </h3>
+
+            <p>
+              ${escapeHtml(notification.message)}
+            </p>
+
+            <div class="notification-time">
+              ${formatTime(notification.createdAt)}
+            </div>
+
+          </div>
+
+          <div class="notification-actions">
+
+            ${
+              notification.read
+              ? ""
+              : `
+                <button
+                  class="small-btn"
+                  onclick="markRead(${notification.id})"
+                >
+                  Mark Read
+                </button>
+              `
+            }
+
+            <button
+              class="small-btn delete-btn"
+              onclick="deleteNotification(${notification.id})"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        `;
+
+        list.appendChild(item);
+
+      });
+
+
+      updateStats();
+
+    }
+
+
+    function updateStats() {
+
+      const total =
+        notifications.length;
+
+      const unread =
+        notifications.filter(
+          item => !item.read
+        ).length;
+
+      const read =
+        total - unread;
+
+      document.getElementById("totalCount")
+        .textContent = total;
+
+      document.getElementById("unreadCount")
+        .textContent = unread;
+
+      document.getElementById("readCount")
+        .textContent = read;
+
+    }
+
+
+    function markRead(id) {
+
+      notifications =
+        notifications.map(item => {
+
+          if (item.id === id) {
+            return {
+              ...item,
+              read: true
+            };
+          }
+
+          return item;
+
+        });
+
+      saveNotifications();
+
+      renderNotifications();
+
+    }
+
+
+    function markAllRead() {
+
+      notifications =
+        notifications.map(item => ({
+          ...item,
+          read: true
+        }));
+
+      saveNotifications();
+
+      renderNotifications();
+
+    }
+
+
+    function deleteNotification(id) {
+
+      notifications =
+        notifications.filter(
+          item => item.id !== id
+        );
+
+      saveNotifications();
+
+      renderNotifications();
+
+    }
+
+
+    function clearAll() {
+
+      if (notifications.length === 0) {
+        return;
+      }
+
+      if (!confirm("Clear all notifications?")) {
+        return;
+      }
+
+      notifications = [];
+
+      saveNotifications();
+
+      renderNotifications();
+
+    }
+
+
+    function formatTime(dateString) {
+
+      if (!dateString) {
+        return "";
+      }
+
+      const date =
+        new Date(dateString);
+
+      if (isNaN(date.getTime())) {
+        return "";
+      }
+
+      return date.toLocaleString(
+        "en-US",
+        {
+          dateStyle: "medium",
+          timeStyle: "short"
+        }
+      );
+
+    }
+
+
+    function escapeHtml(value) {
+
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    /*
+      Create a few useful notifications automatically
+      when the company has relevant data.
+    */
+
+    function generateAutomaticNotifications() {
+
+      const generatedKey =
+        "companyflow_auto_notifications";
+
+      const alreadyGenerated =
+        localStorage.getItem(generatedKey);
+
+      if (alreadyGenerated) {
+        return;
+      }
+
+
+      const tasks =
+        JSON.parse(
+          localStorage.getItem("tasks") || "[]"
+        );
+
+
+      const products =
+        JSON.parse(
+          localStorage.getItem("products") || "[]"
+        );
+
+
+      const employees =
+        JSON.parse(
+          localStorage.getItem("employees") || "[]"
+        );
+
+
+      if (tasks.length > 0) {
+
+        createNotification(
+          "Task Management",
+          `You currently have ${tasks.length} task(s) in your workspace.`,
+          "✅"
+        );
+
+      }
+
+
+      if (products.length > 0) {
+
+        const lowStock =
+          products.filter(item => {
+
+            const stock =
+              Number(item.stock) || 0;
+
+            const minimum =
+              Number(
+                item.lowStockAlert ||
+                item.lowStock ||
+                0
+              );
+
+            return stock <= minimum;
+
+          });
+
+        if (lowStock.length > 0) {
+
+          createNotification(
+            "Low Stock Alert",
+            `${lowStock.length} product(s) may need restocking.`,
+            "📦"
+          );
+
+        }
+
+      }
+
+
+      if (employees.length > 0) {
+
+        createNotification(
+          "Employee Management",
+          `Your company currently has ${employees.length} employee record(s).`,
+          "👥"
+        );
+
+      }
+
+
+      localStorage.setItem(
+        generatedKey,
+        "true"
+      );
+
+    }
+
+
+    generateAutomaticNotifications();
+
+    renderNotifications();
+
+  </script>
+
+</body>
+</html>
