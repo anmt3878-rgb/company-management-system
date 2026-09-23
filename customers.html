@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Customers | CompanyFlow</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+header {
+    background: #0f172a;
+    color: white;
+    padding: 18px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: #60a5fa;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.back {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+h1 {
+    font-size: 30px;
+    margin-bottom: 7px;
+}
+
+.subtitle {
+    color: #64748b;
+}
+
+.add-button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 13px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    opacity: .9;
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 22px;
+}
+
+.stat-title {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 800;
+}
+
+/* SEARCH */
+
+.toolbar {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 18px;
+}
+
+.search {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+.search:focus {
+    border-color: #2563eb;
+}
+
+/* TABLE */
+
+.table-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 12px;
+    text-align: left;
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+td {
+    padding: 16px 15px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 14px;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.customer-name {
+    font-weight: 700;
+}
+
+.customer-email {
+    color: #64748b;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.inactive {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.lead {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.action-button {
+    background: #eff6ff;
+    color: #2563eb;
+    border: none;
+    padding: 7px 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.empty {
+    text-align: center;
+    padding: 45px 20px;
+    color: #64748b;
+}
+
+/* MODAL */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, .55);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+}
+
+.modal-box {
+    background: white;
+    width: 100%;
+    max-width: 560px;
+    border-radius: 16px;
+    padding: 25px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.close {
+    background: #f1f5f9;
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.field.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+input,
+select {
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+input:focus,
+select:focus {
+    border-color: #2563eb;
+}
+
+.save-button {
+    width: 100%;
+    margin-top: 20px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    color: #64748b;
+    padding: 30px;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .add-button {
+        width: 100%;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .table-card {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 850px;
+    }
+}
+
+@media (max-width: 550px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .field.full {
+        grid-column: auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        CompanyFlow
+    </div>
+
+    <a href="dashboard.html" class="back">
+        ← Back to Dashboard
+    </a>
+
+</header>
+
+
+<div class="container">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>Customers</h1>
+
+            <p class="subtitle">
+                Manage customers, leads, and business relationships.
+            </p>
+
+        </div>
+
+        <button
+            class="add-button"
+            onclick="openModal()">
+
+            + Add Customer
+
+        </button>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Total Customers
+            </div>
+
+            <div
+                class="stat-value"
+                id="totalCustomers">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Active Customers
+            </div>
+
+            <div
+                class="stat-value"
+                id="activeCustomers">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Leads
+            </div>
+
+            <div
+                class="stat-value"
+                id="leadCustomers">
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="toolbar">
+
+        <input
+            type="text"
+            class="search"
+            id="search"
+            placeholder="Search customers by name, company, email, or phone..."
+            oninput="renderCustomers()"
+        >
+
+    </div>
+
+
+    <!-- CUSTOMERS -->
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Customer</th>
+
+                    <th>Company</th>
+
+                    <th>Phone</th>
+
+                    <th>Industry</th>
+
+                    <th>Status</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="customerList"></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- ADD CUSTOMER MODAL -->
+
+<div
+    class="modal"
+    id="customerModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>Add Customer</h2>
+
+            <button
+                class="close"
+                onclick="closeModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="form-grid">
+
+            <div class="field">
+
+                <label>Customer Name</label>
+
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="John Smith"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>Email</label>
+
+                <input
+                    type="email"
+                    id="customerEmail"
+                    placeholder="john@example.com"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>Company</label>
+
+                <input
+                    type="text"
+                    id="customerCompany"
+                    placeholder="Acme Inc."
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>Phone</label>
+
+                <input
+                    type="tel"
+                    id="customerPhone"
+                    placeholder="+1 555 000 0000"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>Industry</label>
+
+                <select id="customerIndustry">
+
+                    <option value="Technology">
+                        Technology
+                    </option>
+
+                    <option value="Finance">
+                        Finance
+                    </option>
+
+                    <option value="Healthcare">
+                        Healthcare
+                    </option>
+
+                    <option value="Real Estate">
+                        Real Estate
+                    </option>
+
+                    <option value="Retail">
+                        Retail
+                    </option>
+
+                    <option value="Manufacturing">
+                        Manufacturing
+                    </option>
+
+                    <option value="Education">
+                        Education
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>Status</label>
+
+                <select id="customerStatus">
+
+                    <option value="Active">
+                        Active
+                    </option>
+
+                    <option value="Lead">
+                        Lead
+                    </option>
+
+                    <option value="Inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field full">
+
+                <label>Notes</label>
+
+                <input
+                    type="text"
+                    id="customerNotes"
+                    placeholder="Additional customer notes"
+                >
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="save-button"
+            onclick="addCustomer()">
+
+            Add Customer
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<footer>
+    © 2026 CompanyFlow. All rights reserved.
+</footer>
+
+
+<script>
+
+function getCustomers() {
+
+    const saved =
+        localStorage.getItem("customers");
+
+    if (!saved) {
+        return [];
+    }
+
+    return JSON.parse(saved);
+
+}
+
+
+function saveCustomers(customers) {
+
+    localStorage.setItem(
+        "customers",
+        JSON.stringify(customers)
+    );
+
+}
+
+
+function renderCustomers() {
+
+    const customers =
+        getCustomers();
+
+    const search =
+        document.getElementById("search")
+        .value
+        .toLowerCase();
+
+
+    const filtered =
+        customers.filter(function(customer) {
+
+            return (
+                customer.name.toLowerCase().includes(search) ||
+                customer.email.toLowerCase().includes(search) ||
+                customer.company.toLowerCase().includes(search) ||
+                customer.phone.toLowerCase().includes(search)
+            );
+
+        });
+
+
+    const list =
+        document.getElementById("customerList");
+
+
+    if (filtered.length === 0) {
+
+        list.innerHTML = `
+            <tr>
+                <td colspan="6">
+                    <div class="empty">
+                        No customers found.
+                    </div>
+                </td>
+            </tr>
+        `;
+
+    } else {
+
+        list.innerHTML =
+            filtered.map(function(customer) {
+
+                let badgeClass = "active";
+
+                if (customer.status === "Inactive") {
+                    badgeClass = "inactive";
+                }
+
+                if (customer.status === "Lead") {
+                    badgeClass = "lead";
+                }
+
+                return `
+
+                    <tr>
+
+                        <td>
+
+                            <div class="customer-name">
+                                ${customer.name}
+                            </div>
+
+                            <div class="customer-email">
+                                ${customer.email}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            ${customer.company || "-"}
+                        </td>
+
+
+                        <td>
+                            ${customer.phone || "-"}
+                        </td>
+
+
+                        <td>
+                            ${customer.industry}
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge ${badgeClass}">
+
+                                ${customer.status}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                class="action-button"
+                                onclick="deleteCustomer(${customer.id})">
+
+                                Delete
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }).join("");
+
+    }
+
+
+    updateStats(customers);
+
+}
+
+
+function updateStats(customers) {
+
+    const total =
+        customers.length;
+
+    const active =
+        customers.filter(
+            customer => customer.status === "Active"
+        ).length;
+
+    const leads =
+        customers.filter(
+            customer => customer.status === "Lead"
+        ).length;
+
+
+    document.getElementById(
+        "totalCustomers"
+    ).textContent = total;
+
+
+    document.getElementById(
+        "activeCustomers"
+    ).textContent = active;
+
+
+    document.getElementById(
+        "leadCustomers"
+    ).textContent = leads;
+
+}
+
+
+function openModal() {
+
+    document.getElementById(
+        "customerModal"
+    ).style.display = "flex";
+
+}
+
+
+function closeModal() {
+
+    document.getElementById(
+        "customerModal"
+    ).style.display = "none";
+
+}
+
+
+function addCustomer() {
+
+    const name =
+        document.getElementById(
+            "customerName"
+        ).value.trim();
+
+    const email =
+        document.getElementById(
+            "customerEmail"
+        ).value.trim();
+
+    const company =
+        document.getElementById(
+            "customerCompany"
+        ).value.trim();
+
+    const phone =
+        document.getElementById(
+            "customerPhone"
+        ).value.trim();
+
+    const industry =
+        document.getElementById(
+            "customerIndustry"
+        ).value;
+
+    const status =
+        document.getElementById(
+            "customerStatus"
+        ).value;
+
+    const notes =
+        document.getElementById(
+            "customerNotes"
+        ).value.trim();
+
+
+    if (!name || !email) {
+
+        alert(
+            "Please enter the customer name and email."
+        );
+
+        return;
+
+    }
+
+
+    const customers =
+        getCustomers();
+
+
+    customers.push({
+
+        id: Date.now(),
+
+        name: name,
+
+        email: email,
+
+        company: company,
+
+        phone: phone,
+
+        industry: industry,
+
+        status: status,
+
+        notes: notes
+
+    });
+
+
+    saveCustomers(customers);
+
+
+    document.getElementById(
+        "customerName"
+    ).value = "";
+
+    document.getElementById(
+        "customerEmail"
+    ).value = "";
+
+    document.getElementById(
+        "customerCompany"
+    ).value = "";
+
+    document.getElementById(
+        "customerPhone"
+    ).value = "";
+
+    document.getElementById(
+        "customerNotes"
+    ).value = "";
+
+
+    closeModal();
+
+    renderCustomers();
+
+}
+
+
+function deleteCustomer(id) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this customer?"
+        );
+
+    if (!confirmed) return;
+
+
+    const customers =
+        getCustomers()
+        .filter(customer => customer.id !== id);
+
+
+    saveCustomers(customers);
+
+    renderCustomers();
+
+}
+
+
+renderCustomers();
+
+</script>
+
+</body>
+</html>
