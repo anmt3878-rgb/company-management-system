@@ -1,793 +1,1501 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard | CompanyFlow</title>
+  <title>Dashboard | CompanyFlow</title>
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-    background: #f8fafc;
-    color: #0f172a;
-}
-
-/* SIDEBAR */
-
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 245px;
-    height: 100vh;
-    background: #0f172a;
-    color: white;
-    padding: 25px 15px;
-    z-index: 100;
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: 800;
-    color: #60a5fa;
-    padding: 0 15px 30px;
-}
-
-.menu a {
-    display: block;
-    padding: 13px 15px;
-    margin-bottom: 5px;
-    color: #cbd5e1;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 14px;
-}
-
-.menu a:hover,
-.menu a.active {
-    background: #1e293b;
-    color: white;
-}
-
-/* MAIN */
-
-.main {
-    margin-left: 245px;
-    min-height: 100vh;
-}
-
-/* TOPBAR */
-
-.topbar {
-    height: 75px;
-    background: white;
-    border-bottom: 1px solid #e2e8f0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 30px;
-}
-
-.topbar h1 {
-    font-size: 23px;
-}
-
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.avatar {
-    width: 40px;
-    height: 40px;
-    background: #2563eb;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-}
-
-/* CONTENT */
-
-.content {
-    padding: 30px;
-}
-
-.welcome {
-    margin-bottom: 25px;
-}
-
-.welcome h2 {
-    font-size: 26px;
-    margin-bottom: 7px;
-}
-
-.welcome p {
-    color: #64748b;
-}
-
-/* STATS */
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-    margin-bottom: 25px;
-}
-
-.stat {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 22px;
-}
-
-.stat-title {
-    color: #64748b;
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-.stat-value {
-    font-size: 28px;
-    font-weight: 800;
-}
-
-.stat-change {
-    margin-top: 8px;
-    color: #16a34a;
-    font-size: 13px;
-}
-
-/* GRID */
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
-}
-
-.card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 24px;
-    margin-bottom: 20px;
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.card-header h3 {
-    font-size: 18px;
-}
-
-.view {
-    color: #2563eb;
-    text-decoration: none;
-    font-size: 13px;
-}
-
-/* TASKS */
-
-.task {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 0;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.task:last-child {
-    border-bottom: none;
-}
-
-.task-info h4 {
-    font-size: 14px;
-    margin-bottom: 5px;
-}
-
-.task-info p {
-    color: #64748b;
-    font-size: 12px;
-}
-
-.status {
-    padding: 6px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: bold;
-}
-
-.completed {
-    background: #dcfce7;
-    color: #15803d;
-}
-
-.progress {
-    background: #dbeafe;
-    color: #1d4ed8;
-}
-
-.pending {
-    background: #fef3c7;
-    color: #b45309;
-}
-
-/* REVENUE */
-
-.amount {
-    font-size: 30px;
-    font-weight: 800;
-    margin-bottom: 8px;
-}
-
-.muted {
-    color: #64748b;
-    font-size: 13px;
-}
-
-/* PLAN */
-
-.plan {
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-}
-
-.plan-name {
-    color: #2563eb;
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 7px;
-}
-
-.plan-price {
-    font-size: 28px;
-    font-weight: 800;
-    margin-bottom: 15px;
-}
-
-.plan a {
-    display: inline-block;
-    background: #2563eb;
-    color: white;
-    text-decoration: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    font-size: 13px;
-}
-
-/* QUICK ACTIONS */
-
-.quick-actions {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-
-.quick-actions a {
-    padding: 13px;
-    border: 1px solid #e2e8f0;
-    border-radius: 9px;
-    text-decoration: none;
-    color: #334155;
-    font-size: 13px;
-    text-align: center;
-}
-
-.quick-actions a:hover {
-    border-color: #2563eb;
-    color: #2563eb;
-}
-
-/* MOBILE */
-
-@media (max-width: 1000px) {
-
-    .stats {
-        grid-template-columns: repeat(2, 1fr);
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
-    .dashboard-grid {
-        grid-template-columns: 1fr;
+    body {
+      background: #f5f7fb;
+      color: #172033;
     }
-}
 
-@media (max-width: 700px) {
+    a {
+      text-decoration: none;
+    }
+
+    /* SIDEBAR */
 
     .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+
+      width: 245px;
+
+      background: #111827;
+      color: white;
+
+      padding: 22px 14px;
+
+      overflow-y: auto;
     }
+
+    .brand {
+      padding: 0 12px 25px;
+
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .brand span {
+      color: #60a5fa;
+    }
+
+    .menu-title {
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 700;
+
+      text-transform: uppercase;
+
+      padding: 0 12px;
+      margin: 15px 0 8px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+
+      padding: 11px 12px;
+      margin-bottom: 4px;
+
+      border-radius: 8px;
+
+      color: #cbd5e1;
+
+      font-size: 13px;
+      font-weight: 600;
+
+      transition: 0.2s;
+    }
+
+    .nav-link:hover {
+      background: #1f2937;
+      color: white;
+    }
+
+    .nav-link.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .logout {
+      margin-top: 20px;
+      border-top: 1px solid #293548;
+      padding-top: 18px;
+    }
+
+    /* MAIN */
 
     .main {
-        margin-left: 0;
+      margin-left: 245px;
+      min-height: 100vh;
     }
 
-    .menu {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 5px;
-    }
-
-    .menu a {
-        margin: 0;
-    }
+    /* TOPBAR */
 
     .topbar {
-        padding: 0 18px;
+      height: 72px;
+
+      background: white;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 28px;
     }
+
+    .topbar-left h1 {
+      font-size: 21px;
+    }
+
+    .topbar-left p {
+      color: #64748b;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+
+      border-radius: 50%;
+
+      background: #2563eb;
+      color: white;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .profile-info strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .profile-info span {
+      display: block;
+      color: #64748b;
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    /* CONTENT */
 
     .content {
-        padding: 18px;
+      padding: 28px;
+      max-width: 1400px;
     }
+
+    .welcome {
+      margin-bottom: 25px;
+    }
+
+    .welcome h2 {
+      font-size: 25px;
+      margin-bottom: 5px;
+    }
+
+    .welcome p {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    /* STATS */
 
     .stats {
-        grid-template-columns: 1fr;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
     }
 
-    .topbar h1 {
-        font-size: 18px;
+    .stat-card {
+      background: white;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 12px;
+
+      padding: 21px;
     }
-}
-</style>
+
+    .stat-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 15px;
+    }
+
+    .stat-title {
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .stat-icon {
+      width: 35px;
+      height: 35px;
+
+      border-radius: 8px;
+
+      background: #eff6ff;
+      color: #2563eb;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 17px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .stat-change {
+      color: #16a34a;
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    /* GRID */
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: white;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 12px;
+
+      padding: 22px;
+
+      margin-bottom: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 18px;
+    }
+
+    .panel-header h3 {
+      font-size: 17px;
+    }
+
+    .panel-link {
+      color: #2563eb;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* TASKS */
+
+    .task {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 15px;
+
+      padding: 14px 0;
+
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .task:last-child {
+      border-bottom: none;
+    }
+
+    .task-info strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .task-info span {
+      color: #64748b;
+      font-size: 11px;
+    }
+
+    .badge {
+      display: inline-block;
+
+      padding: 5px 9px;
+
+      border-radius: 20px;
+
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .badge-blue {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .badge-green {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-orange {
+      background: #ffedd5;
+      color: #c2410c;
+    }
+
+    /* FINANCE */
+
+    .finance-row {
+      display: flex;
+      justify-content: space-between;
+
+      padding: 14px 0;
+
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .finance-row:last-child {
+      border-bottom: none;
+    }
+
+    .finance-label {
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .finance-value {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .income {
+      color: #16a34a;
+    }
+
+    .expense {
+      color: #dc2626;
+    }
+
+    .profit {
+      color: #2563eb;
+    }
+
+    /* PLAN */
+
+    .plan-card {
+      background: linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+      );
+
+      color: white;
+
+      border-radius: 12px;
+
+      padding: 23px;
+
+      margin-bottom: 20px;
+    }
+
+    .plan-card small {
+      color: #dbeafe;
+      font-size: 11px;
+    }
+
+    .plan-card h3 {
+      font-size: 21px;
+      margin: 5px 0;
+    }
+
+    .plan-card p {
+      color: #dbeafe;
+      font-size: 12px;
+    }
+
+    .plan-button {
+      display: inline-block;
+
+      margin-top: 15px;
+
+      background: white;
+      color: #2563eb;
+
+      padding: 9px 14px;
+
+      border-radius: 7px;
+
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* QUICK ACTIONS */
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .quick-action {
+      display: block;
+
+      background: #f8fafc;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 8px;
+
+      padding: 13px;
+
+      color: #334155;
+
+      font-size: 11px;
+      font-weight: 700;
+
+      text-align: center;
+
+      transition: 0.2s;
+    }
+
+    .quick-action:hover {
+      border-color: #2563eb;
+      color: #2563eb;
+    }
+
+    /* ACTIVITY */
+
+    .activity {
+      display: flex;
+      gap: 11px;
+
+      padding: 12px 0;
+
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .activity:last-child {
+      border-bottom: none;
+    }
+
+    .activity-icon {
+      width: 31px;
+      height: 31px;
+
+      flex-shrink: 0;
+
+      border-radius: 50%;
+
+      background: #eff6ff;
+      color: #2563eb;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 13px;
+    }
+
+    .activity-text strong {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+
+    .activity-text span {
+      color: #94a3b8;
+      font-size: 10px;
+    }
+
+    /* MOBILE HEADER */
+
+    .mobile-menu {
+      display: none;
+      border: none;
+      background: none;
+      font-size: 23px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1050px) {
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 750px) {
+
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .topbar {
+        padding: 0 17px;
+      }
+
+      .content {
+        padding: 20px 15px;
+      }
+
+      .profile-info {
+        display: none;
+      }
+
+      .welcome h2 {
+        font-size: 22px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 11px;
+      }
+
+      .stat-card {
+        padding: 16px;
+      }
+
+      .stat-value {
+        font-size: 22px;
+      }
+    }
+
+    @media (max-width: 480px) {
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar-left h1 {
+        font-size: 18px;
+      }
+
+      .topbar-left p {
+        display: none;
+      }
+
+      .quick-actions {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+  </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
+  <!-- SIDEBAR -->
 
-<aside class="sidebar">
+  <aside class="sidebar">
 
-    <div class="logo">
-        CompanyFlow
+    <div class="brand">
+      Company<span>Flow</span>
     </div>
 
-    <div class="menu">
 
-        <a href="dashboard.html" class="active">
-            📊 Dashboard
-        </a>
-
-        <a href="#">
-            👥 Employees
-        </a>
-
-        <a href="#">
-            🤝 Customers
-        </a>
-
-        <a href="#">
-            📁 Projects
-        </a>
-
-        <a href="#">
-            ✅ Tasks
-        </a>
-
-        <a href="#">
-            💰 Finance
-        </a>
-
-        <a href="#">
-            📦 Inventory
-        </a>
-
-        <a href="#">
-            📄 Documents
-        </a>
-
-        <a href="#">
-            📈 Reports
-        </a>
-
-        <a href="#">
-            ⚙️ Settings
-        </a>
-
+    <div class="menu-title">
+      Main
     </div>
 
-</aside>
+    <a
+      href="dashboard.html"
+      class="nav-link active"
+    >
+      📊
+      Dashboard
+    </a>
+
+    <a
+      href="employees.html"
+      class="nav-link"
+    >
+      👥
+      Employees
+    </a>
+
+    <a
+      href="customers.html"
+      class="nav-link"
+    >
+      🤝
+      Customers
+    </a>
+
+    <a
+      href="projects.html"
+      class="nav-link"
+    >
+      📁
+      Projects
+    </a>
+
+    <a
+      href="tasks.html"
+      class="nav-link"
+    >
+      ✅
+      Tasks
+    </a>
 
 
-<!-- MAIN -->
+    <div class="menu-title">
+      Business
+    </div>
 
-<main class="main">
+    <a
+      href="finance.html"
+      class="nav-link"
+    >
+      💰
+      Finance
+    </a>
+
+    <a
+      href="inventory.html"
+      class="nav-link"
+    >
+      📦
+      Inventory
+    </a>
+
+    <a
+      href="documents.html"
+      class="nav-link"
+    >
+      📄
+      Documents
+    </a>
+
+    <a
+      href="reports.html"
+      class="nav-link"
+    >
+      📈
+      Reports
+    </a>
+
+
+    <div class="menu-title">
+      Account
+    </div>
+
+    <a
+      href="settings.html"
+      class="nav-link"
+    >
+      ⚙️
+      Settings
+    </a>
+
+    <a
+      href="index.html"
+      class="nav-link logout"
+    >
+      🚪
+      Back to Homepage
+    </a>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+
+    <!-- TOPBAR -->
 
     <header class="topbar">
 
-        <h1>Dashboard</h1>
+      <div class="topbar-left">
 
-        <div class="profile">
+        <button
+          class="mobile-menu"
+          onclick="toggleMobileMenu()"
+        >
+          ☰
+        </button>
 
-            <div>
-                <strong id="ownerName">
-                    Business Owner
-                </strong>
+        <h1>
+          Dashboard
+        </h1>
 
-                <div style="font-size:12px;color:#64748b;">
-                    Administrator
-                </div>
-            </div>
+        <p>
+          Business overview
+        </p>
 
-            <div class="avatar">
-                <span id="avatarLetter">B</span>
-            </div>
+      </div>
+
+
+      <div class="profile">
+
+        <div class="avatar" id="avatar">
+          U
+        </div>
+
+        <div class="profile-info">
+
+          <strong id="ownerName">
+            Business Owner
+          </strong>
+
+          <span id="companyName">
+            Your Company
+          </span>
 
         </div>
+
+      </div>
 
     </header>
 
 
-    <section class="content">
+    <!-- CONTENT -->
 
-        <div class="welcome">
+    <div class="content">
 
-            <h2>
-                Welcome back 👋
-            </h2>
 
-            <p>
-                Here's what's happening with your business today.
+      <div class="welcome">
+
+        <h2 id="welcomeTitle">
+          Welcome back!
+        </h2>
+
+        <p>
+          Here's what's happening with your business today.
+        </p>
+
+      </div>
+
+
+      <!-- STATS -->
+
+      <section class="stats">
+
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+
+            <span class="stat-title">
+              Total Employees
+            </span>
+
+            <div class="stat-icon">
+              👥
+            </div>
+
+          </div>
+
+          <div
+            class="stat-value"
+            id="employeeCount"
+          >
+            0
+          </div>
+
+          <div class="stat-change">
+            Active workforce
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+
+            <span class="stat-title">
+              Customers
+            </span>
+
+            <div class="stat-icon">
+              🤝
+            </div>
+
+          </div>
+
+          <div
+            class="stat-value"
+            id="customerCount"
+          >
+            0
+          </div>
+
+          <div class="stat-change">
+            Customer records
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+
+            <span class="stat-title">
+              Active Projects
+            </span>
+
+            <div class="stat-icon">
+              📁
+            </div>
+
+          </div>
+
+          <div
+            class="stat-value"
+            id="projectCount"
+          >
+            0
+          </div>
+
+          <div class="stat-change">
+            Current projects
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+
+            <span class="stat-title">
+              Net Revenue
+            </span>
+
+            <div class="stat-icon">
+              💰
+            </div>
+
+          </div>
+
+          <div
+            class="stat-value"
+            id="revenueCount"
+          >
+            $0
+          </div>
+
+          <div class="stat-change">
+            Based on transactions
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- MAIN GRID -->
+
+      <div class="dashboard-grid">
+
+
+        <!-- LEFT -->
+
+        <div>
+
+
+          <!-- TASKS -->
+
+          <div class="panel">
+
+            <div class="panel-header">
+
+              <h3>
+                Recent Tasks
+              </h3>
+
+              <a
+                href="tasks.html"
+                class="panel-link"
+              >
+                View All
+              </a>
+
+            </div>
+
+
+            <div id="tasksList">
+
+              <div class="task">
+
+                <div class="task-info">
+
+                  <strong>
+                    No tasks added yet
+                  </strong>
+
+                  <span>
+                    Create your first task from the Tasks page.
+                  </span>
+
+                </div>
+
+                <span class="badge badge-blue">
+                  Ready
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- FINANCE -->
+
+          <div class="panel">
+
+            <div class="panel-header">
+
+              <h3>
+                Financial Overview
+              </h3>
+
+              <a
+                href="finance.html"
+                class="panel-link"
+              >
+                Manage Finance
+              </a>
+
+            </div>
+
+
+            <div class="finance-row">
+
+              <span class="finance-label">
+                Total Income
+              </span>
+
+              <span
+                class="finance-value income"
+                id="incomeValue"
+              >
+                $0
+              </span>
+
+            </div>
+
+
+            <div class="finance-row">
+
+              <span class="finance-label">
+                Total Expenses
+              </span>
+
+              <span
+                class="finance-value expense"
+                id="expenseValue"
+              >
+                $0
+              </span>
+
+            </div>
+
+
+            <div class="finance-row">
+
+              <span class="finance-label">
+                Net Profit
+              </span>
+
+              <span
+                class="finance-value profit"
+                id="profitValue"
+              >
+                $0
+              </span>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+        <!-- RIGHT -->
+
+        <div>
+
+
+          <!-- PLAN -->
+
+          <div class="plan-card">
+
+            <small>
+              CURRENT PLAN
+            </small>
+
+            <h3 id="planName">
+              Free Plan
+            </h3>
+
+            <p id="planPrice">
+              $0 / month
             </p>
 
-        </div>
+            <a
+              href="pricing.html"
+              class="plan-button"
+            >
+              Manage Plan
+            </a>
+
+          </div>
 
 
-        <!-- STATS -->
+          <!-- QUICK ACTIONS -->
 
-        <div class="stats">
+          <div class="panel">
 
-            <div class="stat">
+            <div class="panel-header">
 
-                <div class="stat-title">
-                    Total Employees
-                </div>
-
-                <div class="stat-value">
-                    24
-                </div>
-
-                <div class="stat-change">
-                    +2 this month
-                </div>
-
-            </div>
-
-
-            <div class="stat">
-
-                <div class="stat-title">
-                    Customers
-                </div>
-
-                <div class="stat-value">
-                    128
-                </div>
-
-                <div class="stat-change">
-                    +12 this month
-                </div>
+              <h3>
+                Quick Actions
+              </h3>
 
             </div>
 
 
-            <div class="stat">
+            <div class="quick-actions">
 
-                <div class="stat-title">
-                    Active Projects
-                </div>
+              <a
+                href="employees.html"
+                class="quick-action"
+              >
+                + Employee
+              </a>
 
-                <div class="stat-value">
-                    12
-                </div>
+              <a
+                href="customers.html"
+                class="quick-action"
+              >
+                + Customer
+              </a>
 
-                <div class="stat-change">
-                    +3 this month
-                </div>
+              <a
+                href="projects.html"
+                class="quick-action"
+              >
+                + Project
+              </a>
+
+              <a
+                href="tasks.html"
+                class="quick-action"
+              >
+                + Task
+              </a>
+
+              <a
+                href="finance.html"
+                class="quick-action"
+              >
+                + Transaction
+              </a>
+
+              <a
+                href="inventory.html"
+                class="quick-action"
+              >
+                + Product
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <!-- ACTIVITY -->
+
+          <div class="panel">
+
+            <div class="panel-header">
+
+              <h3>
+                Recent Activity
+              </h3>
 
             </div>
 
 
-            <div class="stat">
+            <div id="activityList">
 
-                <div class="stat-title">
-                    Monthly Revenue
+              <div class="activity">
+
+                <div class="activity-icon">
+                  ✓
                 </div>
 
-                <div class="stat-value">
-                    $8,450
+                <div class="activity-text">
+
+                  <strong>
+                    Dashboard ready
+                  </strong>
+
+                  <span>
+                    Your workspace is ready to use.
+                  </span>
+
                 </div>
 
-                <div class="stat-change">
-                    +8.4% this month
+              </div>
+
+
+              <div class="activity">
+
+                <div class="activity-icon">
+                  🚀
                 </div>
+
+                <div class="activity-text">
+
+                  <strong>
+                    Welcome to CompanyFlow
+                  </strong>
+
+                  <span>
+                    Start by adding your business data.
+                  </span>
+
+                </div>
+
+              </div>
 
             </div>
 
-        </div>
-
-
-        <div class="dashboard-grid">
-
-
-            <!-- LEFT -->
-
-            <div>
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h3>
-                            Recent Tasks
-                        </h3>
-
-                        <a href="#" class="view">
-                            View All
-                        </a>
-
-                    </div>
-
-
-                    <div class="task">
-
-                        <div class="task-info">
-
-                            <h4>
-                                Prepare monthly financial report
-                            </h4>
-
-                            <p>
-                                Finance Team · Today
-                            </p>
-
-                        </div>
-
-                        <span class="status progress">
-                            In Progress
-                        </span>
-
-                    </div>
-
-
-                    <div class="task">
-
-                        <div class="task-info">
-
-                            <h4>
-                                Contact new customer
-                            </h4>
-
-                            <p>
-                                Sales Team · Today
-                            </p>
-
-                        </div>
-
-                        <span class="status pending">
-                            Pending
-                        </span>
-
-                    </div>
-
-
-                    <div class="task">
-
-                        <div class="task-info">
-
-                            <h4>
-                                Update employee records
-                            </h4>
-
-                            <p>
-                                HR Team · Yesterday
-                            </p>
-
-                        </div>
-
-                        <span class="status completed">
-                            Completed
-                        </span>
-
-                    </div>
-
-
-                    <div class="task">
-
-                        <div class="task-info">
-
-                            <h4>
-                                Review project deadline
-                            </h4>
-
-                            <p>
-                                Management · Yesterday
-                            </p>
-
-                        </div>
-
-                        <span class="status completed">
-                            Completed
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <!-- REVENUE -->
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h3>
-                            Financial Overview
-                        </h3>
-
-                        <a href="#" class="view">
-                            View Reports
-                        </a>
-
-                    </div>
-
-                    <div class="amount">
-                        $8,450
-                    </div>
-
-                    <div class="muted">
-                        Revenue this month
-                    </div>
-
-                    <br>
-
-                    <div class="amount">
-                        $3,120
-                    </div>
-
-                    <div class="muted">
-                        Expenses this month
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- RIGHT -->
-
-            <div>
-
-
-                <!-- PLAN -->
-
-                <div class="card plan">
-
-                    <div class="plan-name">
-                        Business Plan
-                    </div>
-
-                    <div class="plan-price">
-                        $49<span style="font-size:14px;">/month</span>
-                    </div>
-
-                    <p class="muted">
-                        Your current subscription plan.
-                    </p>
-
-                    <br>
-
-                    <a href="pricing.html">
-                        Manage Plan
-                    </a>
-
-                </div>
-
-
-                <!-- QUICK ACTIONS -->
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h3>
-                            Quick Actions
-                        </h3>
-
-                    </div>
-
-                    <div class="quick-actions">
-
-                        <a href="#">
-                            + Employee
-                        </a>
-
-                        <a href="#">
-                            + Customer
-                        </a>
-
-                        <a href="#">
-                            + Project
-                        </a>
-
-                        <a href="#">
-                            + Invoice
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ACTIVITY -->
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h3>
-                            Recent Activity
-                        </h3>
-
-                    </div>
-
-                    <p class="muted">
-                        John added a new customer.
-                    </p>
-
-                    <br>
-
-                    <p class="muted">
-                        Sarah completed a project task.
-                    </p>
-
-                    <br>
-
-                    <p class="muted">
-                        Finance team created an invoice.
-                    </p>
-
-                </div>
-
-            </div>
+          </div>
 
         </div>
 
-    </section>
+      </div>
 
-</main>
+    </div>
+
+  </main>
 
 
-<script>
+  <script>
 
-const ownerName = localStorage.getItem("ownerName");
+    /* USER INFORMATION */
 
-if (ownerName) {
+    const ownerName =
+      localStorage.getItem("ownerName") ||
+      "Business Owner";
 
-    document.getElementById("ownerName").textContent = ownerName;
+    const companyName =
+      localStorage.getItem("companyName") ||
+      "Your Company";
 
-    document.getElementById("avatarLetter")
-        .textContent = ownerName.charAt(0).toUpperCase();
 
-}
+    document.getElementById("ownerName")
+      .textContent = ownerName;
 
-</script>
+    document.getElementById("companyName")
+      .textContent = companyName;
+
+    document.getElementById("welcomeTitle")
+      .textContent =
+      "Welcome back, " +
+      ownerName +
+      "!";
+
+
+    /* AVATAR */
+
+    const firstLetter =
+      ownerName.charAt(0).toUpperCase();
+
+    document.getElementById("avatar")
+      .textContent = firstLetter;
+
+
+    /* EMPLOYEES */
+
+    const employees =
+      JSON.parse(
+        localStorage.getItem("employees") || "[]"
+      );
+
+    document.getElementById("employeeCount")
+      .textContent =
+      employees.length;
+
+
+    /* CUSTOMERS */
+
+    const customers =
+      JSON.parse(
+        localStorage.getItem("customers") || "[]"
+      );
+
+    document.getElementById("customerCount")
+      .textContent =
+      customers.length;
+
+
+    /* PROJECTS */
+
+    const projects =
+      JSON.parse(
+        localStorage.getItem("projects") || "[]"
+      );
+
+    const activeProjects =
+      projects.filter(function(project) {
+
+        return (
+          project.status === "Active" ||
+          project.status === "In Progress"
+        );
+
+      });
+
+    document.getElementById("projectCount")
+      .textContent =
+      activeProjects.length;
+
+
+    /* FINANCE */
+
+    const transactions =
+      JSON.parse(
+        localStorage.getItem("transactions") || "[]"
+      );
+
+
+    let income = 0;
+    let expenses = 0;
+
+
+    transactions.forEach(function(transaction) {
+
+      const amount =
+        Number(transaction.amount) || 0;
+
+      const type =
+        String(transaction.type || "")
+          .toLowerCase();
+
+
+      if (
+        type === "income" ||
+        type === "revenue"
+      ) {
+
+        income += amount;
+
+      } else if (
+        type === "expense"
+      ) {
+
+        expenses += amount;
+
+      }
+
+    });
+
+
+    const profit =
+      income - expenses;
+
+
+    function money(value) {
+
+      return "$" +
+        value.toLocaleString(
+          "en-US",
+          {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+          }
+        );
+
+    }
+
+
+    document.getElementById("incomeValue")
+      .textContent =
+      money(income);
+
+    document.getElementById("expenseValue")
+      .textContent =
+      money(expenses);
+
+    document.getElementById("profitValue")
+      .textContent =
+      money(profit);
+
+    document.getElementById("revenueCount")
+      .textContent =
+      money(profit);
+
+
+    /* RECENT TASKS */
+
+    const tasks =
+      JSON.parse(
+        localStorage.getItem("tasks") || "[]"
+      );
+
+
+    const tasksList =
+      document.getElementById("tasksList");
+
+
+    if (tasks.length > 0) {
+
+      tasksList.innerHTML = "";
+
+
+      const recentTasks =
+        tasks.slice(-5).reverse();
+
+
+      recentTasks.forEach(function(task) {
+
+        let badgeClass =
+          "badge-blue";
+
+        if (
+          task.status === "Completed"
+        ) {
+
+          badgeClass =
+            "badge-green";
+
+        } else if (
+          task.status === "In Progress"
+        ) {
+
+          badgeClass =
+            "badge-orange";
+
+        }
+
+
+        const taskElement =
+          document.createElement("div");
+
+
+        taskElement.className =
+          "task";
+
+
+        taskElement.innerHTML = `
+
+          <div class="task-info">
+
+            <strong>
+              ${escapeHTML(task.title || "Untitled Task")}
+            </strong>
+
+            <span>
+              ${escapeHTML(task.assignee || "Unassigned")}
+            </span>
+
+          </div>
+
+          <span class="badge ${badgeClass}">
+            ${escapeHTML(task.status || "Pending")}
+          </span>
+
+        `;
+
+
+        tasksList.appendChild(
+          taskElement
+        );
+
+      });
+
+    }
+
+
+    /* PLAN */
+
+    const selectedPlan =
+      localStorage.getItem("selectedPlan");
+
+
+    const selectedPrice =
+      localStorage.getItem("selectedPrice");
+
+
+    if (selectedPlan) {
+
+      document.getElementById("planName")
+        .textContent =
+        selectedPlan + " Plan";
+
+
+      if (selectedPrice) {
+
+        document.getElementById("planPrice")
+          .textContent =
+          "$" +
+          selectedPrice +
+          " / month";
+
+      }
+
+    }
+
+
+    /* SECURITY */
+
+    function escapeHTML(value) {
+
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* MOBILE MENU */
+
+    function toggleMobileMenu() {
+
+      const sidebar =
+        document.querySelector(".sidebar");
+
+
+      if (
+        sidebar.style.display === "block"
+      ) {
+
+        sidebar.style.display =
+          "none";
+
+      } else {
+
+        sidebar.style.display =
+          "block";
+
+        sidebar.style.zIndex =
+          "2000";
+
+      }
+
+    }
+
+  </script>
 
 </body>
 </html>
