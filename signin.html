@@ -1,204 +1,270 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>ورود به حساب | CompanyFlow</title>
+<title>Sign In | CompanyFlow</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 440px;
+}
+
+.logo {
+    text-align: center;
+    color: #2563eb;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: white;
+    padding: 36px;
+    border-radius: 18px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
+
+h1 {
+    text-align: center;
+    color: #0f172a;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+
+.password-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forgot {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.button {
+    width: 100%;
+    border: none;
+    background: #2563eb;
+    color: white;
+    padding: 14px;
+    border-radius: 9px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.button:hover {
+    background: #1d4ed8;
+}
+
+.register {
+    text-align: center;
+    margin-top: 22px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.register a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.back {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+@media (max-width: 500px) {
+    .card {
+        padding: 27px 20px;
     }
-
-    body {
-      min-height: 100vh;
-      background: #f5f7fb;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .login-box {
-      width: 100%;
-      max-width: 430px;
-      background: white;
-      padding: 32px;
-      border-radius: 20px;
-      box-shadow: 0 10px 35px rgba(0,0,0,0.08);
-    }
-
-    .logo {
-      text-align: center;
-      font-size: 27px;
-      font-weight: bold;
-      color: #2563eb;
-      margin-bottom: 12px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #172033;
-      margin-bottom: 8px;
-    }
-
-    .description {
-      text-align: center;
-      color: #64748b;
-      margin-bottom: 28px;
-      line-height: 1.7;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-      color: #172033;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 18px;
-      border: 1px solid #dbe3f0;
-      border-radius: 10px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: #2563eb;
-    }
-
-    .forgot {
-      display: block;
-      text-align: left;
-      color: #2563eb;
-      text-decoration: none;
-      font-size: 14px;
-      margin-bottom: 22px;
-    }
-
-    button {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 10px;
-      background: #2563eb;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    .register {
-      text-align: center;
-      margin-top: 22px;
-      color: #64748b;
-    }
-
-    .register a {
-      color: #2563eb;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .home {
-      display: block;
-      text-align: center;
-      margin-top: 20px;
-      color: #64748b;
-      text-decoration: none;
-      font-size: 14px;
-    }
-  </style>
+}
+</style>
 </head>
 
 <body>
 
-  <div class="login-box">
+<div class="container">
 
     <div class="logo">
-      CompanyFlow
+        CompanyFlow
     </div>
 
-    <h1>خوش آمدید 👋</h1>
+    <div class="card">
 
-    <p class="description">
-      برای ورود به حساب شرکت خود، اطلاعاتتان را وارد کنید.
-    </p>
+        <h1>Welcome Back</h1>
 
-    <form id="signinForm">
+        <p class="subtitle">
+            Sign in to manage your business.
+        </p>
 
-      <label for="email">ایمیل</label>
+        <form id="signinForm">
 
-      <input
-        type="email"
-        id="email"
-        placeholder="example@email.com"
-        required
-      >
+            <div class="form-group">
 
-      <label for="password">رمز عبور</label>
+                <label for="email">
+                    Business Email
+                </label>
 
-      <input
-        type="password"
-        id="password"
-        placeholder="رمز عبور خود را وارد کنید"
-        required
-      >
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="you@company.com"
+                    required
+                >
 
-      <a href="#" class="forgot">
-        رمز عبور را فراموش کرده‌اید؟
-      </a>
+            </div>
 
-      <button type="submit">
-        ورود به حساب
-      </button>
+            <div class="form-group">
 
-    </form>
+                <div class="password-row">
 
-    <div class="register">
-      حساب ندارید؟
-      <a href="register.html">حساب شرکت بسازید</a>
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <a href="#" class="forgot"
+                       onclick="forgotPassword(event)">
+                        Forgot password?
+                    </a>
+
+                </div>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="button">
+                Sign In
+            </button>
+
+        </form>
+
+        <div class="register">
+
+            Don't have an account?
+
+            <a href="register.html">
+                Create an account
+            </a>
+
+        </div>
+
     </div>
 
-    <a href="index.html" class="home">
-      ← بازگشت به صفحه اصلی
+    <a href="index.html" class="back">
+        ← Back to CompanyFlow
     </a>
 
-  </div>
+</div>
 
-  <script>
-    document
-      .getElementById("signinForm")
-      .addEventListener("submit", function(event) {
+<script>
 
-        event.preventDefault();
+document.getElementById("signinForm").addEventListener("submit", function(event) {
 
-        const email =
-          document.getElementById("email").value.trim();
+    event.preventDefault();
 
-        const password =
-          document.getElementById("password").value;
+    const email = document.getElementById("email").value.trim();
 
-        if (!email || !password) {
-          alert("لطفاً ایمیل و رمز عبور را وارد کنید.");
-          return;
-        }
+    const savedEmail = localStorage.getItem("userEmail");
 
-        alert("ورود آزمایشی انجام شد.");
+    if (savedEmail && email === savedEmail) {
 
-      });
-  </script>
+        alert("Sign in successful!");
+
+        window.location.href = "dashboard.html";
+
+    } else {
+
+        alert(
+            "Demo sign-in: account authentication will be connected to the secure database later."
+        );
+
+        window.location.href = "dashboard.html";
+    }
+
+});
+
+
+function forgotPassword(event) {
+
+    event.preventDefault();
+
+    alert(
+        "Password recovery will be available after secure authentication is connected."
+    );
+
+}
+
+</script>
 
 </body>
 </html>
