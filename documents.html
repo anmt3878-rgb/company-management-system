@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Documents - CompanyFlow</title>
+  <title>Documents | CompanyFlow</title>
 
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
       background: #f5f7fb;
-      color: #172033;
+      color: #1f2937;
     }
 
     .sidebar {
@@ -26,29 +26,29 @@
       height: 100vh;
       background: #111827;
       color: white;
-      padding: 25px 15px;
+      padding: 24px 16px;
       overflow-y: auto;
     }
 
     .logo {
-      font-size: 23px;
+      font-size: 22px;
       font-weight: bold;
-      margin-bottom: 35px;
-      padding-left: 10px;
+      margin-bottom: 30px;
+      padding: 0 10px;
     }
 
     .logo span {
-      color: #4f8cff;
+      color: #60a5fa;
     }
 
     .nav a {
       display: block;
-      color: #cbd5e1;
       text-decoration: none;
-      padding: 13px 15px;
+      color: #cbd5e1;
+      padding: 12px 14px;
       border-radius: 8px;
       margin-bottom: 5px;
-      font-size: 14px;
+      transition: 0.2s;
     }
 
     .nav a:hover,
@@ -63,7 +63,7 @@
     }
 
     .topbar {
-      height: 75px;
+      height: 72px;
       background: white;
       border-bottom: 1px solid #e5e7eb;
       display: flex;
@@ -77,60 +77,12 @@
     }
 
     .user {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #2563eb;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
+      font-size: 14px;
+      color: #64748b;
     }
 
     .content {
       padding: 30px;
-    }
-
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-      gap: 15px;
-    }
-
-    .page-header h2 {
-      font-size: 25px;
-      margin-bottom: 6px;
-    }
-
-    .page-header p {
-      color: #64748b;
-      font-size: 14px;
-    }
-
-    button {
-      border: none;
-      cursor: pointer;
-      border-radius: 8px;
-      padding: 12px 18px;
-      font-weight: bold;
-    }
-
-    .primary-btn {
-      background: #2563eb;
-      color: white;
-    }
-
-    .primary-btn:hover {
-      background: #1d4ed8;
     }
 
     .stats {
@@ -140,128 +92,136 @@
       margin-bottom: 25px;
     }
 
-    .stat-card {
+    .stat {
       background: white;
-      border: 1px solid #e5e7eb;
+      padding: 22px;
       border-radius: 12px;
-      padding: 20px;
+      border: 1px solid #e5e7eb;
     }
 
-    .stat-card p {
-      color: #64748b;
+    .stat h3 {
       font-size: 13px;
+      color: #64748b;
       margin-bottom: 10px;
+      font-weight: normal;
     }
 
-    .stat-card h3 {
+    .stat p {
       font-size: 27px;
+      font-weight: bold;
     }
 
     .toolbar {
       background: white;
-      border: 1px solid #e5e7eb;
       padding: 18px;
-      border-radius: 12px 12px 0 0;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 20px;
     }
 
     .search {
-      width: 100%;
-      max-width: 400px;
+      flex: 1;
       padding: 12px 14px;
       border: 1px solid #d1d5db;
       border-radius: 8px;
       outline: none;
     }
 
-    .search:focus {
-      border-color: #2563eb;
+    .btn {
+      border: none;
+      background: #2563eb;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
     }
 
     .table-container {
       background: white;
       border: 1px solid #e5e7eb;
-      border-top: none;
-      border-radius: 0 0 12px 12px;
+      border-radius: 12px;
       overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 800px;
+      min-width: 850px;
     }
 
     th,
     td {
-      text-align: left;
       padding: 16px;
-      border-bottom: 1px solid #eef0f4;
-      font-size: 14px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
     }
 
     th {
       background: #f8fafc;
-      color: #475569;
+      color: #64748b;
       font-size: 13px;
     }
 
-    .badge {
+    td {
+      font-size: 14px;
+    }
+
+    .status {
       display: inline-block;
-      padding: 6px 10px;
+      padding: 5px 10px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: bold;
     }
 
-    .active {
+    .active-status {
       background: #dcfce7;
       color: #166534;
     }
 
-    .archived {
+    .archived-status {
       background: #e5e7eb;
       color: #475569;
     }
 
     .delete-btn {
+      border: none;
       background: #fee2e2;
       color: #b91c1c;
-      padding: 8px 12px;
-      font-size: 12px;
+      padding: 7px 11px;
+      border-radius: 6px;
+      cursor: pointer;
     }
 
     .delete-btn:hover {
       background: #fecaca;
     }
 
-    .empty {
-      text-align: center;
-      padding: 45px;
-      color: #64748b;
-    }
-
-    /* Modal */
-
     .modal {
       display: none;
       position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(15, 23, 42, 0.55);
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
       align-items: center;
       justify-content: center;
       padding: 20px;
+      z-index: 1000;
     }
 
-    .modal-content {
+    .modal-box {
       width: 100%;
-      max-width: 560px;
+      max-width: 600px;
       background: white;
       border-radius: 14px;
-      padding: 25px;
+      padding: 28px;
       max-height: 90vh;
       overflow-y: auto;
     }
@@ -273,17 +233,12 @@
       margin-bottom: 22px;
     }
 
-    .modal-header h2 {
-      font-size: 21px;
-    }
-
     .close {
-      background: #f1f5f9;
-      color: #475569;
-      font-size: 20px;
-      width: 38px;
-      height: 38px;
-      padding: 0;
+      border: none;
+      background: none;
+      font-size: 26px;
+      cursor: pointer;
+      color: #64748b;
     }
 
     .form-group {
@@ -293,73 +248,64 @@
     .form-group label {
       display: block;
       margin-bottom: 7px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: bold;
-      color: #334155;
     }
 
     .form-group input,
-    .form-group select,
-    .form-group textarea {
+    .form-group select {
       width: 100%;
       padding: 12px;
       border: 1px solid #d1d5db;
       border-radius: 8px;
       outline: none;
-      font-size: 14px;
-    }
-
-    .form-group textarea {
-      min-height: 90px;
-      resize: vertical;
     }
 
     .form-group input:focus,
     .form-group select:focus,
-    .form-group textarea:focus {
+    .search:focus {
       border-color: #2563eb;
     }
 
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 20px;
+    .empty {
+      text-align: center;
+      padding: 45px 20px;
+      color: #64748b;
     }
 
-    .cancel-btn {
-      background: #e5e7eb;
-      color: #334155;
-    }
-
-    @media (max-width: 900px) {
-      .sidebar {
-        width: 190px;
-      }
-
-      .main {
-        margin-left: 190px;
-      }
-
+    @media (max-width: 1000px) {
       .stats {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 750px) {
       .sidebar {
-        position: static;
-        width: 100%;
-        height: auto;
+        width: 70px;
+        padding: 20px 8px;
+      }
+
+      .logo {
+        font-size: 0;
+        text-align: center;
+      }
+
+      .logo span {
+        font-size: 22px;
+      }
+
+      .nav a {
+        font-size: 0;
+        text-align: center;
+        padding: 12px 5px;
+      }
+
+      .nav a::first-letter {
+        font-size: 18px;
       }
 
       .main {
-        margin-left: 0;
-      }
-
-      .nav {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        margin-left: 70px;
       }
 
       .topbar {
@@ -370,27 +316,22 @@
         padding: 18px;
       }
 
-      .page-header {
-        align-items: flex-start;
+      .toolbar {
         flex-direction: column;
-      }
-
-      .stats {
-        grid-template-columns: 1fr 1fr;
       }
     }
 
-    @media (max-width: 430px) {
+    @media (max-width: 500px) {
       .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .nav {
         grid-template-columns: 1fr;
       }
 
       .topbar h1 {
-        font-size: 19px;
+        font-size: 20px;
+      }
+
+      .user {
+        display: none;
       }
     }
   </style>
@@ -419,46 +360,31 @@
 
     <header class="topbar">
       <h1>Documents</h1>
-
-      <div class="user">
-        <span id="ownerName">Owner</span>
-        <div class="avatar" id="avatar">O</div>
-      </div>
+      <div class="user" id="userName">Company Owner</div>
     </header>
 
     <section class="content">
 
-      <div class="page-header">
-        <div>
-          <h2>Document Management</h2>
-          <p>Store and manage important company documents.</p>
-        </div>
-
-        <button class="primary-btn" onclick="openModal()">
-          + Add Document
-        </button>
-      </div>
-
       <div class="stats">
 
-        <div class="stat-card">
-          <p>Total Documents</p>
-          <h3 id="totalDocuments">0</h3>
+        <div class="stat">
+          <h3>Total Documents</h3>
+          <p id="totalDocuments">0</p>
         </div>
 
-        <div class="stat-card">
-          <p>Active Documents</p>
-          <h3 id="activeDocuments">0</h3>
+        <div class="stat">
+          <h3>Active</h3>
+          <p id="activeDocuments">0</p>
         </div>
 
-        <div class="stat-card">
-          <p>Archived</p>
-          <h3 id="archivedDocuments">0</h3>
+        <div class="stat">
+          <h3>Archived</h3>
+          <p id="archivedDocuments">0</p>
         </div>
 
-        <div class="stat-card">
-          <p>Document Types</p>
-          <h3 id="documentTypes">0</h3>
+        <div class="stat">
+          <h3>Document Types</h3>
+          <p id="documentTypes">0</p>
         </div>
 
       </div>
@@ -471,6 +397,10 @@
           placeholder="Search documents..."
           oninput="renderDocuments()"
         >
+
+        <button class="btn" onclick="openModal()">
+          + Add Document
+        </button>
       </div>
 
       <div class="table-container">
@@ -480,7 +410,7 @@
             <tr>
               <th>Document Name</th>
               <th>Type</th>
-              <th>Owner</th>
+              <th>Responsible Person</th>
               <th>Date</th>
               <th>Status</th>
               <th>Action</th>
@@ -505,21 +435,24 @@
 
   <div class="modal" id="documentModal">
 
-    <div class="modal-content">
+    <div class="modal-box">
 
       <div class="modal-header">
         <h2>Add Document</h2>
-        <button class="close" onclick="closeModal()">×</button>
+
+        <button class="close" onclick="closeModal()">
+          ×
+        </button>
       </div>
 
-      <form id="documentForm">
+      <form onsubmit="addDocument(event)">
 
         <div class="form-group">
           <label>Document Name</label>
           <input
             type="text"
             id="documentName"
-            placeholder="e.g. Employment Contract"
+            placeholder="e.g. Business Contract"
             required
           >
         </div>
@@ -532,20 +465,20 @@
             <option>Contract</option>
             <option>Invoice</option>
             <option>Report</option>
+            <option>Proposal</option>
+            <option>Agreement</option>
             <option>Policy</option>
             <option>Legal</option>
-            <option>HR</option>
-            <option>Financial</option>
             <option>Other</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label>Owner / Responsible Person</label>
+          <label>Responsible Person</label>
 
           <input
             type="text"
-            id="documentOwner"
+            id="responsiblePerson"
             placeholder="e.g. John Smith"
             required
           >
@@ -564,39 +497,15 @@
         <div class="form-group">
           <label>Status</label>
 
-          <select id="documentStatus">
+          <select id="documentStatus" required>
             <option value="Active">Active</option>
             <option value="Archived">Archived</option>
           </select>
         </div>
 
-        <div class="form-group">
-          <label>Description / Notes</label>
-
-          <textarea
-            id="documentNotes"
-            placeholder="Add additional information..."
-          ></textarea>
-        </div>
-
-        <div class="form-actions">
-
-          <button
-            type="button"
-            class="cancel-btn"
-            onclick="closeModal()"
-          >
-            Cancel
-          </button>
-
-          <button
-            type="submit"
-            class="primary-btn"
-          >
-            Save Document
-          </button>
-
-        </div>
+        <button class="btn" type="submit" style="width:100%;">
+          Save Document
+        </button>
 
       </form>
 
@@ -612,156 +521,62 @@
     );
 
 
-    // Load owner
+    function saveDocuments() {
 
-    const savedOwner =
-      localStorage.getItem("ownerName") || "Owner";
+      localStorage.setItem(
+        "documents",
+        JSON.stringify(documents)
+      );
 
-    document.getElementById("ownerName").textContent =
-      savedOwner;
-
-    document.getElementById("avatar").textContent =
-      savedOwner.charAt(0).toUpperCase();
-
-
-    // Open modal
-
-    function openModal() {
-      document.getElementById("documentModal").style.display = "flex";
-
-      document.getElementById("documentDate").value =
-        new Date().toISOString().split("T")[0];
     }
 
-
-    // Close modal
-
-    function closeModal() {
-      document.getElementById("documentModal").style.display = "none";
-
-      document.getElementById("documentForm").reset();
-    }
-
-
-    // Save document
-
-    document
-      .getElementById("documentForm")
-      .addEventListener("submit", function(e) {
-
-        e.preventDefault();
-
-        const documentItem = {
-
-          id: Date.now(),
-
-          name:
-            document.getElementById("documentName").value.trim(),
-
-          type:
-            document.getElementById("documentType").value,
-
-          owner:
-            document.getElementById("documentOwner").value.trim(),
-
-          date:
-            document.getElementById("documentDate").value,
-
-          status:
-            document.getElementById("documentStatus").value,
-
-          notes:
-            document.getElementById("documentNotes").value.trim()
-
-        };
-
-        documents.push(documentItem);
-
-        localStorage.setItem(
-          "documents",
-          JSON.stringify(documents)
-        );
-
-        closeModal();
-
-        renderDocuments();
-
-      });
-
-
-    // Render documents
 
     function renderDocuments() {
 
-      const table =
-        document.getElementById("documentTable");
-
-      const empty =
-        document.getElementById("emptyMessage");
+      const table = document.getElementById("documentTable");
+      const emptyMessage = document.getElementById("emptyMessage");
 
       const search =
         document.getElementById("searchInput")
-          .value
-          .toLowerCase();
+        .value
+        .toLowerCase();
 
-      const filtered =
-        documents.filter(doc =>
-
-          doc.name.toLowerCase().includes(search) ||
-
-          doc.type.toLowerCase().includes(search) ||
-
-          doc.owner.toLowerCase().includes(search) ||
-
-          doc.status.toLowerCase().includes(search)
-
-        );
-
+      const filtered = documents.filter(doc =>
+        doc.name.toLowerCase().includes(search) ||
+        doc.type.toLowerCase().includes(search) ||
+        doc.responsible.toLowerCase().includes(search)
+      );
 
       table.innerHTML = "";
 
-
       if (filtered.length === 0) {
 
-        empty.style.display = "block";
+        emptyMessage.style.display = "block";
 
       } else {
 
-        empty.style.display = "none";
-
+        emptyMessage.style.display = "none";
 
         filtered.forEach(doc => {
 
-          const row =
-            document.createElement("tr");
-
-          const statusClass =
-            doc.status === "Active"
-              ? "active"
-              : "archived";
-
+          const row = document.createElement("tr");
 
           row.innerHTML = `
+            <td><strong>${escapeHTML(doc.name)}</strong></td>
+
+            <td>${escapeHTML(doc.type)}</td>
+
+            <td>${escapeHTML(doc.responsible)}</td>
+
+            <td>${escapeHTML(doc.date)}</td>
 
             <td>
-              <strong>${escapeHtml(doc.name)}</strong>
-            </td>
-
-            <td>
-              ${escapeHtml(doc.type)}
-            </td>
-
-            <td>
-              ${escapeHtml(doc.owner)}
-            </td>
-
-            <td>
-              ${formatDate(doc.date)}
-            </td>
-
-            <td>
-              <span class="badge ${statusClass}">
-                ${escapeHtml(doc.status)}
+              <span class="status ${
+                doc.status === "Active"
+                  ? "active-status"
+                  : "archived-status"
+              }">
+                ${escapeHTML(doc.status)}
               </span>
             </td>
 
@@ -773,7 +588,6 @@
                 Delete
               </button>
             </td>
-
           `;
 
           table.appendChild(row);
@@ -782,46 +596,22 @@
 
       }
 
-
       updateStats();
 
     }
 
 
-    // Delete document
-
-    function deleteDocument(id) {
-
-      if (!confirm("Delete this document?")) {
-        return;
-      }
-
-      documents =
-        documents.filter(doc => doc.id !== id);
-
-      localStorage.setItem(
-        "documents",
-        JSON.stringify(documents)
-      );
-
-      renderDocuments();
-
-    }
-
-
-    // Statistics
-
     function updateStats() {
 
-      document.getElementById("totalDocuments").textContent =
+      const total =
         documents.length;
 
-      document.getElementById("activeDocuments").textContent =
+      const active =
         documents.filter(
           doc => doc.status === "Active"
         ).length;
 
-      document.getElementById("archivedDocuments").textContent =
+      const archived =
         documents.filter(
           doc => doc.status === "Archived"
         ).length;
@@ -829,35 +619,117 @@
       const types =
         new Set(
           documents.map(doc => doc.type)
-        );
+        ).size;
 
-      document.getElementById("documentTypes").textContent =
-        types.size;
+      document.getElementById(
+        "totalDocuments"
+      ).textContent = total;
+
+      document.getElementById(
+        "activeDocuments"
+      ).textContent = active;
+
+      document.getElementById(
+        "archivedDocuments"
+      ).textContent = archived;
+
+      document.getElementById(
+        "documentTypes"
+      ).textContent = types;
 
     }
 
 
-    // Format date
+    function openModal() {
 
-    function formatDate(date) {
+      document.getElementById(
+        "documentModal"
+      ).style.display = "flex";
 
-      if (!date) return "-";
+    }
 
-      const parts =
-        date.split("-");
 
-      if (parts.length !== 3) {
-        return date;
+    function closeModal() {
+
+      document.getElementById(
+        "documentModal"
+      ).style.display = "none";
+
+    }
+
+
+    function addDocument(event) {
+
+      event.preventDefault();
+
+      const documentData = {
+
+        id: Date.now(),
+
+        name:
+          document.getElementById(
+            "documentName"
+          ).value.trim(),
+
+        type:
+          document.getElementById(
+            "documentType"
+          ).value,
+
+        responsible:
+          document.getElementById(
+            "responsiblePerson"
+          ).value.trim(),
+
+        date:
+          document.getElementById(
+            "documentDate"
+          ).value,
+
+        status:
+          document.getElementById(
+            "documentStatus"
+          ).value
+
+      };
+
+
+      documents.push(documentData);
+
+      saveDocuments();
+
+      renderDocuments();
+
+      event.target.reset();
+
+      closeModal();
+
+    }
+
+
+    function deleteDocument(id) {
+
+      if (
+        confirm(
+          "Are you sure you want to delete this document?"
+        )
+      ) {
+
+        documents =
+          documents.filter(
+            doc => doc.id !== id
+          );
+
+        saveDocuments();
+
+        renderDocuments();
+
       }
 
-      return `${parts[1]}/${parts[2]}/${parts[0]}`;
-
     }
 
 
-    // Security helper for displayed text
-
-    function escapeHtml(value) {
+    function escapeHTML(value) {
 
       return String(value)
         .replace(/&/g, "&amp;")
@@ -869,23 +741,35 @@
     }
 
 
-    // Close modal by clicking outside
+    const ownerName =
+      localStorage.getItem("ownerName");
 
-    window.addEventListener("click", function(e) {
+    if (ownerName) {
 
-      const modal =
-        document.getElementById("documentModal");
+      document.getElementById(
+        "userName"
+      ).textContent = ownerName;
 
-      if (e.target === modal) {
-        closeModal();
-      }
+    }
 
-    });
-
-
-    // Initial render
 
     renderDocuments();
+
+
+    window.onclick = function(event) {
+
+      const modal =
+        document.getElementById(
+          "documentModal"
+        );
+
+      if (event.target === modal) {
+
+        closeModal();
+
+      }
+
+    };
 
   </script>
 
