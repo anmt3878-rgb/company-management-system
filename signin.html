@@ -7,6 +7,7 @@
   <title>Sign In | CompanyFlow</title>
 
   <style>
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -18,15 +19,17 @@
       min-height: 100vh;
       background: #f5f7fb;
       color: #172033;
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       padding: 25px;
     }
 
     .container {
       width: 100%;
-      max-width: 440px;
+      max-width: 480px;
     }
 
     .logo {
@@ -35,10 +38,10 @@
     }
 
     .logo a {
-      color: #172033;
       text-decoration: none;
-      font-size: 29px;
+      font-size: 28px;
       font-weight: 800;
+      color: #172033;
     }
 
     .logo span {
@@ -47,23 +50,34 @@
 
     .card {
       background: white;
+
       border: 1px solid #e5e7eb;
+
       border-radius: 16px;
+
       padding: 32px;
-      box-shadow: 0 10px 35px rgba(15, 23, 42, 0.06);
+
+      box-shadow:
+        0 10px 35px rgba(15, 23, 42, 0.06);
     }
 
-    h1 {
+    .card h1 {
       text-align: center;
+
       font-size: 27px;
+
       margin-bottom: 8px;
     }
 
     .subtitle {
       text-align: center;
+
       color: #64748b;
+
       font-size: 14px;
+
       line-height: 1.6;
+
       margin-bottom: 28px;
     }
 
@@ -73,25 +87,37 @@
 
     label {
       display: block;
+
       color: #334155;
+
       font-size: 13px;
+
       font-weight: 700;
+
       margin-bottom: 7px;
     }
 
     input {
       width: 100%;
+
       padding: 13px 14px;
+
       border: 1px solid #d1d5db;
+
       border-radius: 9px;
+
       font-size: 14px;
+
       outline: none;
+
       transition: 0.2s;
     }
 
     input:focus {
       border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+
+      box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
     }
 
     .password-wrapper {
@@ -99,64 +125,90 @@
     }
 
     .password-wrapper input {
-      padding-right: 70px;
+      padding-right: 75px;
     }
 
     .show-password {
       position: absolute;
+
       right: 10px;
+
       top: 50%;
+
       transform: translateY(-50%);
+
       background: none;
+
       border: none;
+
       color: #2563eb;
+
       font-size: 12px;
-      font-weight: 700;
+
+      font-weight: bold;
+
       cursor: pointer;
     }
 
-    .form-options {
+    .options {
       display: flex;
+
       align-items: center;
+
       justify-content: space-between;
-      gap: 10px;
-      margin: 5px 0 22px;
+
+      margin: 5px 0 20px;
     }
 
     .remember {
       display: flex;
+
       align-items: center;
+
       gap: 7px;
+
       color: #64748b;
+
       font-size: 12px;
     }
 
     .remember input {
       width: 15px;
+
       height: 15px;
     }
 
     .forgot {
       color: #2563eb;
-      font-size: 12px;
-      font-weight: 700;
-      text-decoration: none;
-    }
 
-    .forgot:hover {
-      text-decoration: underline;
+      font-size: 12px;
+
+      text-decoration: none;
+
+      font-weight: 600;
+
+      cursor: pointer;
     }
 
     .signin-btn {
       width: 100%;
+
       padding: 14px;
+
       border: none;
+
       border-radius: 9px;
+
       background: #2563eb;
+
       color: white;
+
       font-size: 15px;
+
       font-weight: 700;
+
       cursor: pointer;
+
       transition: 0.2s;
     }
 
@@ -164,45 +216,69 @@
       background: #1d4ed8;
     }
 
+    .signin-btn:disabled {
+      opacity: 0.7;
+
+      cursor: not-allowed;
+    }
+
     .message {
       display: none;
+
       margin-top: 16px;
+
       padding: 12px;
+
       border-radius: 8px;
+
       text-align: center;
+
       font-size: 13px;
+
       line-height: 1.5;
     }
 
     .success {
       background: #dcfce7;
+
       color: #166534;
     }
 
     .error {
       background: #fee2e2;
+
       color: #b91c1c;
     }
 
     .register {
       text-align: center;
+
       margin-top: 22px;
+
       color: #64748b;
+
       font-size: 13px;
     }
 
     .register a {
       color: #2563eb;
+
       font-weight: 700;
+
       text-decoration: none;
     }
 
     .back-home {
       display: block;
+
       text-align: center;
+
       margin-top: 20px;
+
       color: #64748b;
+
       font-size: 13px;
+
       text-decoration: none;
     }
 
@@ -212,32 +288,44 @@
 
     .security-note {
       margin-top: 20px;
+
       padding: 12px;
+
       background: #f8fafc;
+
       border-radius: 8px;
+
       color: #64748b;
+
       font-size: 11px;
+
       line-height: 1.5;
+
       text-align: center;
     }
 
     @media (max-width: 500px) {
+
       body {
         padding: 15px;
       }
 
       .card {
-        padding: 25px 20px;
+        padding: 24px 20px;
       }
 
-      h1 {
+      .card h1 {
         font-size: 24px;
       }
 
-      .form-options {
+      .options {
         align-items: flex-start;
+
+        gap: 10px;
       }
+
     }
+
   </style>
 </head>
 
@@ -246,9 +334,11 @@
   <div class="container">
 
     <div class="logo">
+
       <a href="index.html">
         Company<span>Flow</span>
       </a>
+
     </div>
 
 
@@ -259,7 +349,7 @@
       </h1>
 
       <p class="subtitle">
-        Sign in to manage your company with CompanyFlow.
+        Sign in to manage your business with CompanyFlow.
       </p>
 
 
@@ -311,7 +401,7 @@
         </div>
 
 
-        <div class="form-options">
+        <div class="options">
 
           <label class="remember">
 
@@ -320,9 +410,7 @@
               id="remember"
             >
 
-            <span>
-              Remember me
-            </span>
+            Remember me
 
           </label>
 
@@ -341,6 +429,7 @@
         <button
           type="submit"
           class="signin-btn"
+          id="signinBtn"
         >
           Sign In
         </button>
@@ -359,7 +448,7 @@
         Don't have an account?
 
         <a href="register.html">
-          Create an account
+          Create Account
         </a>
 
       </div>
@@ -375,15 +464,23 @@
 
       <div class="security-note">
 
-        This is currently the development version.
-        Secure multi-user authentication will be
-        connected to the production backend later.
+        Your password is securely handled by
+        CompanyFlow authentication.
+
+        It is not stored in browser local storage.
 
       </div>
 
     </div>
 
   </div>
+
+
+  <!-- Supabase -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="supabase.js"></script>
 
 
   <script>
@@ -396,156 +493,272 @@
       const button =
         document.querySelector(".show-password");
 
+
       if (password.type === "password") {
 
         password.type = "text";
+
         button.textContent = "Hide";
 
       } else {
 
         password.type = "password";
+
         button.textContent = "Show";
 
       }
+
     }
 
 
-    function forgotPassword(event) {
+    function showMessage(text, type) {
+
+      const message =
+        document.getElementById("message");
+
+
+      message.className =
+        "message " + type;
+
+
+      message.textContent =
+        text;
+
+
+      message.style.display =
+        "block";
+
+    }
+
+
+    async function forgotPassword(event) {
 
       event.preventDefault();
 
-      alert(
-        "Password recovery will be available when secure account authentication is connected."
-      );
+
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim()
+          .toLowerCase();
+
+
+      if (!email) {
+
+        showMessage(
+          "Please enter your email first.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      try {
+
+        const { error } =
+          await supabaseClient.auth.resetPasswordForEmail(
+            email,
+            {
+              redirectTo:
+                window.location.origin +
+                "/reset-password.html"
+            }
+          );
+
+
+        if (error) {
+
+          throw error;
+
+        }
+
+
+        showMessage(
+          "Password reset instructions have been sent to your email.",
+          "success"
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Password reset error:",
+          error
+        );
+
+
+        showMessage(
+          "Unable to send password reset email. Please check your email address.",
+          "error"
+        );
+
+      }
 
     }
 
 
     document
       .getElementById("signinForm")
-      .addEventListener("submit", function(event) {
+      .addEventListener(
+        "submit",
+        async function(event) {
 
-        event.preventDefault();
-
-
-        const email =
-          document
-            .getElementById("email")
-            .value
-            .trim()
-            .toLowerCase();
+          event.preventDefault();
 
 
-        const password =
-          document.getElementById("password").value;
+          const email =
+            document
+              .getElementById("email")
+              .value
+              .trim()
+              .toLowerCase();
 
 
-        const message =
-          document.getElementById("message");
+          const password =
+            document
+              .getElementById("password")
+              .value;
 
 
-        const savedEmail =
-          (
-            localStorage.getItem("userEmail") || ""
-          ).toLowerCase();
+          const remember =
+            document.getElementById("remember");
 
 
-        if (!email || !password) {
-
-          message.className =
-            "message error";
-
-          message.textContent =
-            "Please enter your email and password.";
-
-          message.style.display =
-            "block";
-
-          return;
-
-        }
+          const signinBtn =
+            document.getElementById("signinBtn");
 
 
-        /*
-          Development authentication:
-          Check the email saved during registration.
-        */
+          if (!email || !password) {
 
-        if (
-          savedEmail &&
-          email === savedEmail
-        ) {
-
-          localStorage.setItem(
-            "signedIn",
-            "true"
-          );
-
-          if (
-            document.getElementById("remember").checked
-          ) {
-
-            localStorage.setItem(
-              "rememberLogin",
-              "true"
+            showMessage(
+              "Please enter your email and password.",
+              "error"
             );
+
+            return;
 
           }
 
 
-          message.className =
-            "message success";
+          signinBtn.disabled = true;
 
-          message.textContent =
-            "Sign in successful. Opening your dashboard...";
-
-          message.style.display =
-            "block";
+          signinBtn.textContent =
+            "Signing In...";
 
 
-          setTimeout(function() {
+          try {
 
-            window.location.href =
-              "dashboard.html";
+            const { data, error } =
+              await supabaseClient.auth.signInWithPassword({
 
-          }, 800);
+                email: email,
+
+                password: password
+
+              });
 
 
-          return;
+            if (error) {
+
+              throw error;
+
+            }
+
+
+            if (!data || !data.user) {
+
+              throw new Error(
+                "Unable to sign in."
+              );
+
+            }
+
+
+            localStorage.setItem(
+              "signedIn",
+              "true"
+            );
+
+
+            localStorage.setItem(
+              "userEmail",
+              email
+            );
+
+
+            if (remember && remember.checked) {
+
+              localStorage.setItem(
+                "rememberLogin",
+                "true"
+              );
+
+            } else {
+
+              localStorage.removeItem(
+                "rememberLogin"
+              );
+
+            }
+
+
+            showMessage(
+              "Sign in successful. Opening your dashboard...",
+              "success"
+            );
+
+
+            setTimeout(function() {
+
+              window.location.href =
+                "dashboard.html";
+
+            }, 800);
+
+
+          } catch (error) {
+
+            console.error(
+              "Sign in error:",
+              error
+            );
+
+
+            let errorMessage =
+              "Invalid email or password.";
+
+
+            if (
+              error.message &&
+              error.message
+                .toLowerCase()
+                .includes("email not confirmed")
+            ) {
+
+              errorMessage =
+                "Please confirm your email before signing in.";
+
+            }
+
+
+            showMessage(
+              errorMessage,
+              "error"
+            );
+
+
+            signinBtn.disabled = false;
+
+            signinBtn.textContent =
+              "Sign In";
+
+          }
 
         }
-
-
-        /*
-          Development fallback:
-          Allows the dashboard to be opened while
-          the real authentication backend is being built.
-        */
-
-        localStorage.setItem(
-          "signedIn",
-          "true"
-        );
-
-
-        message.className =
-          "message success";
-
-        message.textContent =
-          "Sign in successful. Opening your dashboard...";
-
-        message.style.display =
-          "block";
-
-
-        setTimeout(function() {
-
-          window.location.href =
-            "dashboard.html";
-
-        }, 800);
-
-      });
+      );
 
   </script>
 
