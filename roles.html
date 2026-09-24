@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roles & Permissions | CompanyFlow</title>
+  <title>Roles & Permissions - CompanyFlow</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
 
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Arial, sans-serif;
     }
 
     body {
@@ -18,35 +21,38 @@
       color: #1f2937;
     }
 
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
     .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
       width: 240px;
-      height: 100vh;
       background: #111827;
       color: white;
       padding: 24px 16px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto;
     }
 
     .logo {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: bold;
       margin-bottom: 30px;
       padding: 0 10px;
     }
 
-    .logo span {
-      color: #60a5fa;
-    }
-
     .nav a {
       display: block;
-      color: #cbd5e1;
+      color: #d1d5db;
       text-decoration: none;
       padding: 12px 14px;
       border-radius: 8px;
       margin-bottom: 5px;
+      font-size: 14px;
     }
 
     .nav a:hover,
@@ -57,103 +63,86 @@
 
     .main {
       margin-left: 240px;
-      min-height: 100vh;
-    }
-
-    .topbar {
-      height: 72px;
-      background: white;
-      border-bottom: 1px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-    }
-
-    .content {
+      width: calc(100% - 240px);
       padding: 30px;
     }
 
-    .intro {
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 24px;
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 25px;
     }
 
-    .intro h2 {
-      margin-bottom: 8px;
+    h1 {
+      font-size: 28px;
     }
 
-    .intro p {
-      color: #64748b;
+    .subtitle {
+      color: #6b7280;
+      margin-top: 6px;
       font-size: 14px;
     }
 
-    .roles {
+    .user-email {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .stats {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 18px;
       margin-bottom: 25px;
     }
 
-    .role-card {
+    .stat-card {
       background: white;
-      border: 1px solid #e5e7eb;
       border-radius: 12px;
       padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
-    .role-card h3 {
+    .stat-title {
+      color: #6b7280;
+      font-size: 13px;
       margin-bottom: 8px;
     }
 
-    .role-card p {
-      color: #64748b;
-      font-size: 13px;
-      line-height: 1.5;
-      margin-bottom: 15px;
-    }
-
-    .role-badge {
-      display: inline-block;
-      background: #eff6ff;
-      color: #1d4ed8;
-      padding: 6px 10px;
-      border-radius: 20px;
-      font-size: 12px;
+    .stat-value {
+      font-size: 27px;
       font-weight: bold;
     }
 
-    .section {
+    .card {
       background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 25px;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
     }
 
-    .section-header {
+    .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-      gap: 15px;
+      margin-bottom: 18px;
     }
 
-    .btn {
-      border: none;
-      background: #2563eb;
-      color: white;
-      padding: 11px 16px;
+    .card-header h2 {
+      font-size: 20px;
+    }
+
+    .search {
+      width: 260px;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
       border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
+      outline: none;
     }
 
-    .btn:hover {
-      background: #1d4ed8;
+    .search:focus {
+      border-color: #2563eb;
     }
 
     .table-container {
@@ -163,166 +152,179 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 700px;
     }
 
     th,
     td {
-      padding: 14px;
+      padding: 14px 12px;
       text-align: left;
       border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
     }
 
     th {
-      background: #f8fafc;
-      color: #64748b;
-      font-size: 13px;
+      color: #6b7280;
+      font-size: 12px;
+      text-transform: uppercase;
+      background: #f9fafb;
     }
 
-    td {
-      font-size: 14px;
-    }
-
-    .delete {
-      border: none;
-      background: #fee2e2;
-      color: #b91c1c;
-      padding: 7px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .permission-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .permission {
-      padding: 12px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 13px;
-    }
-
-    .allowed {
-      color: #166534;
-      background: #dcfce7;
-    }
-
-    .restricted {
-      color: #991b1b;
-      background: #fee2e2;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.5);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 1000;
-    }
-
-    .modal-box {
+    .role-select {
+      padding: 8px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 7px;
       background: white;
-      width: 100%;
-      max-width: 520px;
-      border-radius: 14px;
-      padding: 26px;
+      min-width: 120px;
     }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-
-    .close {
-      border: none;
-      background: none;
-      font-size: 25px;
-      cursor: pointer;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 7px;
-      font-size: 14px;
+    .role-badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 12px;
       font-weight: bold;
     }
 
-    input,
-    select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
+    .delete-btn {
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      padding: 8px 11px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background: #fecaca;
+    }
+
+    .save-btn {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      margin-left: 6px;
+    }
+
+    .save-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .message {
+      display: none;
+      padding: 12px 15px;
       border-radius: 8px;
-      outline: none;
+      margin-bottom: 18px;
+      font-size: 14px;
     }
 
-    @media (max-width: 1050px) {
-      .roles {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .permission-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    .success {
+      background: #dcfce7;
+      color: #166534;
     }
 
-    @media (max-width: 750px) {
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 35px;
+      color: #6b7280;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 35px;
+      color: #6b7280;
+    }
+
+    .permissions-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .permission-box {
+      border: 1px solid #e5e7eb;
+      padding: 16px;
+      border-radius: 10px;
+    }
+
+    .permission-box h3 {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .permission-box p {
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
       .sidebar {
-        width: 70px;
-        padding: 20px 8px;
-      }
-
-      .logo {
-        font-size: 0;
-        text-align: center;
-      }
-
-      .logo span {
-        font-size: 22px;
-      }
-
-      .nav a {
-        font-size: 0;
-        text-align: center;
-        padding: 12px 5px;
+        width: 200px;
       }
 
       .main {
-        margin-left: 70px;
+        margin-left: 200px;
+        width: calc(100% - 200px);
       }
 
-      .content {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .permissions-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 650px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
         padding: 18px;
       }
 
       .topbar {
-        padding: 0 15px;
+        display: block;
       }
-    }
 
-    @media (max-width: 500px) {
-      .roles {
+      .user-email {
+        margin-top: 10px;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      .card-header {
+        display: block;
+      }
+
+      .card-header .search {
+        margin-top: 12px;
+      }
+
+      .permissions-grid {
         grid-template-columns: 1fr;
-      }
-
-      .permission-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar h1 {
-        font-size: 20px;
       }
     }
   </style>
@@ -330,11 +332,10 @@
 
 <body>
 
-  <aside class="sidebar">
+<div class="layout">
 
-    <div class="logo">
-      Company<span>Flow</span>
-    </div>
+  <aside class="sidebar">
+    <div class="logo">CompanyFlow</div>
 
     <nav class="nav">
       <a href="dashboard.html">Dashboard</a>
@@ -346,153 +347,126 @@
       <a href="inventory.html">Inventory</a>
       <a href="documents.html">Documents</a>
       <a href="reports.html">Reports</a>
-      <a href="roles.html" class="active">Roles</a>
+      <a href="roles.html" class="active">Roles & Permissions</a>
+      <a href="notifications.html">Notifications</a>
       <a href="settings.html">Settings</a>
+      <a href="index.html">Back to Website</a>
     </nav>
-
   </aside>
-
 
   <main class="main">
 
-    <header class="topbar">
-      <h1>Roles & Permissions</h1>
-      <span id="ownerName">Company Owner</span>
-    </header>
-
-
-    <section class="content">
-
-      <div class="intro">
-        <h2>Access Control</h2>
-        <p>
-          Manage team roles and control which areas of your company
-          system each user can access.
+    <div class="topbar">
+      <div>
+        <h1>Roles & Permissions</h1>
+        <p class="subtitle">
+          Manage your company users and their access roles.
         </p>
       </div>
 
+      <div class="user-email" id="userEmail">
+        Loading...
+      </div>
+    </div>
 
-      <!-- Role Cards -->
+    <div id="message" class="message"></div>
 
-      <div class="roles">
+    <section class="stats">
 
-        <div class="role-card">
+      <div class="stat-card">
+        <div class="stat-title">Total Users</div>
+        <div class="stat-value" id="totalUsers">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">Admins & Managers</div>
+        <div class="stat-value" id="adminUsers">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-title">Employees</div>
+        <div class="stat-value" id="employeeUsers">0</div>
+      </div>
+
+    </section>
+
+    <section class="card">
+
+      <div class="card-header">
+        <h2>Company Users</h2>
+
+        <input
+          type="text"
+          id="searchInput"
+          class="search"
+          placeholder="Search users..."
+        >
+      </div>
+
+      <div class="table-container">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Joined</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="usersTable">
+
+            <tr>
+              <td colspan="5" class="loading">
+                Loading users...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+    <section class="card">
+
+      <div class="card-header">
+        <h2>Role Information</h2>
+      </div>
+
+      <div class="permissions-grid">
+
+        <div class="permission-box">
           <h3>Owner</h3>
           <p>
-            Full access to the entire company account,
-            billing, users and settings.
+            Full company access, users, settings, finance and permissions.
           </p>
-          <span class="role-badge">Full Access</span>
         </div>
 
-        <div class="role-card">
+        <div class="permission-box">
           <h3>Admin</h3>
           <p>
-            Manages employees, customers, projects,
-            finance and company operations.
+            Manage most company operations and team members.
           </p>
-          <span class="role-badge">Management</span>
         </div>
 
-        <div class="role-card">
+        <div class="permission-box">
           <h3>Manager</h3>
           <p>
-            Manages assigned projects, tasks and team
-            members.
+            Manage projects, tasks, customers and assigned teams.
           </p>
-          <span class="role-badge">Team Access</span>
         </div>
 
-        <div class="role-card">
+        <div class="permission-box">
           <h3>Employee</h3>
           <p>
-            Accesses assigned tasks, projects and
-            permitted company information.
+            Access daily work, assigned tasks and permitted company data.
           </p>
-          <span class="role-badge">Limited Access</span>
-        </div>
-
-      </div>
-
-
-      <!-- Permission Matrix -->
-
-      <div class="section">
-
-        <h2>Permission Matrix</h2>
-
-        <div class="permission-grid">
-
-          <div class="permission allowed">
-            ✓ Employees — Owner/Admin
-          </div>
-
-          <div class="permission allowed">
-            ✓ Customers — Owner/Admin/Manager
-          </div>
-
-          <div class="permission allowed">
-            ✓ Projects — Owner/Admin/Manager
-          </div>
-
-          <div class="permission allowed">
-            ✓ Tasks — All Roles
-          </div>
-
-          <div class="permission allowed">
-            ✓ Finance — Owner/Admin
-          </div>
-
-          <div class="permission allowed">
-            ✓ Inventory — Owner/Admin/Manager
-          </div>
-
-          <div class="permission allowed">
-            ✓ Documents — Owner/Admin/Manager
-          </div>
-
-          <div class="permission restricted">
-            ✕ Billing — Owner Only
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- Users -->
-
-      <div class="section">
-
-        <div class="section-header">
-
-          <h2>Team Access</h2>
-
-          <button class="btn" onclick="openModal()">
-            + Add User
-          </button>
-
-        </div>
-
-
-        <div class="table-container">
-
-          <table>
-
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Access</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-
-            <tbody id="usersTable"></tbody>
-
-          </table>
-
         </div>
 
       </div>
@@ -501,307 +475,310 @@
 
   </main>
 
+</div>
 
-  <!-- Modal -->
+<script>
 
-  <div class="modal" id="userModal">
+  let currentUser = null;
+  let currentCompanyId = null;
+  let allUsers = [];
 
-    <div class="modal-box">
+  const usersTable = document.getElementById("usersTable");
+  const searchInput = document.getElementById("searchInput");
+  const messageBox = document.getElementById("message");
 
-      <div class="modal-header">
+  function showMessage(text, type) {
+    messageBox.textContent = text;
+    messageBox.className = "message " + type;
+    messageBox.style.display = "block";
 
-        <h2>Add Team User</h2>
+    setTimeout(() => {
+      messageBox.style.display = "none";
+    }, 3500);
+  }
 
-        <button class="close" onclick="closeModal()">
-          ×
-        </button>
+  async function getCurrentUser() {
 
-      </div>
+    const {
+      data: { user },
+      error
+    } = await supabaseClient.auth.getUser();
 
-
-      <form onsubmit="addUser(event)">
-
-        <div class="form-group">
-
-          <label>Full Name</label>
-
-          <input
-            type="text"
-            id="userFullName"
-            placeholder="John Smith"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>Business Email</label>
-
-          <input
-            type="email"
-            id="userEmail"
-            placeholder="john@company.com"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>Role</label>
-
-          <select id="userRole" required>
-
-            <option value="">Select role</option>
-            <option value="Admin">Admin</option>
-            <option value="Manager">Manager</option>
-            <option value="Employee">Employee</option>
-
-          </select>
-
-        </div>
-
-
-        <button
-          class="btn"
-          type="submit"
-          style="width:100%;"
-        >
-          Add User
-        </button>
-
-      </form>
-
-    </div>
-
-  </div>
-
-
-  <script>
-
-    let users =
-      JSON.parse(
-        localStorage.getItem("companyUsers") || "[]"
-      );
-
-
-    function saveUsers() {
-
-      localStorage.setItem(
-        "companyUsers",
-        JSON.stringify(users)
-      );
-
+    if (error || !user) {
+      window.location.href = "signin.html";
+      return null;
     }
 
+    return user;
+  }
 
-    function renderUsers() {
+  async function loadCompany() {
 
-      const table =
-        document.getElementById("usersTable");
+    const { data, error } = await supabaseClient
+      .from("profiles")
+      .select("company_id")
+      .eq("id", currentUser.id)
+      .single();
 
-      table.innerHTML = "";
+    if (error) {
+      console.error(error);
+      showMessage("Could not load company information.", "error");
+      return false;
+    }
 
+    currentCompanyId = data.company_id;
 
-      if (users.length === 0) {
+    return true;
+  }
 
-        table.innerHTML = `
-          <tr>
-            <td colspan="5"
-              style="text-align:center;color:#64748b;padding:30px;">
-              No additional users have been added yet.
-            </td>
-          </tr>
-        `;
+  async function loadUsers() {
 
-        return;
+    usersTable.innerHTML = `
+      <tr>
+        <td colspan="5" class="loading">
+          Loading users...
+        </td>
+      </tr>
+    `;
 
-      }
+    const { data, error } = await supabaseClient
+      .from("company_users")
+      .select("*")
+      .eq("company_id", currentCompanyId)
+      .order("created_at", { ascending: true });
 
+    if (error) {
+      console.error(error);
 
-      users.forEach(user => {
+      usersTable.innerHTML = `
+        <tr>
+          <td colspan="5" class="empty">
+            Could not load users.
+          </td>
+        </tr>
+      `;
 
-        const row =
-          document.createElement("tr");
+      showMessage("Could not load company users.", "error");
+      return;
+    }
 
+    allUsers = data || [];
 
-        row.innerHTML = `
+    updateStats();
+    renderUsers(allUsers);
+  }
+
+  function updateStats() {
+
+    const total = allUsers.length;
+
+    const admins = allUsers.filter(user =>
+      ["Admin", "Manager"].includes(user.role)
+    ).length;
+
+    const employees = allUsers.filter(user =>
+      user.role === "Employee"
+    ).length;
+
+    document.getElementById("totalUsers").textContent = total;
+    document.getElementById("adminUsers").textContent = admins;
+    document.getElementById("employeeUsers").textContent = employees;
+  }
+
+  function renderUsers(users) {
+
+    if (!users.length) {
+
+      usersTable.innerHTML = `
+        <tr>
+          <td colspan="5" class="empty">
+            No users found.
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    usersTable.innerHTML = users.map(user => {
+
+      const date = user.created_at
+        ? new Date(user.created_at).toLocaleDateString()
+        : "-";
+
+      const isCurrentUser = user.user_id === currentUser.id;
+
+      return `
+        <tr>
 
           <td>
-            <strong>
-              ${escapeHTML(user.name)}
-            </strong>
+            <strong>${escapeHtml(user.full_name || "Unnamed User")}</strong>
           </td>
 
           <td>
-            ${escapeHTML(user.email)}
+            ${escapeHtml(user.email || "-")}
           </td>
 
           <td>
-            <span class="role-badge">
-              ${escapeHTML(user.role)}
-            </span>
-          </td>
 
-          <td>
-            ${getAccessText(user.role)}
-          </td>
+            <select
+              class="role-select"
+              id="role-${user.id}"
+              ${isCurrentUser ? "disabled" : ""}
+            >
 
-          <td>
+              <option value="Owner" ${user.role === "Owner" ? "selected" : ""}>
+                Owner
+              </option>
+
+              <option value="Admin" ${user.role === "Admin" ? "selected" : ""}>
+                Admin
+              </option>
+
+              <option value="Manager" ${user.role === "Manager" ? "selected" : ""}>
+                Manager
+              </option>
+
+              <option value="Employee" ${user.role === "Employee" ? "selected" : ""}>
+                Employee
+              </option>
+
+            </select>
+
             <button
-              class="delete"
-              onclick="deleteUser(${user.id})">
+              class="save-btn"
+              onclick="updateRole('${user.id}')"
+              ${isCurrentUser ? "disabled" : ""}
+            >
+              Save
+            </button>
+
+          </td>
+
+          <td>
+            ${date}
+          </td>
+
+          <td>
+
+            <button
+              class="delete-btn"
+              onclick="deleteUser('${user.id}', '${escapeHtml(user.full_name || "this user")}')"
+              ${isCurrentUser ? "disabled" : ""}
+            >
               Delete
             </button>
+
           </td>
 
-        `;
+        </tr>
+      `;
 
+    }).join("");
+  }
 
-        table.appendChild(row);
+  async function updateRole(companyUserId) {
 
-      });
+    const select = document.getElementById("role-" + companyUserId);
 
+    if (!select) return;
+
+    const newRole = select.value;
+
+    const { error } = await supabaseClient
+      .from("company_users")
+      .update({
+        role: newRole
+      })
+      .eq("id", companyUserId)
+      .eq("company_id", currentCompanyId);
+
+    if (error) {
+      console.error(error);
+      showMessage("Could not update the role.", "error");
+      return;
     }
 
+    showMessage("User role updated successfully.", "success");
 
-    function getAccessText(role) {
+    await loadUsers();
+  }
 
-      if (role === "Admin") {
-        return "Management Access";
-      }
+  async function deleteUser(companyUserId, userName) {
 
-      if (role === "Manager") {
-        return "Team Access";
-      }
+    const confirmed = confirm(
+      "Are you sure you want to remove " + userName + " from this company?"
+    );
 
-      return "Limited Access";
+    if (!confirmed) return;
 
+    const { error } = await supabaseClient
+      .from("company_users")
+      .delete()
+      .eq("id", companyUserId)
+      .eq("company_id", currentCompanyId);
+
+    if (error) {
+      console.error(error);
+      showMessage("Could not remove the user.", "error");
+      return;
     }
 
+    showMessage("User removed successfully.", "success");
 
-    function openModal() {
+    await loadUsers();
+  }
 
-      document.getElementById(
-        "userModal"
-      ).style.display = "flex";
+  searchInput.addEventListener("input", function () {
 
-    }
+    const search = this.value.toLowerCase().trim();
 
+    const filtered = allUsers.filter(user => {
 
-    function closeModal() {
+      const name = (user.full_name || "").toLowerCase();
+      const email = (user.email || "").toLowerCase();
+      const role = (user.role || "").toLowerCase();
 
-      document.getElementById(
-        "userModal"
-      ).style.display = "none";
+      return (
+        name.includes(search) ||
+        email.includes(search) ||
+        role.includes(search)
+      );
 
-    }
+    });
 
+    renderUsers(filtered);
+  });
 
-    function addUser(event) {
+  function escapeHtml(value) {
 
-      event.preventDefault();
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 
+  async function init() {
 
-      const user = {
+    currentUser = await getCurrentUser();
 
-        id: Date.now(),
+    if (!currentUser) return;
 
-        name:
-          document.getElementById(
-            "userFullName"
-          ).value.trim(),
+    document.getElementById("userEmail").textContent =
+      currentUser.email || "";
 
-        email:
-          document.getElementById(
-            "userEmail"
-          ).value.trim(),
+    const companyLoaded = await loadCompany();
 
-        role:
-          document.getElementById(
-            "userRole"
-          ).value
+    if (!companyLoaded) return;
 
-      };
+    await loadUsers();
+  }
 
+  init();
 
-      users.push(user);
-
-      saveUsers();
-
-      renderUsers();
-
-      event.target.reset();
-
-      closeModal();
-
-    }
-
-
-    function deleteUser(id) {
-
-      if (
-        confirm(
-          "Are you sure you want to remove this user?"
-        )
-      ) {
-
-        users =
-          users.filter(
-            user => user.id !== id
-          );
-
-        saveUsers();
-
-        renderUsers();
-
-      }
-
-    }
-
-
-    function escapeHTML(value) {
-
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    }
-
-
-    const owner =
-      localStorage.getItem("ownerName");
-
-    if (owner) {
-
-      document.getElementById(
-        "ownerName"
-      ).textContent = owner;
-
-    }
-
-
-    renderUsers();
-
-
-    window.onclick = function(event) {
-
-      const modal =
-        document.getElementById("userModal");
-
-      if (event.target === modal) {
-        closeModal();
-      }
-
-    };
-
-  </script>
+</script>
 
 </body>
 </html>
