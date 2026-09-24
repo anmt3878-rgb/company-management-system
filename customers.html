@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Customers - CompanyFlow</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -244,6 +245,8 @@
       background: white;
       width: 100%;
       max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
       border-radius: 14px;
       padding: 25px;
     }
@@ -275,7 +278,7 @@
     }
 
     .form-group textarea {
-      min-height: 80px;
+      min-height: 90px;
       resize: vertical;
     }
 
@@ -351,17 +354,31 @@
     <nav class="nav">
 
       <a href="dashboard.html">Dashboard</a>
+
       <a href="employees.html">Employees</a>
-      <a href="customers.html" class="active">Customers</a>
+
+      <a href="customers.html" class="active">
+        Customers
+      </a>
+
       <a href="projects.html">Projects</a>
+
       <a href="tasks.html">Tasks</a>
+
       <a href="finance.html">Finance</a>
+
       <a href="inventory.html">Inventory</a>
+
       <a href="documents.html">Documents</a>
+
       <a href="reports.html">Reports</a>
+
       <a href="roles.html">Roles & Permissions</a>
+
       <a href="notifications.html">Notifications</a>
+
       <a href="settings.html">Settings</a>
+
       <a href="index.html">Back to Website</a>
 
     </nav>
@@ -433,6 +450,7 @@
         <table>
 
           <thead>
+
             <tr>
               <th>Customer</th>
               <th>Company</th>
@@ -442,6 +460,7 @@
               <th>Status</th>
               <th>Action</th>
             </tr>
+
           </thead>
 
           <tbody id="customersTable">
@@ -464,6 +483,7 @@
 
 </div>
 
+
 <!-- ADD CUSTOMER MODAL -->
 
 <div class="modal" id="customerModal">
@@ -473,6 +493,7 @@
     <h2>Add Customer</h2>
 
     <div class="form-group">
+
       <label>Customer Name</label>
 
       <input
@@ -480,9 +501,12 @@
         id="customerName"
         placeholder="John Smith"
       >
+
     </div>
 
+
     <div class="form-group">
+
       <label>Company</label>
 
       <input
@@ -490,9 +514,12 @@
         id="customerCompany"
         placeholder="Apex Solutions"
       >
+
     </div>
 
+
     <div class="form-group">
+
       <label>Email</label>
 
       <input
@@ -500,9 +527,12 @@
         id="customerEmail"
         placeholder="john@apexsolutions.com"
       >
+
     </div>
 
+
     <div class="form-group">
+
       <label>Phone</label>
 
       <input
@@ -510,9 +540,12 @@
         id="customerPhone"
         placeholder="+1 555 123 4567"
       >
+
     </div>
 
+
     <div class="form-group">
+
       <label>Industry</label>
 
       <input
@@ -520,9 +553,12 @@
         id="customerIndustry"
         placeholder="Technology"
       >
+
     </div>
 
+
     <div class="form-group">
+
       <label>Status</label>
 
       <select id="customerStatus">
@@ -536,16 +572,21 @@
         </option>
 
       </select>
+
     </div>
 
+
     <div class="form-group">
+
       <label>Notes</label>
 
       <textarea
         id="customerNotes"
         placeholder="Additional notes..."
       ></textarea>
+
     </div>
+
 
     <div class="modal-actions">
 
@@ -569,426 +610,484 @@
 
 </div>
 
+
 <div id="message" class="message"></div>
+
 
 <script>
 
-  let customers = [];
-  let companyId = null;
+let customers = [];
+let companyId = null;
 
 
-  function showMessage(text, type) {
+/* MESSAGE */
 
-    const message =
-      document.getElementById("message");
+function showMessage(text, type) {
 
-    message.textContent = text;
+  const message =
+    document.getElementById("message");
 
-    message.className =
-      "message " + type;
+  message.textContent = text;
 
-    message.style.display = "block";
+  message.className =
+    "message " + type;
 
-    setTimeout(function() {
-      message.style.display = "none";
-    }, 3500);
+  message.style.display = "block";
+
+  setTimeout(function() {
+
+    message.style.display = "none";
+
+  }, 3500);
+
+}
+
+
+/* MODAL */
+
+function openModal() {
+
+  document.getElementById(
+    "customerModal"
+  ).style.display = "flex";
+
+}
+
+
+function closeModal() {
+
+  document.getElementById(
+    "customerModal"
+  ).style.display = "none";
+
+  document.getElementById(
+    "customerName"
+  ).value = "";
+
+  document.getElementById(
+    "customerCompany"
+  ).value = "";
+
+  document.getElementById(
+    "customerEmail"
+  ).value = "";
+
+  document.getElementById(
+    "customerPhone"
+  ).value = "";
+
+  document.getElementById(
+    "customerIndustry"
+  ).value = "";
+
+  document.getElementById(
+    "customerStatus"
+  ).value = "Active";
+
+  document.getElementById(
+    "customerNotes"
+  ).value = "";
+
+}
+
+
+/* LOAD CURRENT USER + COMPANY */
+
+async function loadCompany() {
+
+  const {
+    data: {
+      user
+    },
+    error: userError
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if (userError || !user) {
+
+    window.location.href =
+      "signin.html";
+
+    return false;
 
   }
 
 
-  function openModal() {
-
-    document.getElementById(
-      "customerModal"
-    ).style.display = "flex";
-
-  }
+  document.getElementById(
+    "userBox"
+  ).textContent =
+    user.email || "User";
 
 
-  function closeModal() {
+  const {
+    data: profile,
+    error: profileError
+  } =
+    await supabaseClient
 
-    document.getElementById(
-      "customerModal"
-    ).style.display = "none";
+      .from("profiles")
 
-    document.getElementById(
-      "customerName"
-    ).value = "";
+      .select(
+        "company_id, full_name"
+      )
 
-    document.getElementById(
-      "customerCompany"
-    ).value = "";
+      .eq(
+        "id",
+        user.id
+      )
 
-    document.getElementById(
-      "customerEmail"
-    ).value = "";
+      .single();
 
-    document.getElementById(
-      "customerPhone"
-    ).value = "";
 
-    document.getElementById(
-      "customerIndustry"
-    ).value = "";
+  if (profileError || !profile) {
 
-    document.getElementById(
-      "customerStatus"
-    ).value = "Active";
+    console.error(profileError);
 
-    document.getElementById(
-      "customerNotes"
-    ).value = "";
+    showMessage(
+      "Could not load company information.",
+      "error"
+    );
+
+    return false;
 
   }
 
 
-  async function loadCompany() {
-
-    const {
-      data: {
-        user
-      },
-      error: userError
-    } =
-      await supabaseClient.auth.getUser();
+  companyId =
+    profile.company_id;
 
 
-    if (userError || !user) {
+  if (!companyId) {
 
-      window.location.href =
-        "signin.html";
+    showMessage(
+      "No company is linked to this account.",
+      "error"
+    );
 
-      return false;
+    return false;
 
-    }
+  }
 
+
+  if (profile.full_name) {
 
     document.getElementById(
       "userBox"
     ).textContent =
-      user.email || "User";
-
-
-    const {
-      data: profile,
-      error: profileError
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select("company_id, full_name")
-        .eq("id", user.id)
-        .single();
-
-
-    if (profileError || !profile) {
-
-      console.error(profileError);
-
-      showMessage(
-        "Could not load company information.",
-        "error"
-      );
-
-      return false;
-
-    }
-
-
-    companyId =
-      profile.company_id;
-
-
-    if (!companyId) {
-
-      showMessage(
-        "No company is linked to this account.",
-        "error"
-      );
-
-      return false;
-
-    }
-
-
-    if (profile.full_name) {
-
-      document.getElementById(
-        "userBox"
-      ).textContent =
-        profile.full_name;
-
-    }
-
-
-    return true;
+      profile.full_name;
 
   }
 
 
-  async function loadCustomers() {
+  return true;
 
-    const ready =
-      await loadCompany();
-
-
-    if (!ready) return;
+}
 
 
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("customers")
-        .select("*")
-        .eq("company_id", companyId)
-        .order("created_at", {
+/* LOAD CUSTOMERS */
+
+async function loadCustomers() {
+
+  const ready =
+    await loadCompany();
+
+
+  if (!ready) return;
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+
+      .from("customers")
+
+      .select("*")
+
+      .eq(
+        "company_id",
+        companyId
+      )
+
+      .order(
+        "created_at",
+        {
           ascending: false
-        });
-
-
-    if (error) {
-
-      console.error(error);
-
-      showMessage(
-        "Could not load customers: " +
-        error.message,
-        "error"
+        }
       );
 
-      return;
 
-    }
+  if (error) {
 
-
-    customers =
-      data || [];
-
-
-    renderCustomers();
-
-  }
-
-
-  async function addCustomer() {
-
-    const name =
-      document
-        .getElementById("customerName")
-        .value
-        .trim();
-
-
-    const companyName =
-      document
-        .getElementById("customerCompany")
-        .value
-        .trim();
-
-
-    const email =
-      document
-        .getElementById("customerEmail")
-        .value
-        .trim();
-
-
-    const phone =
-      document
-        .getElementById("customerPhone")
-        .value
-        .trim();
-
-
-    const industry =
-      document
-        .getElementById("customerIndustry")
-        .value
-        .trim();
-
-
-    const status =
-      document
-        .getElementById("customerStatus")
-        .value;
-
-
-    const notes =
-      document
-        .getElementById("customerNotes")
-        .value
-        .trim();
-
-
-    if (!name) {
-
-      showMessage(
-        "Please enter the customer name.",
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    if (!companyId) {
-
-      showMessage(
-        "Company information is missing.",
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("customers")
-        .insert({
-
-          company_id: companyId,
-
-          name: name,
-
-          company_nar:
-            companyName || null,
-
-          email:
-            email || null,
-
-          phone:
-            phone || null,
-
-          industry:
-            industry || null,
-
-          status:
-            status,
-
-          notes:
-            notes || null
-
-        })
-        .select()
-        .single();
-
-
-    if (error) {
-
-      console.error(error);
-
-      showMessage(
-        "Could not add customer: " +
-        error.message,
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    customers.unshift(data);
-
-    renderCustomers();
-
-    closeModal();
-
+    console.error(error);
 
     showMessage(
-      "Customer added successfully.",
-      "success"
+      "Could not load customers: " +
+      error.message,
+      "error"
     );
+
+    return;
 
   }
 
 
-  async function deleteCustomer(id) {
+  customers =
+    data || [];
 
-    const confirmed =
-      confirm(
-        "Are you sure you want to delete this customer?"
+
+  renderCustomers();
+
+}
+
+
+/* ADD CUSTOMER */
+
+async function addCustomer() {
+
+  const name =
+    document
+      .getElementById("customerName")
+      .value
+      .trim();
+
+
+  const companyName =
+    document
+      .getElementById("customerCompany")
+      .value
+      .trim();
+
+
+  const email =
+    document
+      .getElementById("customerEmail")
+      .value
+      .trim();
+
+
+  const phone =
+    document
+      .getElementById("customerPhone")
+      .value
+      .trim();
+
+
+  const industry =
+    document
+      .getElementById("customerIndustry")
+      .value
+      .trim();
+
+
+  const status =
+    document
+      .getElementById("customerStatus")
+      .value;
+
+
+  const notes =
+    document
+      .getElementById("customerNotes")
+      .value
+      .trim();
+
+
+  if (!name) {
+
+    showMessage(
+      "Please enter the customer name.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (!companyId) {
+
+    showMessage(
+      "Company information is missing.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+
+      .from("customers")
+
+      .insert({
+
+        company_id:
+          companyId,
+
+        name:
+          name,
+
+        email:
+          email || null,
+
+        company_name:
+          companyName || null,
+
+        phone:
+          phone || null,
+
+        industry:
+          industry || null,
+
+        status:
+          status,
+
+        notes:
+          notes || null
+
+      })
+
+      .select()
+
+      .single();
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Could not add customer: " +
+      error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  customers.unshift(data);
+
+  renderCustomers();
+
+  closeModal();
+
+
+  showMessage(
+    "Customer added successfully.",
+    "success"
+  );
+
+}
+
+
+/* DELETE CUSTOMER */
+
+async function deleteCustomer(id) {
+
+  const confirmed =
+    confirm(
+      "Are you sure you want to delete this customer?"
+    );
+
+
+  if (!confirmed) return;
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+
+      .from("customers")
+
+      .delete()
+
+      .eq(
+        "id",
+        id
+      )
+
+      .eq(
+        "company_id",
+        companyId
       );
 
 
-    if (!confirmed) return;
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Could not delete customer: " +
+      error.message,
+      "error"
+    );
+
+    return;
+
+  }
 
 
-    const {
-      error
-    } =
-      await supabaseClient
-        .from("customers")
-        .delete()
-        .eq("id", id)
-        .eq("company_id", companyId);
-
-
-    if (error) {
-
-      console.error(error);
-
-      showMessage(
-        "Could not delete customer: " +
-        error.message,
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    customers =
-      customers.filter(function(customer) {
+  customers =
+    customers.filter(
+      function(customer) {
 
         return customer.id !== id;
 
-      });
-
-
-    renderCustomers();
-
-
-    showMessage(
-      "Customer deleted successfully.",
-      "success"
+      }
     );
 
-  }
+
+  renderCustomers();
 
 
-  function renderCustomers() {
+  showMessage(
+    "Customer deleted successfully.",
+    "success"
+  );
 
-    const table =
-      document.getElementById(
-        "customersTable"
-      );
-
-
-    const search =
-      document
-        .getElementById("searchInput")
-        .value
-        .toLowerCase()
-        .trim();
+}
 
 
-    const filtered =
-      customers.filter(function(customer) {
+/* RENDER */
+
+function renderCustomers() {
+
+  const table =
+    document.getElementById(
+      "customersTable"
+    );
+
+
+  const search =
+    document
+      .getElementById(
+        "searchInput"
+      )
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  const filtered =
+    customers.filter(
+      function(customer) {
 
         const name =
           customer.name || "";
 
         const company =
-          customer.company_nar || "";
+          customer.company_name || "";
 
         const email =
           customer.email || "";
@@ -1023,222 +1122,254 @@
 
         );
 
-      });
+      }
+    );
 
 
-    updateStats();
+  updateStats();
 
 
-    if (filtered.length === 0) {
+  if (filtered.length === 0) {
 
-      table.innerHTML = `
-        <tr>
-          <td colspan="7" class="empty">
-            No customers found.
-          </td>
-        </tr>
-      `;
+    table.innerHTML = `
 
-      return;
+      <tr>
 
-    }
+        <td
+          colspan="7"
+          class="empty"
+        >
+          No customers found.
+        </td>
 
+      </tr>
 
-    table.innerHTML =
-      filtered.map(function(customer) {
+    `;
 
-        const name =
-          customer.name ||
-          "Unknown";
-
-
-        const company =
-          customer.company_nar ||
-          "-";
-
-
-        const email =
-          customer.email ||
-          "-";
-
-
-        const phone =
-          customer.phone ||
-          "-";
-
-
-        const industry =
-          customer.industry ||
-          "-";
-
-
-        const status =
-          customer.status ||
-          "Active";
-
-
-        const statusClass =
-          String(status).toLowerCase() === "inactive"
-
-            ? "status inactive"
-
-            : "status";
-
-
-        return `
-
-          <tr>
-
-            <td>
-              <strong>
-                ${escapeHTML(name)}
-              </strong>
-            </td>
-
-            <td>
-              ${escapeHTML(company)}
-            </td>
-
-            <td>
-              ${escapeHTML(email)}
-            </td>
-
-            <td>
-              ${escapeHTML(phone)}
-            </td>
-
-            <td>
-              ${escapeHTML(industry)}
-            </td>
-
-            <td>
-
-              <span class="${statusClass}">
-                ${escapeHTML(status)}
-              </span>
-
-            </td>
-
-            <td>
-
-              <button
-                class="btn btn-danger"
-                onclick="deleteCustomer('${customer.id}')"
-              >
-                Delete
-              </button>
-
-            </td>
-
-          </tr>
-
-        `;
-
-      }).join("");
+    return;
 
   }
 
 
-  function updateStats() {
+  table.innerHTML =
 
-    const total =
-      customers.length;
+    filtered
+
+      .map(
+        function(customer) {
+
+          const name =
+            customer.name ||
+            "Unknown";
 
 
-    const active =
-      customers.filter(function(customer) {
+          const company =
+            customer.company_name ||
+            "-";
+
+
+          const email =
+            customer.email ||
+            "-";
+
+
+          const phone =
+            customer.phone ||
+            "-";
+
+
+          const industry =
+            customer.industry ||
+            "-";
+
+
+          const status =
+            customer.status ||
+            "Active";
+
+
+          const statusClass =
+
+            String(status)
+              .toLowerCase() ===
+              "inactive"
+
+              ? "status inactive"
+
+              : "status";
+
+
+          return `
+
+            <tr>
+
+              <td>
+                <strong>
+                  ${escapeHTML(name)}
+                </strong>
+              </td>
+
+              <td>
+                ${escapeHTML(company)}
+              </td>
+
+              <td>
+                ${escapeHTML(email)}
+              </td>
+
+              <td>
+                ${escapeHTML(phone)}
+              </td>
+
+              <td>
+                ${escapeHTML(industry)}
+              </td>
+
+              <td>
+
+                <span
+                  class="${statusClass}"
+                >
+                  ${escapeHTML(status)}
+                </span>
+
+              </td>
+
+              <td>
+
+                <button
+                  class="btn btn-danger"
+                  onclick="deleteCustomer('${customer.id}')"
+                >
+                  Delete
+                </button>
+
+              </td>
+
+            </tr>
+
+          `;
+
+        }
+      )
+
+      .join("");
+
+}
+
+
+/* STATS */
+
+function updateStats() {
+
+  const total =
+    customers.length;
+
+
+  const active =
+    customers.filter(
+      function(customer) {
 
         return (
 
           String(
-            customer.status || "Active"
+            customer.status ||
+            "Active"
           )
-          .toLowerCase() === "active"
+          .toLowerCase() ===
+          "active"
 
         );
 
-      }).length;
+      }
+    ).length;
 
 
-    const inactive =
-      total - active;
+  const inactive =
+    total - active;
 
 
-    const companies =
-      new Set(
+  const companies =
+    new Set(
 
-        customers
+      customers
 
-          .map(function(customer) {
+        .map(
+          function(customer) {
 
-            return customer.company_nar;
+            return customer.company_name;
 
-          })
+          }
+        )
 
-          .filter(Boolean)
+        .filter(Boolean)
 
-      );
-
-
-    document.getElementById(
-      "totalCustomers"
-    ).textContent =
-      total;
+    );
 
 
-    document.getElementById(
-      "activeCustomers"
-    ).textContent =
-      active;
+  document.getElementById(
+    "totalCustomers"
+  ).textContent =
+    total;
 
 
-    document.getElementById(
-      "inactiveCustomers"
-    ).textContent =
-      inactive;
+  document.getElementById(
+    "activeCustomers"
+  ).textContent =
+    active;
 
 
-    document.getElementById(
-      "companyCount"
-    ).textContent =
-      companies.size;
-
-  }
+  document.getElementById(
+    "inactiveCustomers"
+  ).textContent =
+    inactive;
 
 
-  function escapeHTML(value) {
+  document.getElementById(
+    "companyCount"
+  ).textContent =
+    companies.size;
 
-    return String(value)
-
-      .replace(
-        /&/g,
-        "&amp;"
-      )
-
-      .replace(
-        /</g,
-        "&lt;"
-      )
-
-      .replace(
-        />/g,
-        "&gt;"
-      )
-
-      .replace(
-        /"/g,
-        "&quot;"
-      )
-
-      .replace(
-        /'/g,
-        "&#039;"
-      );
-
-  }
+}
 
 
-  loadCustomers();
+/* SECURITY: ESCAPE HTML */
+
+function escapeHTML(value) {
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* START */
+
+loadCustomers();
 
 </script>
 
