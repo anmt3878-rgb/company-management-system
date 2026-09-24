@@ -3,128 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tasks | CompanyFlow</title>
+  <title>Tasks - CompanyFlow</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
 
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: Arial, sans-serif;
     }
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
       background: #f5f7fb;
-      color: #172033;
+      color: #1f2937;
     }
 
     .sidebar {
       position: fixed;
       left: 0;
       top: 0;
-      width: 245px;
+      width: 240px;
       height: 100vh;
       background: #111827;
       color: white;
-      padding: 25px 16px;
-      overflow-y: auto;
+      padding: 25px 15px;
     }
 
     .logo {
-      font-size: 22px;
-      font-weight: 700;
-      padding: 0 12px 30px;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      padding-left: 10px;
     }
 
-    .logo span {
-      color: #4f8cff;
-    }
-
-    .nav a {
+    .sidebar a {
       display: block;
+      color: #d1d5db;
       text-decoration: none;
-      color: #aeb8c9;
-      padding: 13px 14px;
-      border-radius: 10px;
+      padding: 12px 15px;
+      border-radius: 8px;
       margin-bottom: 5px;
-      font-size: 14px;
     }
 
-    .nav a:hover,
-    .nav a.active {
-      background: #1f2937;
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: #2563eb;
       color: white;
     }
 
     .main {
-      margin-left: 245px;
-      min-height: 100vh;
-    }
-
-    .topbar {
-      height: 72px;
-      background: white;
-      border-bottom: 1px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-    }
-
-    .topbar h1 {
-      font-size: 22px;
-    }
-
-    .user {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #4f8cff;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
-
-    .content {
+      margin-left: 240px;
       padding: 30px;
     }
 
-    .page-header {
+    .top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 15px;
       margin-bottom: 25px;
+      gap: 15px;
     }
 
-    .page-header p {
-      color: #6b7280;
-      margin-top: 6px;
-      font-size: 14px;
+    h1 {
+      font-size: 30px;
     }
 
     .btn {
-      border: none;
-      background: #4f8cff;
+      background: #2563eb;
       color: white;
+      border: none;
       padding: 12px 18px;
-      border-radius: 9px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: bold;
     }
 
     .btn:hover {
-      background: #3978e8;
+      background: #1d4ed8;
     }
 
     .stats {
@@ -134,135 +92,92 @@
       margin-bottom: 25px;
     }
 
-    .stat {
+    .card {
       background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
       padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.06);
     }
 
-    .stat small {
-      color: #6b7280;
-      font-size: 13px;
-    }
-
-    .stat strong {
-      display: block;
+    .stat-number {
       font-size: 28px;
+      font-weight: bold;
       margin-top: 8px;
-    }
-
-    .toolbar {
-      background: white;
-      padding: 18px;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px 14px 0 0;
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
     }
 
     .search {
       width: 100%;
-      max-width: 350px;
-      padding: 11px 13px;
+      padding: 13px;
       border: 1px solid #d1d5db;
       border-radius: 8px;
-      outline: none;
+      margin-bottom: 20px;
     }
 
-    .search:focus {
-      border-color: #4f8cff;
-    }
-
-    .table-wrap {
+    .table-card {
       background: white;
-      border: 1px solid #e5e7eb;
-      border-top: none;
-      border-radius: 0 0 14px 14px;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.06);
       overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 850px;
+      min-width: 750px;
     }
 
-    th,
-    td {
-      padding: 15px 18px;
+    th, td {
+      padding: 14px 10px;
+      border-bottom: 1px solid #eee;
       text-align: left;
-      border-bottom: 1px solid #eef0f4;
-      font-size: 14px;
     }
 
     th {
       color: #6b7280;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .4px;
-    }
-
-    td {
-      color: #374151;
-    }
-
-    .task-title {
-      font-weight: 600;
-      color: #111827;
+      font-size: 14px;
     }
 
     .badge {
-      display: inline-block;
-      padding: 6px 9px;
+      padding: 6px 10px;
       border-radius: 20px;
       font-size: 12px;
-      font-weight: 600;
-    }
-
-    .pending {
-      background: #fff7ed;
-      color: #c2410c;
-    }
-
-    .progress {
-      background: #eff6ff;
-      color: #2563eb;
-    }
-
-    .completed {
-      background: #ecfdf5;
-      color: #047857;
+      font-weight: bold;
+      display: inline-block;
     }
 
     .high {
-      background: #fef2f2;
-      color: #dc2626;
+      background: #fee2e2;
+      color: #b91c1c;
     }
 
     .medium {
-      background: #fffbeb;
-      color: #b45309;
+      background: #fef3c7;
+      color: #92400e;
     }
 
     .low {
-      background: #f0fdf4;
-      color: #15803d;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status {
+      background: #dbeafe;
+      color: #1d4ed8;
     }
 
     .delete-btn {
+      background: #ef4444;
+      color: white;
       border: none;
-      background: #fee2e2;
-      color: #b91c1c;
-      padding: 7px 10px;
-      border-radius: 7px;
+      padding: 7px 11px;
+      border-radius: 6px;
       cursor: pointer;
     }
 
     .empty {
       text-align: center;
-      padding: 45px;
+      padding: 35px;
       color: #6b7280;
     }
 
@@ -270,100 +185,70 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.45);
+      background: rgba(0,0,0,.5);
       align-items: center;
       justify-content: center;
       padding: 20px;
-      z-index: 1000;
     }
 
     .modal-box {
       background: white;
       width: 100%;
-      max-width: 600px;
-      border-radius: 16px;
+      max-width: 550px;
+      border-radius: 14px;
       padding: 25px;
-      max-height: 90vh;
-      overflow-y: auto;
     }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .modal-box h2 {
       margin-bottom: 20px;
     }
 
-    .close {
-      border: none;
-      background: none;
-      font-size: 25px;
-      cursor: pointer;
-      color: #6b7280;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
-
     .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .full {
-      grid-column: 1 / -1;
+      margin-bottom: 15px;
     }
 
     label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #374151;
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+      font-size: 14px;
     }
 
-    input,
-    select {
+    input, select {
       width: 100%;
-      padding: 11px 12px;
+      padding: 12px;
       border: 1px solid #d1d5db;
       border-radius: 8px;
-      outline: none;
-      background: white;
     }
 
-    input:focus,
-    select:focus {
-      border-color: #4f8cff;
-    }
-
-    .form-actions {
+    .form-buttons {
       display: flex;
-      justify-content: flex-end;
       gap: 10px;
-      margin-top: 22px;
+      margin-top: 20px;
     }
 
     .cancel {
-      border: 1px solid #d1d5db;
-      background: white;
-      color: #374151;
-      padding: 11px 16px;
+      background: #6b7280;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      padding: 10px;
       border-radius: 8px;
-      cursor: pointer;
+      display: none;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
     }
 
     @media (max-width: 900px) {
-      .sidebar {
-        width: 200px;
-      }
-
-      .main {
-        margin-left: 200px;
-      }
-
       .stats {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -378,41 +263,16 @@
 
       .main {
         margin-left: 0;
+        padding: 20px;
       }
 
-      .topbar {
-        padding: 0 18px;
+      .stats {
+        grid-template-columns: 1fr;
       }
 
-      .content {
-        padding: 18px;
-      }
-
-      .page-header {
-        align-items: flex-start;
+      .top {
         flex-direction: column;
-      }
-
-      .stats {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .full {
-        grid-column: auto;
-      }
-    }
-
-    @media (max-width: 450px) {
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar h1 {
-        font-size: 18px;
+        align-items: flex-start;
       }
     }
   </style>
@@ -421,490 +281,479 @@
 <body>
 
   <aside class="sidebar">
-    <div class="logo">Company<span>Flow</span></div>
+    <div class="logo">CompanyFlow</div>
 
-    <nav class="nav">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="employees.html">Employees</a>
-      <a href="customers.html">Customers</a>
-      <a href="projects.html">Projects</a>
-      <a href="tasks.html" class="active">Tasks</a>
-      <a href="finance.html">Finance</a>
-      <a href="inventory.html">Inventory</a>
-      <a href="documents.html">Documents</a>
-      <a href="reports.html">Reports</a>
-      <a href="settings.html">Settings</a>
-    </nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="employees.html">Employees</a>
+    <a href="customers.html">Customers</a>
+    <a href="projects.html">Projects</a>
+    <a href="tasks.html" class="active">Tasks</a>
+    <a href="finance.html">Finance</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="documents.html">Documents</a>
+    <a href="reports.html">Reports</a>
+    <a href="roles.html">Roles & Permissions</a>
+    <a href="notifications.html">Notifications</a>
+    <a href="settings.html">Settings</a>
+    <a href="index.html">Back to Website</a>
   </aside>
 
   <main class="main">
 
-    <header class="topbar">
-      <h1>Tasks</h1>
-
-      <div class="user">
-        <div class="avatar" id="avatar">U</div>
-        <span id="ownerName">User</span>
-      </div>
-    </header>
-
-    <section class="content">
-
-      <div class="page-header">
-        <div>
-          <h2>Task Management</h2>
-          <p>Create, assign and track your business tasks.</p>
-        </div>
-
-        <button class="btn" onclick="openModal()">
-          + Add Task
-        </button>
+    <div class="top">
+      <div>
+        <h1>Tasks</h1>
+        <p>Manage your company tasks.</p>
       </div>
 
-      <div class="stats">
+      <button class="btn" onclick="openModal()">+ Add Task</button>
+    </div>
 
-        <div class="stat">
-          <small>Total Tasks</small>
-          <strong id="totalTasks">0</strong>
-        </div>
-
-        <div class="stat">
-          <small>Pending</small>
-          <strong id="pendingTasks">0</strong>
-        </div>
-
-        <div class="stat">
-          <small>In Progress</small>
-          <strong id="progressTasks">0</strong>
-        </div>
-
-        <div class="stat">
-          <small>Completed</small>
-          <strong id="completedTasks">0</strong>
-        </div>
-
+    <div class="stats">
+      <div class="card">
+        <div>Total Tasks</div>
+        <div class="stat-number" id="totalTasks">0</div>
       </div>
 
-      <div class="toolbar">
-        <input
-          type="text"
-          id="search"
-          class="search"
-          placeholder="Search tasks..."
-          oninput="renderTasks()"
-        >
+      <div class="card">
+        <div>Pending</div>
+        <div class="stat-number" id="pendingTasks">0</div>
       </div>
 
-      <div class="table-wrap">
-
-        <table>
-          <thead>
-            <tr>
-              <th>Task</th>
-              <th>Project</th>
-              <th>Assignee</th>
-              <th>Deadline</th>
-              <th>Priority</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody id="taskTable"></tbody>
-        </table>
-
-        <div id="emptyState" class="empty">
-          No tasks found. Create your first task.
-        </div>
-
+      <div class="card">
+        <div>In Progress</div>
+        <div class="stat-number" id="progressTasks">0</div>
       </div>
 
-    </section>
+      <div class="card">
+        <div>Completed</div>
+        <div class="stat-number" id="completedTasks">0</div>
+      </div>
+    </div>
+
+    <input
+      type="text"
+      id="search"
+      class="search"
+      placeholder="Search tasks..."
+      oninput="renderTasks()"
+    >
+
+    <div id="message" class="message"></div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Project</th>
+            <th>Assignee</th>
+            <th>Deadline</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="taskTable">
+        </tbody>
+      </table>
+    </div>
 
   </main>
 
-
-  <!-- ADD TASK MODAL -->
+  <!-- Modal -->
 
   <div class="modal" id="taskModal">
 
     <div class="modal-box">
 
-      <div class="modal-header">
-        <h2>Add New Task</h2>
+      <h2>Add New Task</h2>
 
-        <button class="close" onclick="closeModal()">×</button>
+      <div class="form-group">
+        <label>Task Title</label>
+        <input type="text" id="title" placeholder="Enter task title">
       </div>
 
-      <form id="taskForm">
+      <div class="form-group">
+        <label>Project</label>
+        <input type="text" id="projectId" placeholder="Project ID (optional)">
+      </div>
 
-        <div class="form-grid">
+      <div class="form-group">
+        <label>Assignee</label>
+        <input type="text" id="assignee" placeholder="Employee name">
+      </div>
 
-          <div class="form-group full">
-            <label>Task Title</label>
-            <input
-              type="text"
-              id="title"
-              placeholder="e.g. Prepare monthly sales report"
-              required
-            >
-          </div>
+      <div class="form-group">
+        <label>Deadline</label>
+        <input type="date" id="deadline">
+      </div>
 
-          <div class="form-group">
-            <label>Related Project</label>
-            <input
-              type="text"
-              id="project"
-              placeholder="Project name"
-            >
-          </div>
+      <div class="form-group">
+        <label>Priority</label>
 
-          <div class="form-group">
-            <label>Assignee</label>
-            <input
-              type="text"
-              id="assignee"
-              placeholder="Employee name"
-            >
-          </div>
+        <select id="priority">
+          <option value="Low">Low</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="High">High</option>
+        </select>
+      </div>
 
-          <div class="form-group">
-            <label>Deadline</label>
-            <input
-              type="date"
-              id="deadline"
-              required
-            >
-          </div>
+      <div class="form-group">
+        <label>Status</label>
 
-          <div class="form-group">
-            <label>Priority</label>
+        <select id="status">
+          <option value="Pending">Pending</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
 
-            <select id="priority">
-              <option value="Low">Low</option>
-              <option value="Medium" selected>Medium</option>
-              <option value="High">High</option>
-            </select>
-          </div>
+      <div class="form-buttons">
 
-          <div class="form-group full">
-            <label>Status</label>
+        <button class="btn" onclick="addTask()">
+          Save Task
+        </button>
 
-            <select id="status">
-              <option value="Pending">Pending</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Completed">Completed</option>
-            </select>
-          </div>
+        <button class="btn cancel" onclick="closeModal()">
+          Cancel
+        </button>
 
-        </div>
-
-        <div class="form-actions">
-
-          <button
-            type="button"
-            class="cancel"
-            onclick="closeModal()"
-          >
-            Cancel
-          </button>
-
-          <button type="submit" class="btn">
-            Create Task
-          </button>
-
-        </div>
-
-      </form>
+      </div>
 
     </div>
 
   </div>
 
+<script>
 
-  <script>
+let tasks = [];
+let companyId = null;
 
-    // Load owner information
+async function loadTasks() {
 
-    const ownerName =
-      localStorage.getItem("ownerName") || "User";
+  showMessage("Loading...", false);
 
-    document.getElementById("ownerName").textContent =
-      ownerName;
+  const {
+    data: { user },
+    error: userError
+  } = await supabaseClient.auth.getUser();
 
-    document.getElementById("avatar").textContent =
-      ownerName.charAt(0).toUpperCase();
+  if (userError || !user) {
+    window.location.href = "signin.html";
+    return;
+  }
 
+  const { data: profile, error: profileError } =
+    await supabaseClient
+      .from("profiles")
+      .select("company_id")
+      .eq("id", user.id)
+      .single();
 
-    // Load tasks
+  if (profileError || !profile) {
+    showMessage("Could not load company information.", true);
+    return;
+  }
 
-    let tasks =
-      JSON.parse(localStorage.getItem("tasks")) || [];
+  companyId = profile.company_id;
 
+  const { data, error } = await supabaseClient
+    .from("tasks")
+    .select("*")
+    .eq("company_id", companyId)
+    .order("created_at", { ascending: false });
 
-    // Open modal
+  if (error) {
+    showMessage("Could not load tasks: " + error.message, true);
+    return;
+  }
 
-    function openModal() {
-      document.getElementById("taskModal").style.display = "flex";
-    }
+  tasks = data || [];
 
+  hideMessage();
+  renderTasks();
+}
 
-    // Close modal
 
-    function closeModal() {
-      document.getElementById("taskModal").style.display = "none";
-      document.getElementById("taskForm").reset();
-    }
+function renderTasks() {
 
+  const table = document.getElementById("taskTable");
+  const search = document.getElementById("search").value
+    .toLowerCase();
 
-    // Add task
+  const filtered = tasks.filter(task => {
 
-    document
-      .getElementById("taskForm")
-      .addEventListener("submit", function(e) {
+    return (
+      (task.title || "").toLowerCase().includes(search) ||
+      (task.assignee || "").toLowerCase().includes(search) ||
+      (task.status || "").toLowerCase().includes(search)
+    );
 
-        e.preventDefault();
+  });
 
-        const task = {
+  document.getElementById("totalTasks").textContent =
+    tasks.length;
 
-          id: Date.now(),
+  document.getElementById("pendingTasks").textContent =
+    tasks.filter(t => t.status === "Pending").length;
 
-          title:
-            document.getElementById("title").value.trim(),
+  document.getElementById("progressTasks").textContent =
+    tasks.filter(t => t.status === "In Progress").length;
 
-          project:
-            document.getElementById("project").value.trim() ||
-            "No Project",
+  document.getElementById("completedTasks").textContent =
+    tasks.filter(t => t.status === "Completed").length;
 
-          assignee:
-            document.getElementById("assignee").value.trim() ||
-            "Unassigned",
 
-          deadline:
-            document.getElementById("deadline").value,
+  if (filtered.length === 0) {
 
-          priority:
-            document.getElementById("priority").value,
+    table.innerHTML = `
+      <tr>
+        <td colspan="7" class="empty">
+          No tasks found.
+        </td>
+      </tr>
+    `;
 
-          status:
-            document.getElementById("status").value,
+    return;
+  }
 
-          createdAt:
-            new Date().toISOString()
 
-        };
+  table.innerHTML = filtered.map(task => {
 
-        tasks.push(task);
+    let priorityClass =
+      (task.priority || "Medium").toLowerCase();
 
-        localStorage.setItem(
-          "tasks",
-          JSON.stringify(tasks)
-        );
+    return `
+      <tr>
 
-        closeModal();
+        <td>
+          <strong>${escapeHTML(task.title || "")}</strong>
+        </td>
 
-        renderTasks();
+        <td>
+          ${escapeHTML(task.project_id || "-")}
+        </td>
 
-      });
+        <td>
+          ${escapeHTML(task.assignee || "-")}
+        </td>
 
+        <td>
+          ${task.deadline || "-"}
+        </td>
 
-    // Render tasks
+        <td>
+          <span class="badge ${priorityClass}">
+            ${escapeHTML(task.priority || "-")}
+          </span>
+        </td>
 
-    function renderTasks() {
+        <td>
+          <span class="badge status">
+            ${escapeHTML(task.status || "-")}
+          </span>
+        </td>
 
-      const table =
-        document.getElementById("taskTable");
+        <td>
+          <button
+            class="delete-btn"
+            onclick="deleteTask('${task.id}')">
+            Delete
+          </button>
+        </td>
 
-      const empty =
-        document.getElementById("emptyState");
+      </tr>
+    `;
 
-      const search =
-        document.getElementById("search")
-          .value
-          .toLowerCase();
+  }).join("");
 
-      const filtered =
-        tasks.filter(task =>
-          task.title.toLowerCase().includes(search) ||
-          task.project.toLowerCase().includes(search) ||
-          task.assignee.toLowerCase().includes(search)
-        );
+}
 
-      table.innerHTML = "";
 
+async function addTask() {
 
-      if (filtered.length === 0) {
+  const title =
+    document.getElementById("title").value.trim();
 
-        empty.style.display = "block";
+  const projectId =
+    document.getElementById("projectId").value.trim();
 
-      } else {
+  const assignee =
+    document.getElementById("assignee").value.trim();
 
-        empty.style.display = "none";
+  const deadline =
+    document.getElementById("deadline").value;
 
-        filtered.forEach(task => {
+  const priority =
+    document.getElementById("priority").value;
 
-          const row =
-            document.createElement("tr");
+  const status =
+    document.getElementById("status").value;
 
-          const statusClass =
-            task.status === "Completed"
-              ? "completed"
-              : task.status === "In Progress"
-                ? "progress"
-                : "pending";
 
-          const priorityClass =
-            task.priority.toLowerCase();
+  if (!title) {
 
-          row.innerHTML = `
+    alert("Please enter a task title.");
 
-            <td>
-              <div class="task-title">
-                ${escapeHTML(task.title)}
-              </div>
-            </td>
+    return;
+  }
 
-            <td>
-              ${escapeHTML(task.project)}
-            </td>
 
-            <td>
-              ${escapeHTML(task.assignee)}
-            </td>
+  if (!companyId) {
 
-            <td>
-              ${formatDate(task.deadline)}
-            </td>
+    alert("Company information is missing.");
 
-            <td>
-              <span class="badge ${priorityClass}">
-                ${escapeHTML(task.priority)}
-              </span>
-            </td>
+    return;
+  }
 
-            <td>
-              <span class="badge ${statusClass}">
-                ${escapeHTML(task.status)}
-              </span>
-            </td>
 
-            <td>
-              <button
-                class="delete-btn"
-                onclick="deleteTask(${task.id})"
-              >
-                Delete
-              </button>
-            </td>
+  const { data, error } =
+    await supabaseClient
+      .from("tasks")
+      .insert([
 
-          `;
-
-          table.appendChild(row);
-
-        });
-
-      }
-
-
-      updateStats();
-
-    }
-
-
-    // Update statistics
-
-    function updateStats() {
-
-      document.getElementById("totalTasks").textContent =
-        tasks.length;
-
-      document.getElementById("pendingTasks").textContent =
-        tasks.filter(t => t.status === "Pending").length;
-
-      document.getElementById("progressTasks").textContent =
-        tasks.filter(t => t.status === "In Progress").length;
-
-      document.getElementById("completedTasks").textContent =
-        tasks.filter(t => t.status === "Completed").length;
-
-    }
-
-
-    // Delete task
-
-    function deleteTask(id) {
-
-      const confirmed =
-        confirm("Are you sure you want to delete this task?");
-
-      if (!confirmed) return;
-
-      tasks =
-        tasks.filter(task => task.id !== id);
-
-      localStorage.setItem(
-        "tasks",
-        JSON.stringify(tasks)
-      );
-
-      renderTasks();
-
-    }
-
-
-    // Format date
-
-    function formatDate(date) {
-
-      if (!date) return "-";
-
-      const d = new Date(date + "T00:00:00");
-
-      return d.toLocaleDateString(
-        "en-US",
         {
-          year: "numeric",
-          month: "short",
-          day: "numeric"
+          company_id: companyId,
+          title: title,
+          project_id: projectId || null,
+          assignee: assignee || null,
+          deadline: deadline || null,
+          priority: priority,
+          status: status
         }
-      );
 
-    }
-
-
-    // Security helper
-
-    function escapeHTML(value) {
-
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    }
+      ])
+      .select()
+      .single();
 
 
-    // Close modal by clicking outside
+  if (error) {
 
-    window.addEventListener("click", function(e) {
+    showMessage(
+      "Could not add task: " + error.message,
+      true
+    );
 
-      const modal =
-        document.getElementById("taskModal");
-
-      if (e.target === modal) {
-        closeModal();
-      }
-
-    });
+    return;
+  }
 
 
-    // Initial render
+  tasks.unshift(data);
 
-    renderTasks();
+  renderTasks();
 
-  </script>
+  closeModal();
+
+  showMessage(
+    "Task added successfully.",
+    false
+  );
+
+}
+
+
+async function deleteTask(id) {
+
+  if (!confirm("Delete this task?")) {
+    return;
+  }
+
+
+  const { error } =
+    await supabaseClient
+      .from("tasks")
+      .delete()
+      .eq("id", id)
+      .eq("company_id", companyId);
+
+
+  if (error) {
+
+    showMessage(
+      "Could not delete task: " + error.message,
+      true
+    );
+
+    return;
+  }
+
+
+  tasks =
+    tasks.filter(task => task.id !== id);
+
+  renderTasks();
+
+  showMessage(
+    "Task deleted successfully.",
+    false
+  );
+
+}
+
+
+function openModal() {
+
+  document.getElementById("taskModal").style.display =
+    "flex";
+
+}
+
+
+function closeModal() {
+
+  document.getElementById("taskModal").style.display =
+    "none";
+
+  document.getElementById("title").value = "";
+  document.getElementById("projectId").value = "";
+  document.getElementById("assignee").value = "";
+  document.getElementById("deadline").value = "";
+  document.getElementById("priority").value = "Medium";
+  document.getElementById("status").value = "Pending";
+
+}
+
+
+function showMessage(message, isError) {
+
+  const box =
+    document.getElementById("message");
+
+  box.textContent = message;
+
+  box.className =
+    "message " + (isError ? "error" : "success");
+
+  box.style.display = "block";
+
+}
+
+
+function hideMessage() {
+
+  document.getElementById("message").style.display =
+    "none";
+
+}
+
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+loadTasks();
+
+</script>
 
 </body>
 </html>
