@@ -7,7 +7,6 @@
   <title>Create Account | CompanyFlow</title>
 
   <style>
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -51,8 +50,7 @@
       border: 1px solid #e5e7eb;
       border-radius: 16px;
       padding: 32px;
-      box-shadow:
-        0 10px 35px rgba(15, 23, 42, 0.06);
+      box-shadow: 0 10px 35px rgba(15, 23, 42, 0.06);
     }
 
     .card h1 {
@@ -84,20 +82,16 @@
     input {
       width: 100%;
       padding: 13px 14px;
-
       border: 1px solid #d1d5db;
       border-radius: 9px;
-
       font-size: 14px;
       outline: none;
-
       transition: 0.2s;
     }
 
     input:focus {
       border-color: #2563eb;
-      box-shadow:
-        0 0 0 3px rgba(37, 99, 235, 0.10);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
     }
 
     .password-wrapper {
@@ -113,14 +107,11 @@
       right: 10px;
       top: 50%;
       transform: translateY(-50%);
-
       background: none;
       border: none;
-
       color: #2563eb;
       font-size: 12px;
       font-weight: bold;
-
       cursor: pointer;
     }
 
@@ -128,9 +119,7 @@
       display: flex;
       align-items: flex-start;
       gap: 9px;
-
       margin: 18px 0;
-
       color: #64748b;
       font-size: 12px;
       line-height: 1.5;
@@ -143,6 +132,11 @@
       flex-shrink: 0;
     }
 
+    .terms label {
+      font-weight: normal;
+      margin: 0;
+    }
+
     .terms a {
       color: #2563eb;
       text-decoration: none;
@@ -150,20 +144,14 @@
 
     .create-btn {
       width: 100%;
-
       padding: 14px;
-
       border: none;
       border-radius: 9px;
-
       background: #2563eb;
       color: white;
-
       font-size: 15px;
       font-weight: 700;
-
       cursor: pointer;
-
       transition: 0.2s;
     }
 
@@ -171,18 +159,19 @@
       background: #1d4ed8;
     }
 
+    .create-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
     .message {
       display: none;
-
       margin-top: 16px;
-
       padding: 12px;
-
       border-radius: 8px;
-
       text-align: center;
-
       font-size: 13px;
+      line-height: 1.5;
     }
 
     .success {
@@ -197,11 +186,8 @@
 
     .signin {
       text-align: center;
-
       margin-top: 22px;
-
       color: #64748b;
-
       font-size: 13px;
     }
 
@@ -213,15 +199,10 @@
 
     .back-home {
       display: block;
-
       text-align: center;
-
       margin-top: 20px;
-
       color: #64748b;
-
       font-size: 13px;
-
       text-decoration: none;
     }
 
@@ -231,24 +212,16 @@
 
     .security-note {
       margin-top: 20px;
-
       padding: 12px;
-
       background: #f8fafc;
-
       border-radius: 8px;
-
       color: #64748b;
-
       font-size: 11px;
-
       line-height: 1.5;
-
       text-align: center;
     }
 
     @media (max-width: 500px) {
-
       body {
         padding: 15px;
       }
@@ -260,9 +233,7 @@
       .card h1 {
         font-size: 24px;
       }
-
     }
-
   </style>
 </head>
 
@@ -276,25 +247,18 @@
       </a>
     </div>
 
-
     <div class="card">
 
-      <h1>
-        Create Your Account
-      </h1>
+      <h1>Create Your Account</h1>
 
       <p class="subtitle">
         Start managing your business with CompanyFlow.
       </p>
 
-
       <form id="registerForm">
 
         <div class="form-group">
-
-          <label for="companyName">
-            Company Name
-          </label>
+          <label for="companyName">Company Name</label>
 
           <input
             type="text"
@@ -302,15 +266,10 @@
             placeholder="Enter your company name"
             required
           >
-
         </div>
 
-
         <div class="form-group">
-
-          <label for="ownerName">
-            Owner / Manager Name
-          </label>
+          <label for="ownerName">Owner / Manager Name</label>
 
           <input
             type="text"
@@ -318,15 +277,10 @@
             placeholder="Enter your full name"
             required
           >
-
         </div>
 
-
         <div class="form-group">
-
-          <label for="email">
-            Business Email
-          </label>
+          <label for="email">Business Email</label>
 
           <input
             type="email"
@@ -334,15 +288,10 @@
             placeholder="you@company.com"
             required
           >
-
         </div>
 
-
         <div class="form-group">
-
-          <label for="password">
-            Password
-          </label>
+          <label for="password">Password</label>
 
           <div class="password-wrapper">
 
@@ -363,9 +312,7 @@
             </button>
 
           </div>
-
         </div>
-
 
         <div class="terms">
 
@@ -376,62 +323,47 @@
           >
 
           <label for="terms">
-            I agree to the CompanyFlow terms and
-            understand that account security features
-            will be connected to the secure backend
-            when the production system is launched.
+            I agree to the CompanyFlow terms and understand that my
+            account will be securely managed by CompanyFlow.
           </label>
 
         </div>
 
-
         <button
           type="submit"
           class="create-btn"
+          id="createBtn"
         >
           Create Account
         </button>
 
-
-        <div
-          id="message"
-          class="message"
-        ></div>
+        <div id="message" class="message"></div>
 
       </form>
 
-
       <div class="signin">
-
         Already have an account?
-
-        <a href="signin.html">
-          Sign In
-        </a>
-
+        <a href="signin.html">Sign In</a>
       </div>
 
-
-      <a
-        href="index.html"
-        class="back-home"
-      >
+      <a href="index.html" class="back-home">
         ← Back to Homepage
       </a>
 
-
       <div class="security-note">
-
-        Your account information is currently stored
-        locally for the development version.
-        Secure multi-user authentication will be
-        added with the production backend.
-
+        Your password is handled securely through CompanyFlow's
+        authentication backend. It is not stored in your browser's
+        local storage.
       </div>
 
     </div>
 
   </div>
+
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
 
 
   <script>
@@ -447,26 +379,38 @@
       if (password.type === "password") {
 
         password.type = "text";
-
         button.textContent = "Hide";
 
       } else {
 
         password.type = "password";
-
         button.textContent = "Show";
 
       }
+    }
 
+
+    function showMessage(text, type) {
+
+      const message =
+        document.getElementById("message");
+
+      message.className =
+        "message " + type;
+
+      message.textContent =
+        text;
+
+      message.style.display =
+        "block";
     }
 
 
     document
       .getElementById("registerForm")
-      .addEventListener("submit", function(event) {
+      .addEventListener("submit", async function(event) {
 
         event.preventDefault();
-
 
         const companyName =
           document
@@ -474,13 +418,11 @@
             .value
             .trim();
 
-
         const ownerName =
           document
             .getElementById("ownerName")
             .value
             .trim();
-
 
         const email =
           document
@@ -488,15 +430,13 @@
             .value
             .trim();
 
-
         const password =
           document
             .getElementById("password")
             .value;
 
-
-        const message =
-          document.getElementById("message");
+        const createBtn =
+          document.getElementById("createBtn");
 
 
         if (
@@ -506,73 +446,138 @@
           !password
         ) {
 
-          message.className =
-            "message error";
-
-          message.textContent =
-            "Please complete all required fields.";
-
-          message.style.display =
-            "block";
+          showMessage(
+            "Please complete all required fields.",
+            "error"
+          );
 
           return;
-
         }
 
 
         if (password.length < 6) {
 
-          message.className =
-            "message error";
-
-          message.textContent =
-            "Password must be at least 6 characters.";
-
-          message.style.display =
-            "block";
+          showMessage(
+            "Password must be at least 6 characters.",
+            "error"
+          );
 
           return;
-
         }
 
 
-        /*
-          Development version:
-          Save basic account information locally.
-        */
+        createBtn.disabled = true;
 
-        localStorage.setItem(
-          "companyName",
-          companyName
-        );
-
-        localStorage.setItem(
-          "ownerName",
-          ownerName
-        );
-
-        localStorage.setItem(
-          "userEmail",
-          email
-        );
+        createBtn.textContent =
+          "Creating Account...";
 
 
-        message.className =
-          "message success";
+        try {
 
-        message.textContent =
-          "Account created successfully. Opening your dashboard...";
+          const { data, error } =
+            await supabase.auth.signUp({
 
-        message.style.display =
-          "block";
+              email: email,
+
+              password: password,
+
+              options: {
+
+                data: {
+
+                  full_name: ownerName,
+
+                  company_name: companyName
+
+                }
+
+              }
+
+            });
 
 
-        setTimeout(function() {
+          if (error) {
 
-          window.location.href =
-            "dashboard.html";
+            throw error;
 
-        }, 900);
+          }
+
+
+          /*
+            Save only non-sensitive information
+            for the current dashboard UI.
+          */
+
+          localStorage.setItem(
+            "companyName",
+            companyName
+          );
+
+          localStorage.setItem(
+            "ownerName",
+            ownerName
+          );
+
+          localStorage.setItem(
+            "userEmail",
+            email
+          );
+
+
+          showMessage(
+            "Account created successfully. Please check your email if confirmation is required.",
+            "success"
+          );
+
+
+          setTimeout(function() {
+
+            window.location.href =
+              "signin.html";
+
+          }, 1800);
+
+
+        } catch (error) {
+
+          console.error(
+            "Registration error:",
+            error
+          );
+
+
+          let errorMessage =
+            "Unable to create your account. Please try again.";
+
+
+          if (
+            error.message &&
+            error.message.toLowerCase().includes("already registered")
+          ) {
+
+            errorMessage =
+              "This email is already registered. Please sign in.";
+
+          } else if (error.message) {
+
+            errorMessage =
+              error.message;
+
+          }
+
+
+          showMessage(
+            errorMessage,
+            "error"
+          );
+
+
+          createBtn.disabled = false;
+
+          createBtn.textContent =
+            "Create Account";
+
+        }
 
       });
 
