@@ -1,1173 +1,917 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Finance | CompanyFlow</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f5f7fb;
-      color: #172033;
-    }
-
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 245px;
-      height: 100vh;
-      background: #111827;
-      color: white;
-      padding: 25px 16px;
-      overflow-y: auto;
-    }
-
-    .logo {
-      font-size: 22px;
-      font-weight: 700;
-      padding: 0 12px 30px;
-    }
-
-    .logo span {
-      color: #4f8cff;
-    }
-
-    .nav a {
-      display: block;
-      text-decoration: none;
-      color: #aeb8c9;
-      padding: 13px 14px;
-      border-radius: 10px;
-      margin-bottom: 5px;
-      font-size: 14px;
-    }
-
-    .nav a:hover,
-    .nav a.active {
-      background: #1f2937;
-      color: white;
-    }
-
-    .main {
-      margin-left: 245px;
-      min-height: 100vh;
-    }
-
-    .topbar {
-      height: 72px;
-      background: white;
-      border-bottom: 1px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-    }
-
-    .topbar h1 {
-      font-size: 22px;
-    }
-
-    .user {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #4f8cff;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
-
-    .content {
-      padding: 30px;
-    }
-
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 25px;
-    }
-
-    .page-header p {
-      color: #6b7280;
-      margin-top: 6px;
-      font-size: 14px;
-    }
-
-    .btn {
-      border: none;
-      background: #4f8cff;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 9px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .btn:hover {
-      background: #3978e8;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-bottom: 25px;
-    }
-
-    .stat {
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 20px;
-    }
-
-    .stat small {
-      color: #6b7280;
-      font-size: 13px;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 26px;
-      margin-top: 8px;
-    }
-
-    .green {
-      color: #059669;
-    }
-
-    .red {
-      color: #dc2626;
-    }
-
-    .blue {
-      color: #2563eb;
-    }
-
-    .purple {
-      color: #7c3aed;
-    }
-
-    .toolbar {
-      background: white;
-      padding: 18px;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px 14px 0 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .search {
-      width: 100%;
-      max-width: 350px;
-      padding: 11px 13px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      outline: none;
-    }
-
-    .search:focus {
-      border-color: #4f8cff;
-    }
-
-    .table-wrap {
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-top: none;
-      border-radius: 0 0 14px 14px;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 850px;
-    }
-
-    th,
-    td {
-      padding: 15px 18px;
-      text-align: left;
-      border-bottom: 1px solid #eef0f4;
-      font-size: 14px;
-    }
-
-    th {
-      color: #6b7280;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .4px;
-    }
-
-    td {
-      color: #374151;
-    }
-
-    .description {
-      font-weight: 600;
-      color: #111827;
-    }
-
-    .income {
-      color: #059669;
-      font-weight: 700;
-    }
-
-    .expense {
-      color: #dc2626;
-      font-weight: 700;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 9px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .income-badge {
-      background: #ecfdf5;
-      color: #047857;
-    }
-
-    .expense-badge {
-      background: #fef2f2;
-      color: #b91c1c;
-    }
-
-    .delete-btn {
-      border: none;
-      background: #fee2e2;
-      color: #b91c1c;
-      padding: 7px 10px;
-      border-radius: 7px;
-      cursor: pointer;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 45px;
-      color: #6b7280;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.45);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 1000;
-    }
-
-    .modal-box {
-      background: white;
-      width: 100%;
-      max-width: 600px;
-      border-radius: 16px;
-      padding: 25px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .close {
-      border: none;
-      background: none;
-      font-size: 25px;
-      cursor: pointer;
-      color: #6b7280;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .full {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #374151;
-    }
-
-    input,
-    select {
-      width: 100%;
-      padding: 11px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      outline: none;
-      background: white;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: #4f8cff;
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 22px;
-    }
-
-    .cancel {
-      border: 1px solid #d1d5db;
-      background: white;
-      color: #374151;
-      padding: 11px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .invoice-section {
-      margin-top: 25px;
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 22px;
-    }
-
-    .invoice-section h2 {
-      margin-bottom: 8px;
-    }
-
-    .invoice-section p {
-      color: #6b7280;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 900px) {
-      .sidebar {
-        width: 200px;
-      }
-
-      .main {
-        margin-left: 200px;
-      }
-
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 700px) {
-      .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-      }
-
-      .main {
-        margin-left: 0;
-      }
-
-      .topbar {
-        padding: 0 18px;
-      }
-
-      .content {
-        padding: 18px;
-      }
-
-      .page-header {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .stats {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .full {
-        grid-column: auto;
-      }
-    }
-
-    @media (max-width: 450px) {
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar h1 {
-        font-size: 18px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finance - CompanyFlow</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#f5f7fb;
+  color:#1f2937;
+}
+
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  width:240px;
+  height:100vh;
+  background:#111827;
+  color:white;
+  padding:25px 15px;
+}
+
+.logo{
+  font-size:24px;
+  font-weight:bold;
+  margin-bottom:30px;
+  padding-left:10px;
+}
+
+.sidebar a{
+  display:block;
+  color:#d1d5db;
+  text-decoration:none;
+  padding:12px 15px;
+  border-radius:8px;
+  margin-bottom:5px;
+}
+
+.sidebar a:hover,
+.sidebar a.active{
+  background:#2563eb;
+  color:white;
+}
+
+.main{
+  margin-left:240px;
+  padding:30px;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+  gap:15px;
+}
+
+h1{
+  font-size:30px;
+}
+
+.btn{
+  background:#2563eb;
+  color:white;
+  border:none;
+  padding:12px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.btn:hover{
+  background:#1d4ed8;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+  margin-bottom:25px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+.stat-number{
+  font-size:27px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.search{
+  width:100%;
+  padding:13px;
+  border:1px solid #d1d5db;
+  border-radius:8px;
+  margin-bottom:20px;
+}
+
+.table-card{
+  background:white;
+  border-radius:12px;
+  padding:20px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:800px;
+}
+
+th,td{
+  padding:14px 10px;
+  border-bottom:1px solid #eee;
+  text-align:left;
+}
+
+th{
+  color:#6b7280;
+  font-size:14px;
+}
+
+.income{
+  color:#15803d;
+  font-weight:bold;
+}
+
+.expense{
+  color:#dc2626;
+  font-weight:bold;
+}
+
+.delete-btn{
+  background:#ef4444;
+  color:white;
+  border:none;
+  padding:7px 11px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.empty{
+  text-align:center;
+  padding:35px;
+  color:#6b7280;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal-box{
+  background:white;
+  width:100%;
+  max-width:550px;
+  border-radius:14px;
+  padding:25px;
+}
+
+.modal-box h2{
+  margin-bottom:20px;
+}
+
+.form-group{
+  margin-bottom:15px;
+}
+
+label{
+  display:block;
+  margin-bottom:7px;
+  font-weight:bold;
+  font-size:14px;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border:1px solid #d1d5db;
+  border-radius:8px;
+}
+
+.form-buttons{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.cancel{
+  background:#6b7280;
+}
+
+.message{
+  margin-bottom:15px;
+  padding:10px;
+  border-radius:8px;
+  display:none;
+}
+
+.success{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.error{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+@media(max-width:900px){
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:700px){
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+  }
+
+  .main{
+    margin-left:0;
+    padding:20px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .top{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <aside class="sidebar">
+<aside class="sidebar">
 
-    <div class="logo">
-      Company<span>Flow</span>
-    </div>
+<div class="logo">CompanyFlow</div>
 
-    <nav class="nav">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="employees.html">Employees</a>
-      <a href="customers.html">Customers</a>
-      <a href="projects.html">Projects</a>
-      <a href="tasks.html">Tasks</a>
-      <a href="finance.html" class="active">Finance</a>
-      <a href="inventory.html">Inventory</a>
-      <a href="documents.html">Documents</a>
-      <a href="reports.html">Reports</a>
-      <a href="settings.html">Settings</a>
-    </nav>
+<a href="dashboard.html">Dashboard</a>
+<a href="employees.html">Employees</a>
+<a href="customers.html">Customers</a>
+<a href="projects.html">Projects</a>
+<a href="tasks.html">Tasks</a>
+<a href="finance.html" class="active">Finance</a>
+<a href="inventory.html">Inventory</a>
+<a href="documents.html">Documents</a>
+<a href="reports.html">Reports</a>
+<a href="roles.html">Roles & Permissions</a>
+<a href="notifications.html">Notifications</a>
+<a href="settings.html">Settings</a>
+<a href="index.html">Back to Website</a>
 
-  </aside>
+</aside>
 
+<main class="main">
 
-  <main class="main">
+<div class="top">
 
-    <header class="topbar">
+<div>
+<h1>Finance</h1>
+<p>Manage your company income and expenses.</p>
+</div>
 
-      <h1>Finance</h1>
+<button class="btn" onclick="openModal()">
++ Add Transaction
+</button>
 
-      <div class="user">
-        <div class="avatar" id="avatar">U</div>
-        <span id="ownerName">User</span>
-      </div>
+</div>
 
-    </header>
 
+<div class="stats">
 
-    <section class="content">
+<div class="card">
+<div>Total Income</div>
+<div class="stat-number" id="totalIncome">$0.00</div>
+</div>
 
-      <div class="page-header">
+<div class="card">
+<div>Total Expenses</div>
+<div class="stat-number" id="totalExpenses">$0.00</div>
+</div>
 
-        <div>
-          <h2>Financial Management</h2>
-          <p>Track income, expenses and your business financial activity.</p>
-        </div>
+<div class="card">
+<div>Net Profit</div>
+<div class="stat-number" id="netProfit">$0.00</div>
+</div>
 
-        <button class="btn" onclick="openModal()">
-          + Add Transaction
-        </button>
+<div class="card">
+<div>Transactions</div>
+<div class="stat-number" id="totalTransactions">0</div>
+</div>
 
-      </div>
+</div>
 
 
-      <!-- FINANCE STATS -->
+<input
+type="text"
+id="search"
+class="search"
+placeholder="Search transactions..."
+oninput="renderTransactions()"
+>
 
-      <div class="stats">
 
-        <div class="stat">
-          <small>Total Revenue</small>
-          <strong class="green" id="totalIncome">$0.00</strong>
-        </div>
+<div id="message" class="message"></div>
 
-        <div class="stat">
-          <small>Total Expenses</small>
-          <strong class="red" id="totalExpense">$0.00</strong>
-        </div>
 
-        <div class="stat">
-          <small>Net Profit</small>
-          <strong class="blue" id="netProfit">$0.00</strong>
-        </div>
+<div class="table-card">
 
-        <div class="stat">
-          <small>Total Transactions</small>
-          <strong class="purple" id="transactionCount">0</strong>
-        </div>
+<table>
 
-      </div>
+<thead>
 
+<tr>
+<th>Description</th>
+<th>Amount</th>
+<th>Type</th>
+<th>Category</th>
+<th>Date</th>
+<th>Action</th>
+</tr>
 
-      <!-- SEARCH -->
+</thead>
 
-      <div class="toolbar">
+<tbody id="transactionTable"></tbody>
 
-        <input
-          type="text"
-          id="search"
-          class="search"
-          placeholder="Search transactions..."
-          oninput="renderTransactions()"
-        >
+</table>
 
-      </div>
+</div>
 
+</main>
 
-      <!-- TRANSACTION TABLE -->
 
-      <div class="table-wrap">
+<div class="modal" id="transactionModal">
 
-        <table>
+<div class="modal-box">
 
-          <thead>
-            <tr>
-              <th>Description</th>
-              <th>Category</th>
-              <th>Date</th>
-              <th>Type</th>
-              <th>Amount</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+<h2>Add Transaction</h2>
 
-          <tbody id="transactionTable"></tbody>
 
-        </table>
+<div class="form-group">
 
-        <div id="emptyState" class="empty">
-          No financial transactions found.
-        </div>
+<label>Description</label>
 
-      </div>
+<input
+type="text"
+id="description"
+placeholder="e.g. Website project payment"
+>
 
+</div>
 
-      <!-- INVOICE SECTION -->
 
-      <div class="invoice-section">
+<div class="form-group">
 
-        <h2>Invoices</h2>
+<label>Amount</label>
 
-        <p>
-          Invoice management will be connected to customers,
-          payments and automated financial reports in a future
-          version of CompanyFlow.
-        </p>
+<input
+type="number"
+id="amount"
+step="0.01"
+min="0"
+placeholder="0.00"
+>
 
-      </div>
+</div>
 
-    </section>
 
-  </main>
+<div class="form-group">
 
+<label>Type</label>
 
-  <!-- ADD TRANSACTION MODAL -->
+<select id="type">
 
-  <div class="modal" id="transactionModal">
+<option value="Income">Income</option>
+<option value="Expense">Expense</option>
 
-    <div class="modal-box">
+</select>
 
-      <div class="modal-header">
+</div>
 
-        <h2>Add Transaction</h2>
 
-        <button class="close" onclick="closeModal()">×</button>
+<div class="form-group">
 
-      </div>
+<label>Category</label>
 
+<select id="category">
 
-      <form id="transactionForm">
+<option value="Sales">Sales</option>
+<option value="Salary">Salary</option>
+<option value="Marketing">Marketing</option>
+<option value="Office">Office</option>
+<option value="Software">Software</option>
+<option value="Equipment">Equipment</option>
+<option value="Other">Other</option>
 
-        <div class="form-grid">
+</select>
 
-          <div class="form-group full">
+</div>
 
-            <label>Description</label>
 
-            <input
-              type="text"
-              id="description"
-              placeholder="e.g. Website project payment"
-              required
-            >
+<div class="form-group">
 
-          </div>
+<label>Date</label>
 
+<input
+type="date"
+id="transactionDate"
+>
 
-          <div class="form-group">
+</div>
 
-            <label>Amount (USD)</label>
 
-            <input
-              type="number"
-              id="amount"
-              min="0"
-              step="0.01"
-              placeholder="0.00"
-              required
-            >
+<div class="form-buttons">
 
-          </div>
+<button class="btn" onclick="addTransaction()">
+Save Transaction
+</button>
 
+<button class="btn cancel" onclick="closeModal()">
+Cancel
+</button>
 
-          <div class="form-group">
+</div>
 
-            <label>Type</label>
+</div>
 
-            <select id="type">
+</div>
 
-              <option value="Income">
-                Income
-              </option>
 
-              <option value="Expense">
-                Expense
-              </option>
+<script>
 
-            </select>
+let transactions=[];
+let companyId=null;
 
-          </div>
 
+async function loadTransactions(){
 
-          <div class="form-group">
+const {
+data:{user},
+error:userError
+}=await supabaseClient.auth.getUser();
 
-            <label>Category</label>
 
-            <select id="category">
+if(userError || !user){
 
-              <option value="Sales">Sales</option>
-              <option value="Services">Services</option>
-              <option value="Salary">Salary</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Office">Office</option>
-              <option value="Software">Software</option>
-              <option value="Operations">Operations</option>
-              <option value="Other">Other</option>
+window.location.href="signin.html";
+return;
 
-            </select>
+}
 
-          </div>
 
+const {
+data:profile,
+error:profileError
+}=await supabaseClient
+.from("profiles")
+.select("company_id")
+.eq("id",user.id)
+.single();
 
-          <div class="form-group">
 
-            <label>Date</label>
+if(profileError || !profile){
 
-            <input
-              type="date"
-              id="date"
-              required
-            >
+showMessage(
+"Could not load company information.",
+true
+);
 
-          </div>
+return;
 
-        </div>
+}
 
 
-        <div class="form-actions">
+companyId=profile.company_id;
 
-          <button
-            type="button"
-            class="cancel"
-            onclick="closeModal()"
-          >
-            Cancel
-          </button>
 
-          <button
-            type="submit"
-            class="btn"
-          >
-            Add Transaction
-          </button>
+const {
+data,
+error
+}=await supabaseClient
+.from("transactions")
+.select("*")
+.eq("company_id",companyId)
+.order("transaction_date",{ascending:false});
 
-        </div>
 
-      </form>
+if(error){
 
-    </div>
+showMessage(
+"Could not load transactions: "+error.message,
+true
+);
 
-  </div>
+return;
 
+}
 
-  <script>
 
-    // Owner information
+transactions=data||[];
 
-    const ownerName =
-      localStorage.getItem("ownerName") || "User";
+hideMessage();
 
-    document.getElementById("ownerName").textContent =
-      ownerName;
+renderTransactions();
 
-    document.getElementById("avatar").textContent =
-      ownerName.charAt(0).toUpperCase();
+}
 
 
-    // Load transactions
+function renderTransactions(){
 
-    let transactions =
-      JSON.parse(
-        localStorage.getItem("transactions")
-      ) || [];
+const table=
+document.getElementById("transactionTable");
 
 
-    // Set today's date
+const search=
+document.getElementById("search")
+.value
+.toLowerCase();
 
-    document.getElementById("date").value =
-      new Date().toISOString().split("T")[0];
 
+const filtered=
+transactions.filter(transaction=>{
 
-    // Open modal
+return(
+(transaction.description||"")
+.toLowerCase()
+.includes(search)
 
-    function openModal() {
+||
 
-      document.getElementById(
-        "transactionModal"
-      ).style.display = "flex";
+(transaction.category||"")
+.toLowerCase()
+.includes(search)
 
-    }
+||
 
+(transaction.type||"")
+.toLowerCase()
+.includes(search)
+);
 
-    // Close modal
+});
 
-    function closeModal() {
 
-      document.getElementById(
-        "transactionModal"
-      ).style.display = "none";
+let income=0;
+let expenses=0;
 
-      document.getElementById(
-        "transactionForm"
-      ).reset();
 
-      document.getElementById("date").value =
-        new Date().toISOString().split("T")[0];
+transactions.forEach(transaction=>{
 
-    }
+const amount=
+Number(transaction.amount)||0;
 
 
-    // Add transaction
+if(transaction.type==="Income"){
+income+=amount;
+}
 
-    document
-      .getElementById("transactionForm")
-      .addEventListener("submit", function(e) {
+if(transaction.type==="Expense"){
+expenses+=amount;
+}
 
-        e.preventDefault();
+});
 
 
-        const transaction = {
+document.getElementById("totalIncome")
+.textContent=formatMoney(income);
 
-          id: Date.now(),
 
-          description:
-            document.getElementById(
-              "description"
-            ).value.trim(),
+document.getElementById("totalExpenses")
+.textContent=formatMoney(expenses);
 
-          amount:
-            Number(
-              document.getElementById(
-                "amount"
-              ).value
-            ),
 
-          type:
-            document.getElementById(
-              "type"
-            ).value,
+document.getElementById("netProfit")
+.textContent=formatMoney(income-expenses);
 
-          category:
-            document.getElementById(
-              "category"
-            ).value,
 
-          date:
-            document.getElementById(
-              "date"
-            ).value,
+document.getElementById("totalTransactions")
+.textContent=transactions.length;
 
-          createdAt:
-            new Date().toISOString()
 
-        };
+if(filtered.length===0){
 
+table.innerHTML=`
+<tr>
+<td colspan="6" class="empty">
+No transactions found.
+</td>
+</tr>
+`;
 
-        transactions.push(transaction);
+return;
 
+}
 
-        localStorage.setItem(
-          "transactions",
-          JSON.stringify(transactions)
-        );
 
+table.innerHTML=
+filtered.map(transaction=>{
 
-        closeModal();
+const amount=
+Number(transaction.amount)||0;
 
-        renderTransactions();
 
-      });
+const typeClass=
+transaction.type==="Income"
+?"income"
+:"expense";
 
 
-    // Render transactions
+const sign=
+transaction.type==="Income"
+?"+"
+:"-";
 
-    function renderTransactions() {
 
-      const table =
-        document.getElementById(
-          "transactionTable"
-        );
+return`
 
-      const empty =
-        document.getElementById(
-          "emptyState"
-        );
+<tr>
 
-      const search =
-        document.getElementById(
-          "search"
-        ).value.toLowerCase();
+<td>
+<strong>
+${escapeHTML(transaction.description||"")}
+</strong>
+</td>
 
+<td class="${typeClass}">
+${sign}${formatMoney(amount)}
+</td>
 
-      const filtered =
-        transactions.filter(transaction =>
+<td>
+${escapeHTML(transaction.type||"-")}
+</td>
 
-          transaction.description
-            .toLowerCase()
-            .includes(search)
+<td>
+${escapeHTML(transaction.category||"-")}
+</td>
 
-          ||
+<td>
+${transaction.transaction_date||"-"}
+</td>
 
-          transaction.category
-            .toLowerCase()
-            .includes(search)
+<td>
 
-          ||
+<button
+class="delete-btn"
+onclick="deleteTransaction('${transaction.id}')">
+Delete
+</button>
 
-          transaction.type
-            .toLowerCase()
-            .includes(search)
+</td>
 
-        );
+</tr>
 
+`;
 
-      table.innerHTML = "";
+}).join("");
 
+}
 
-      if (filtered.length === 0) {
 
-        empty.style.display = "block";
+async function addTransaction(){
 
-      } else {
+const description=
+document.getElementById("description")
+.value.trim();
 
-        empty.style.display = "none";
 
+const amount=
+Number(
+document.getElementById("amount").value
+);
 
-        filtered.forEach(transaction => {
 
-          const row =
-            document.createElement("tr");
+const type=
+document.getElementById("type").value;
 
 
-          const amount =
-            Number(transaction.amount)
-              .toLocaleString(
-                "en-US",
-                {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                }
-              );
+const category=
+document.getElementById("category").value;
 
 
-          const typeClass =
-            transaction.type === "Income"
-              ? "income-badge"
-              : "expense-badge";
+const transactionDate=
+document.getElementById("transactionDate").value;
 
 
-          const amountClass =
-            transaction.type === "Income"
-              ? "income"
-              : "expense";
+if(!description){
 
+alert("Please enter a description.");
+return;
 
-          const sign =
-            transaction.type === "Income"
-              ? "+"
-              : "-";
+}
 
 
-          row.innerHTML = `
+if(!amount || amount<=0){
 
-            <td>
-              <div class="description">
-                ${escapeHTML(
-                  transaction.description
-                )}
-              </div>
-            </td>
+alert("Please enter a valid amount.");
+return;
 
-            <td>
-              ${escapeHTML(
-                transaction.category
-              )}
-            </td>
+}
 
-            <td>
-              ${formatDate(
-                transaction.date
-              )}
-            </td>
 
-            <td>
-              <span class="badge ${typeClass}">
-                ${escapeHTML(
-                  transaction.type
-                )}
-              </span>
-            </td>
+if(!transactionDate){
 
-            <td class="${amountClass}">
-              ${sign}$${amount}
-            </td>
+alert("Please select a date.");
+return;
 
-            <td>
+}
 
-              <button
-                class="delete-btn"
-                onclick="deleteTransaction(
-                  ${transaction.id}
-                )"
-              >
-                Delete
-              </button>
 
-            </td>
+const {
+data,
+error
+}=await supabaseClient
+.from("transactions")
+.insert([{
 
-          `;
+company_id:companyId,
 
+description:description,
 
-          table.appendChild(row);
+amount:amount,
 
-        });
+type:type,
 
-      }
+category:category,
 
+transaction_date:transactionDate
 
-      updateStats();
+}])
+.select()
+.single();
 
-    }
 
+if(error){
 
-    // Update financial statistics
+showMessage(
+"Could not add transaction: "+error.message,
+true
+);
 
-    function updateStats() {
+return;
 
-      const income =
-        transactions
-          .filter(
-            t => t.type === "Income"
-          )
-          .reduce(
-            (sum, t) =>
-              sum + Number(t.amount),
-            0
-          );
+}
 
 
-      const expense =
-        transactions
-          .filter(
-            t => t.type === "Expense"
-          )
-          .reduce(
-            (sum, t) =>
-              sum + Number(t.amount),
-            0
-          );
+transactions.unshift(data);
 
+renderTransactions();
 
-      const profit =
-        income - expense;
+closeModal();
 
 
-      document.getElementById(
-        "totalIncome"
-      ).textContent =
-        formatMoney(income);
+showMessage(
+"Transaction added successfully.",
+false
+);
 
+}
 
-      document.getElementById(
-        "totalExpense"
-      ).textContent =
-        formatMoney(expense);
 
+async function deleteTransaction(id){
 
-      document.getElementById(
-        "netProfit"
-      ).textContent =
-        formatMoney(profit);
+if(!confirm("Delete this transaction?")){
+return;
+}
 
 
-      document.getElementById(
-        "transactionCount"
-      ).textContent =
-        transactions.length;
+const {
+error
+}=await supabaseClient
+.from("transactions")
+.delete()
+.eq("id",id)
+.eq("company_id",companyId);
 
-    }
 
+if(error){
 
-    // Delete transaction
+showMessage(
+"Could not delete transaction: "+error.message,
+true
+);
 
-    function deleteTransaction(id) {
+return;
 
-      const confirmed =
-        confirm(
-          "Are you sure you want to delete this transaction?"
-        );
+}
 
 
-      if (!confirmed) return;
+transactions=
+transactions.filter(
+transaction=>transaction.id!==id
+);
 
 
-      transactions =
-        transactions.filter(
-          transaction =>
-            transaction.id !== id
-        );
+renderTransactions();
 
 
-      localStorage.setItem(
-        "transactions",
-        JSON.stringify(transactions)
-      );
+showMessage(
+"Transaction deleted successfully.",
+false
+);
 
+}
 
-      renderTransactions();
 
-    }
+function openModal(){
 
+document.getElementById("transactionModal")
+.style.display="flex";
 
-    // Format money
 
-    function formatMoney(amount) {
+document.getElementById("transactionDate")
+.value=
+new Date().toISOString().split("T")[0];
 
-      return "$" +
-        Number(amount).toLocaleString(
-          "en-US",
-          {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }
-        );
+}
 
-    }
 
+function closeModal(){
 
-    // Format date
+document.getElementById("transactionModal")
+.style.display="none";
 
-    function formatDate(date) {
 
-      if (!date) return "-";
+document.getElementById("description").value="";
+document.getElementById("amount").value="";
+document.getElementById("type").value="Income";
+document.getElementById("category").value="Sales";
+document.getElementById("transactionDate").value="";
 
+}
 
-      const d =
-        new Date(
-          date + "T00:00:00"
-        );
 
+function formatMoney(amount){
 
-      return d.toLocaleDateString(
-        "en-US",
-        {
-          year: "numeric",
-          month: "short",
-          day: "numeric"
-        }
-      );
+return new Intl.NumberFormat(
+"en-US",
+{
+style:"currency",
+currency:"USD"
+}
+).format(amount);
 
-    }
+}
 
 
-    // Security helper
+function showMessage(message,isError){
 
-    function escapeHTML(value) {
+const box=
+document.getElementById("message");
 
-      return String(value)
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
+box.textContent=message;
 
-    }
+box.className=
+"message "+(isError?"error":"success");
 
+box.style.display="block";
 
-    // Close modal by clicking outside
+}
 
-    window.addEventListener(
-      "click",
-      function(e) {
 
-        const modal =
-          document.getElementById(
-            "transactionModal"
-          );
+function hideMessage(){
 
-        if (e.target === modal) {
-          closeModal();
-        }
+document.getElementById("message")
+.style.display="none";
 
-      }
-    );
+}
 
 
-    // Initial render
+function escapeHTML(value){
 
-    renderTransactions();
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
-  </script>
+}
+
+
+loadTransactions();
+
+</script>
 
 </body>
 </html>
