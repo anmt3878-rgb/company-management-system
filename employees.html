@@ -12,59 +12,51 @@
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
       background: #f5f7fb;
-      color: #172033;
-    }
-
-    .layout {
-      display: flex;
-      min-height: 100vh;
+      color: #1f2937;
     }
 
     .sidebar {
-      width: 240px;
-      background: #111827;
-      color: white;
-      padding: 24px 16px;
       position: fixed;
       left: 0;
       top: 0;
-      bottom: 0;
+      width: 240px;
+      height: 100vh;
+      background: #111827;
+      color: white;
+      padding: 25px 15px;
       overflow-y: auto;
     }
 
     .logo {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: bold;
       margin-bottom: 30px;
-      padding: 0 10px;
+      padding-left: 10px;
     }
 
-    .nav a {
+    .sidebar a {
       display: block;
-      color: #cbd5e1;
+      color: #d1d5db;
       text-decoration: none;
       padding: 12px 14px;
       border-radius: 8px;
       margin-bottom: 5px;
-      font-size: 14px;
     }
 
-    .nav a:hover,
-    .nav a.active {
+    .sidebar a:hover,
+    .sidebar a.active {
       background: #2563eb;
       color: white;
     }
 
     .main {
       margin-left: 240px;
-      width: calc(100% - 240px);
       padding: 30px;
     }
 
@@ -74,24 +66,19 @@
       align-items: center;
       margin-bottom: 25px;
       gap: 15px;
+      flex-wrap: wrap;
     }
 
-    .title h1 {
+    h1 {
+      margin: 0;
       font-size: 30px;
-      margin-bottom: 6px;
     }
 
-    .title p {
-      color: #64748b;
-      font-size: 14px;
-    }
-
-    .user-box {
+    .plan-box {
       background: white;
-      padding: 10px 15px;
+      padding: 12px 18px;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,.05);
-      font-size: 14px;
     }
 
     .stats {
@@ -108,47 +95,50 @@
       box-shadow: 0 2px 10px rgba(0,0,0,.05);
     }
 
-    .stat span {
-      color: #64748b;
-      font-size: 13px;
+    .stat-title {
+      color: #6b7280;
+      font-size: 14px;
     }
 
-    .stat strong {
-      display: block;
+    .stat-number {
       font-size: 28px;
+      font-weight: bold;
       margin-top: 8px;
     }
 
     .card {
       background: white;
-      border-radius: 14px;
-      padding: 22px;
+      padding: 25px;
+      border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      margin-bottom: 25px;
     }
 
-    .actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+    .card h2 {
+      margin-top: 0;
     }
 
-    .search {
-      flex: 1;
-      min-width: 220px;
-      padding: 12px 14px;
-      border: 1px solid #dbe2ea;
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
       border-radius: 8px;
-      outline: none;
+      font-size: 15px;
     }
 
-    .btn {
+    button {
       border: none;
-      border-radius: 8px;
       padding: 12px 18px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: bold;
+      font-size: 15px;
     }
 
     .btn-primary {
@@ -161,167 +151,100 @@
     }
 
     .btn-danger {
-      background: #fee2e2;
-      color: #b91c1c;
+      background: #dc2626;
+      color: white;
       padding: 8px 12px;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .limit-box {
+      background: #eff6ff;
+      color: #1e40af;
+      padding: 14px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+    }
+
+    .search {
+      margin-bottom: 18px;
+    }
+
+    .table-container {
+      overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
+      min-width: 750px;
     }
 
     th,
     td {
+      padding: 13px;
       text-align: left;
-      padding: 14px 10px;
-      border-bottom: 1px solid #edf0f4;
-      font-size: 14px;
+      border-bottom: 1px solid #e5e7eb;
     }
 
     th {
-      color: #64748b;
-      font-size: 12px;
-      text-transform: uppercase;
+      background: #f9fafb;
     }
 
-    .status {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-size: 12px;
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 40px;
-      color: #64748b;
-    }
-
-    .message {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      padding: 14px 18px;
-      border-radius: 10px;
-      color: white;
-      display: none;
-      z-index: 1000;
-    }
-
-    .message.success {
-      background: #16a34a;
-    }
-
-    .message.error {
-      background: #dc2626;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.5);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 999;
-    }
-
-    .modal-box {
-      background: white;
-      width: 100%;
-      max-width: 520px;
-      border-radius: 14px;
-      padding: 25px;
-    }
-
-    .modal-box h2 {
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 13px;
+    .status-active {
+      color: #15803d;
       font-weight: bold;
-      margin-bottom: 6px;
     }
 
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 11px;
-      border: 1px solid #dbe2ea;
-      border-radius: 8px;
-      outline: none;
-    }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .btn-secondary {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 30px;
-      color: #64748b;
+    .status-inactive {
+      color: #dc2626;
+      font-weight: bold;
     }
 
     @media (max-width: 900px) {
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
       .sidebar {
         width: 200px;
       }
 
       .main {
         margin-left: 200px;
-        width: calc(100% - 200px);
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 650px) {
       .sidebar {
         position: relative;
         width: 100%;
         height: auto;
       }
 
-      .layout {
-        display: block;
-      }
-
       .main {
         margin-left: 0;
-        width: 100%;
         padding: 18px;
       }
 
-      .stats {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .table-wrapper {
-        overflow-x: auto;
-      }
-
-      table {
-        min-width: 700px;
+      .stats,
+      .form-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -329,67 +252,25 @@
 
 <body>
 
-<div class="layout">
-
   <aside class="sidebar">
 
     <div class="logo">
       CompanyFlow
     </div>
 
-    <nav class="nav">
-
-      <a href="dashboard.html">Dashboard</a>
-
-      <a href="employees.html" class="active">
-        Employees
-      </a>
-
-      <a href="customers.html">
-        Customers
-      </a>
-
-      <a href="projects.html">
-        Projects
-      </a>
-
-      <a href="tasks.html">
-        Tasks
-      </a>
-
-      <a href="finance.html">
-        Finance
-      </a>
-
-      <a href="inventory.html">
-        Inventory
-      </a>
-
-      <a href="documents.html">
-        Documents
-      </a>
-
-      <a href="reports.html">
-        Reports
-      </a>
-
-      <a href="roles.html">
-        Roles & Permissions
-      </a>
-
-      <a href="notifications.html">
-        Notifications
-      </a>
-
-      <a href="settings.html">
-        Settings
-      </a>
-
-      <a href="index.html">
-        Back to Website
-      </a>
-
-    </nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="employees.html" class="active">Employees</a>
+    <a href="customers.html">Customers</a>
+    <a href="projects.html">Projects</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="finance.html">Finance</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="documents.html">Documents</a>
+    <a href="reports.html">Reports</a>
+    <a href="roles.html">Roles & Permissions</a>
+    <a href="notifications.html">Notifications</a>
+    <a href="settings.html">Settings</a>
+    <a href="index.html">Back to Website</a>
 
   </aside>
 
@@ -398,18 +279,14 @@
 
     <div class="topbar">
 
-      <div class="title">
-
+      <div>
         <h1>Employees</h1>
-
-        <p>
-          Manage your company employees
-        </p>
-
+        <p>Manage your company employees.</p>
       </div>
 
-      <div class="user-box" id="userBox">
-        Loading...
+      <div class="plan-box">
+        Plan:
+        <strong id="currentPlan">Loading...</strong>
       </div>
 
     </div>
@@ -418,23 +295,23 @@
     <div class="stats">
 
       <div class="stat">
-        <span>Total Employees</span>
-        <strong id="totalEmployees">0</strong>
+        <div class="stat-title">Total Employees</div>
+        <div class="stat-number" id="totalEmployees">0</div>
       </div>
 
       <div class="stat">
-        <span>Active</span>
-        <strong id="activeEmployees">0</strong>
+        <div class="stat-title">Active Employees</div>
+        <div class="stat-number" id="activeEmployees">0</div>
       </div>
 
       <div class="stat">
-        <span>Inactive</span>
-        <strong id="inactiveEmployees">0</strong>
+        <div class="stat-title">Inactive Employees</div>
+        <div class="stat-number" id="inactiveEmployees">0</div>
       </div>
 
       <div class="stat">
-        <span>Departments</span>
-        <strong id="departmentCount">0</strong>
+        <div class="stat-title">Positions</div>
+        <div class="stat-number" id="departmentCount">0</div>
       </div>
 
     </div>
@@ -442,59 +319,122 @@
 
     <div class="card">
 
-      <div class="actions">
+      <h2>Add Employee</h2>
 
-        <input
-          type="text"
-          id="searchInput"
-          class="search"
-          placeholder="Search employees..."
-          oninput="renderEmployees()"
-        >
-
-        <button
-          class="btn btn-primary"
-          onclick="openModal()"
-        >
-          + Add Employee
-        </button>
-
+      <div class="limit-box">
+        Employee limit:
+        <strong id="limitText">Loading...</strong>
       </div>
 
+      <form id="employeeForm">
 
-      <div class="table-wrapper">
+        <div class="form-grid">
+
+          <input
+            type="text"
+            id="name"
+            placeholder="Full Name"
+            required
+          >
+
+          <input
+            type="text"
+            id="position"
+            placeholder="Position"
+            required
+          >
+
+          <input
+            type="email"
+            id="email"
+            placeholder="Email"
+          >
+
+          <input
+            type="text"
+            id="phone"
+            placeholder="Phone"
+          >
+
+          <input
+            type="text"
+            id="department"
+            placeholder="Department"
+          >
+
+          <input
+            type="number"
+            id="salary"
+            placeholder="Salary"
+            min="0"
+          >
+
+          <select id="status">
+
+            <option value="Active">
+              Active
+            </option>
+
+            <option value="Inactive">
+              Inactive
+            </option>
+
+          </select>
+
+        </div>
+
+        <br>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          id="addButton"
+        >
+          Add Employee
+        </button>
+
+      </form>
+
+
+      <div
+        id="message"
+        class="message"
+      ></div>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>Employee List</h2>
+
+      <input
+        class="search"
+        type="text"
+        id="searchInput"
+        placeholder="Search employees..."
+      >
+
+      <div class="table-container">
 
         <table>
 
           <thead>
 
             <tr>
-
               <th>Name</th>
-
               <th>Position</th>
-
               <th>Email</th>
-
               <th>Phone</th>
-
+              <th>Department</th>
+              <th>Salary</th>
               <th>Status</th>
-
               <th>Action</th>
-
             </tr>
 
           </thead>
 
-          <tbody id="employeesTable">
-
-            <tr>
-              <td colspan="6" class="loading">
-                Loading employees...
-              </td>
-            </tr>
-
-          </tbody>
+          <tbody id="employeeTableBody"></tbody>
 
         </table>
 
@@ -504,124 +444,6 @@
 
   </main>
 
-</div>
-
-
-<!-- ADD EMPLOYEE MODAL -->
-
-<div class="modal" id="employeeModal">
-
-  <div class="modal-box">
-
-    <h2>Add Employee</h2>
-
-
-    <div class="form-group">
-
-      <label>
-        Full Name
-      </label>
-
-      <input
-        type="text"
-        id="employeeName"
-        placeholder="John Smith"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Position
-      </label>
-
-      <input
-        type="text"
-        id="employeePosition"
-        placeholder="Manager"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Email
-      </label>
-
-      <input
-        type="email"
-        id="employeeEmail"
-        placeholder="john@company.com"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Phone
-      </label>
-
-      <input
-        type="text"
-        id="employeePhone"
-        placeholder="+1 555 123 4567"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Status
-      </label>
-
-      <select id="employeeStatus">
-
-        <option value="Active">
-          Active
-        </option>
-
-        <option value="Inactive">
-          Inactive
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <div class="modal-actions">
-
-      <button
-        class="btn btn-secondary"
-        onclick="closeModal()"
-      >
-        Cancel
-      </button>
-
-      <button
-        class="btn btn-primary"
-        onclick="addEmployee()"
-      >
-        Add Employee
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<div id="message" class="message"></div>
-
 
 <script>
 
@@ -629,78 +451,57 @@
 
   let companyId = null;
 
+  let currentPlan = "Free";
 
-  function showMessage(text, type) {
 
-    const message =
+  const PLAN_LIMITS = {
+
+    "Free": 3,
+
+    "Starter": 10,
+
+    "Business": 50,
+
+    "Professional": 200,
+
+    "Enterprise": Infinity
+
+  };
+
+
+  function showMessage(message, type) {
+
+    const box =
       document.getElementById("message");
 
-    message.textContent = text;
+    box.textContent = message;
 
-    message.className =
+    box.className =
       "message " + type;
 
-    message.style.display = "block";
+    box.style.display = "block";
 
     setTimeout(function() {
 
-      message.style.display = "none";
+      box.style.display = "none";
 
-    }, 3500);
-
-  }
-
-
-  function openModal() {
-
-    document.getElementById(
-      "employeeModal"
-    ).style.display = "flex";
+    }, 4000);
 
   }
 
 
-  function closeModal() {
-
-    document.getElementById(
-      "employeeModal"
-    ).style.display = "none";
-
-    document.getElementById(
-      "employeeName"
-    ).value = "";
-
-    document.getElementById(
-      "employeePosition"
-    ).value = "";
-
-    document.getElementById(
-      "employeeEmail"
-    ).value = "";
-
-    document.getElementById(
-      "employeePhone"
-    ).value = "";
-
-    document.getElementById(
-      "employeeStatus"
-    ).value = "Active";
-
-  }
-
-
-  async function loadCompany() {
+  async function getCompanyData() {
 
     const {
       data: {
         user
       },
-      error: userError
+      error: authError
     } =
       await supabaseClient.auth.getUser();
 
 
-    if (userError || !user) {
+    if (authError || !user) {
 
       window.location.href =
         "signin.html";
@@ -710,26 +511,30 @@
     }
 
 
-    document.getElementById(
-      "userBox"
-    ).textContent =
-      user.email || "User";
-
-
     const {
       data: profile,
       error: profileError
     } =
       await supabaseClient
+
         .from("profiles")
-        .select("company_id, full_name")
-        .eq("id", user.id)
+
+        .select(
+          "company_id"
+        )
+
+        .eq(
+          "id",
+          user.id
+        )
+
         .single();
 
 
-    if (profileError || !profile) {
-
-      console.error(profileError);
+    if (
+      profileError ||
+      !profile
+    ) {
 
       showMessage(
         "Could not load company information.",
@@ -745,14 +550,70 @@
       profile.company_id;
 
 
-    if (profile.full_name) {
+    const {
+      data: company,
+      error: companyError
+    } =
+      await supabaseClient
 
-      document.getElementById(
-        "userBox"
-      ).textContent =
-        profile.full_name;
+        .from("companies")
+
+        .select(
+          "plan"
+        )
+
+        .eq(
+          "id",
+          companyId
+        )
+
+        .single();
+
+
+    if (
+      companyError ||
+      !company
+    ) {
+
+      currentPlan =
+        "Free";
+
+    } else {
+
+      currentPlan =
+        company.plan || "Free";
 
     }
+
+
+    if (
+      !PLAN_LIMITS.hasOwnProperty(
+        currentPlan
+      )
+    ) {
+
+      currentPlan =
+        "Free";
+
+    }
+
+
+    document.getElementById(
+      "currentPlan"
+    ).textContent =
+      currentPlan;
+
+
+    const limit =
+      PLAN_LIMITS[currentPlan];
+
+
+    document.getElementById(
+      "limitText"
+    ).textContent =
+      limit === Infinity
+        ? "Unlimited"
+        : limit + " employees";
 
 
     return true;
@@ -763,7 +624,7 @@
   async function loadEmployees() {
 
     const ready =
-      await loadCompany();
+      await getCompanyData();
 
 
     if (!ready) return;
@@ -774,17 +635,25 @@
       error
     } =
       await supabaseClient
+
         .from("employees")
+
         .select("*")
-        .eq("company_id", companyId)
-        .order("created_at", {
-          ascending: false
-        });
+
+        .eq(
+          "company_id",
+          companyId
+        )
+
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        );
 
 
     if (error) {
-
-      console.error(error);
 
       showMessage(
         "Could not load employees: " +
@@ -803,134 +672,231 @@
 
     renderEmployees();
 
+    updateStats();
+
+    updateLimitButton();
+
+  }
+
+
+  function updateLimitButton() {
+
+    const limit =
+      PLAN_LIMITS[currentPlan];
+
+
+    const button =
+      document.getElementById(
+        "addButton"
+      );
+
+
+    if (
+      limit !== Infinity &&
+      employees.length >= limit
+    ) {
+
+      button.disabled =
+        true;
+
+      button.style.opacity =
+        "0.5";
+
+      button.style.cursor =
+        "not-allowed";
+
+      button.textContent =
+        "Plan Limit Reached";
+
+    } else {
+
+      button.disabled =
+        false;
+
+      button.style.opacity =
+        "1";
+
+      button.style.cursor =
+        "pointer";
+
+      button.textContent =
+        "Add Employee";
+
+    }
+
   }
 
 
-  async function addEmployee() {
+  document.getElementById(
+    "employeeForm"
+  ).addEventListener(
+    "submit",
+    async function(event) {
 
-    const name =
-      document
-        .getElementById("employeeName")
-        .value
-        .trim();
-
-
-    const position =
-      document
-        .getElementById("employeePosition")
-        .value
-        .trim();
+      event.preventDefault();
 
 
-    const email =
-      document
-        .getElementById("employeeEmail")
-        .value
-        .trim();
+      const limit =
+        PLAN_LIMITS[currentPlan];
 
 
-    const phone =
-      document
-        .getElementById("employeePhone")
-        .value
-        .trim();
+      if (
+        limit !== Infinity &&
+        employees.length >= limit
+      ) {
+
+        showMessage(
+          "Your " +
+          currentPlan +
+          " plan allows only " +
+          limit +
+          " employees.",
+          "error"
+        );
+
+        return;
+
+      }
 
 
-    const status =
-      document
-        .getElementById("employeeStatus")
-        .value;
+      const name =
+        document.getElementById(
+          "name"
+        ).value.trim();
 
 
-    if (!name) {
+      const position =
+        document.getElementById(
+          "position"
+        ).value.trim();
+
+
+      const email =
+        document.getElementById(
+          "email"
+        ).value.trim();
+
+
+      const phone =
+        document.getElementById(
+          "phone"
+        ).value.trim();
+
+
+      const department =
+        document.getElementById(
+          "department"
+        ).value.trim();
+
+
+      const salary =
+        document.getElementById(
+          "salary"
+        ).value;
+
+
+      const status =
+        document.getElementById(
+          "status"
+        ).value;
+
+
+      if (!name || !position) {
+
+        showMessage(
+          "Full name and position are required.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const button =
+        document.getElementById(
+          "addButton"
+        );
+
+
+      button.disabled =
+        true;
+
+      button.textContent =
+        "Adding...";
+
+
+      const {
+        error
+      } =
+        await supabaseClient
+
+          .from("employees")
+
+          .insert({
+
+            company_id:
+              companyId,
+
+            full_name:
+              name,
+
+            name:
+              name,
+
+            position:
+              position,
+
+            email:
+              email || null,
+
+            phone:
+              phone || null,
+
+            department:
+              department || null,
+
+            salary:
+              salary
+                ? Number(salary)
+                : null,
+
+            status:
+              status
+
+          });
+
+
+      if (error) {
+
+        showMessage(
+          "Could not add employee: " +
+          error.message,
+          "error"
+        );
+
+        updateLimitButton();
+
+        return;
+
+      }
+
 
       showMessage(
-        "Please enter the employee name.",
-        "error"
+        "Employee added successfully.",
+        "success"
       );
 
-      return;
+
+      document.getElementById(
+        "employeeForm"
+      ).reset();
+
+
+      await loadEmployees();
 
     }
-
-
-    if (!companyId) {
-
-      showMessage(
-        "Company information is missing.",
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("employees")
-        .insert({
-
-          company_id: companyId,
-
-          /*
-           * full_name is required by
-           * the database.
-           */
-          full_name: name,
-
-          /*
-           * name is also saved because
-           * the existing table/page uses it.
-           */
-          name: name,
-
-          position: position || null,
-
-          email: email || null,
-
-          phone: phone || null,
-
-          status: status
-
-        })
-        .select()
-        .single();
-
-
-    if (error) {
-
-      console.error(error);
-
-      showMessage(
-        "Could not add employee: " +
-        error.message,
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    employees.unshift(data);
-
-
-    renderEmployees();
-
-
-    closeModal();
-
-
-    showMessage(
-      "Employee added successfully.",
-      "success"
-    );
-
-  }
+  );
 
 
   async function deleteEmployee(id) {
@@ -948,15 +914,23 @@
       error
     } =
       await supabaseClient
+
         .from("employees")
+
         .delete()
-        .eq("id", id)
-        .eq("company_id", companyId);
+
+        .eq(
+          "id",
+          id
+        )
+
+        .eq(
+          "company_id",
+          companyId
+        );
 
 
     if (error) {
-
-      console.error(error);
 
       showMessage(
         "Could not delete employee: " +
@@ -969,161 +943,178 @@
     }
 
 
-    employees =
-      employees.filter(function(employee) {
-
-        return employee.id !== id;
-
-      });
-
-
-    renderEmployees();
-
-
     showMessage(
       "Employee deleted successfully.",
       "success"
     );
+
+
+    await loadEmployees();
 
   }
 
 
   function renderEmployees() {
 
-    const table =
+    const tbody =
       document.getElementById(
-        "employeesTable"
+        "employeeTableBody"
       );
 
 
     const search =
-      document
-        .getElementById("searchInput")
-        .value
+      document.getElementById(
+        "searchInput"
+      ).value
         .toLowerCase()
         .trim();
 
 
     const filtered =
-      employees.filter(function(employee) {
+      employees.filter(
+        function(employee) {
 
-        const name =
-          employee.full_name ||
-          employee.name ||
-          "";
+          const text = (
 
-        const position =
-          employee.position ||
-          "";
+            (employee.full_name || "") +
+            " " +
+            (employee.name || "") +
+            " " +
+            (employee.position || "") +
+            " " +
+            (employee.email || "") +
+            " " +
+            (employee.phone || "") +
+            " " +
+            (employee.department || "")
 
-        const email =
-          employee.email ||
-          "";
-
-        return (
-          name.toLowerCase().includes(search) ||
-          position.toLowerCase().includes(search) ||
-          email.toLowerCase().includes(search)
-        );
-
-      });
+          ).toLowerCase();
 
 
-    updateStats();
+          return text.includes(search);
+
+        }
+      );
 
 
     if (filtered.length === 0) {
 
-      table.innerHTML = `
+      tbody.innerHTML =
+        `
         <tr>
-          <td colspan="6" class="empty">
+          <td colspan="8" style="text-align:center;">
             No employees found.
           </td>
         </tr>
-      `;
+        `;
 
       return;
 
     }
 
 
-    table.innerHTML =
-      filtered.map(function(employee) {
+    tbody.innerHTML =
+      filtered.map(
+        function(employee) {
 
-        const name =
-          employee.full_name ||
-          employee.name ||
-          "Unknown";
-
-
-        const position =
-          employee.position ||
-          "-";
+          const status =
+            employee.status ||
+            "Active";
 
 
-        const email =
-          employee.email ||
-          "-";
+          const statusClass =
+            String(status)
+              .toLowerCase() === "active"
+              ? "status-active"
+              : "status-inactive";
 
 
-        const phone =
-          employee.phone ||
-          "-";
+          const salary =
+            employee.salary !== null &&
+            employee.salary !== undefined &&
+            employee.salary !== ""
+              ? "$" +
+                Number(
+                  employee.salary
+                ).toLocaleString()
+              : "-";
 
 
-        const status =
-          employee.status ||
-          "Active";
+          return `
 
+            <tr>
 
-        return `
+              <td>
+                ${escapeHTML(
+                  employee.full_name ||
+                  employee.name ||
+                  ""
+                )}
+              </td>
 
-          <tr>
+              <td>
+                ${escapeHTML(
+                  employee.position ||
+                  ""
+                )}
+              </td>
 
-            <td>
-              <strong>
-                ${escapeHTML(name)}
-              </strong>
-            </td>
+              <td>
+                ${escapeHTML(
+                  employee.email ||
+                  "-"
+                )}
+              </td>
 
-            <td>
-              ${escapeHTML(position)}
-            </td>
+              <td>
+                ${escapeHTML(
+                  employee.phone ||
+                  "-"
+                )}
+              </td>
 
-            <td>
-              ${escapeHTML(email)}
-            </td>
+              <td>
+                ${escapeHTML(
+                  employee.department ||
+                  "-"
+                )}
+              </td>
 
-            <td>
-              ${escapeHTML(phone)}
-            </td>
+              <td>
+                ${salary}
+              </td>
 
-            <td>
-
-              <span class="status">
+              <td class="${statusClass}">
                 ${escapeHTML(status)}
-              </span>
+              </td>
 
-            </td>
+              <td>
 
-            <td>
+                <button
+                  class="btn-danger"
+                  onclick="deleteEmployee('${employee.id}')"
+                >
+                  Delete
+                </button>
 
-              <button
-                class="btn btn-danger"
-                onclick="deleteEmployee('${employee.id}')"
-              >
-                Delete
-              </button>
+              </td>
 
-            </td>
+            </tr>
 
-          </tr>
+          `;
 
-        `;
-
-      }).join("");
+        }
+      ).join("");
 
   }
+
+
+  document.getElementById(
+    "searchInput"
+  ).addEventListener(
+    "input",
+    renderEmployees
+  );
 
 
   function updateStats() {
@@ -1133,14 +1124,19 @@
 
 
     const active =
-      employees.filter(function(employee) {
+      employees.filter(
+        function(employee) {
 
-        return (
-          String(employee.status || "Active")
-            .toLowerCase() === "active"
-        );
+          return (
+            String(
+              employee.status ||
+              "Active"
+            ).toLowerCase() ===
+            "active"
+          );
 
-      }).length;
+        }
+      ).length;
 
 
     const inactive =
@@ -1150,28 +1146,33 @@
     const positions =
       new Set(
         employees
-          .map(function(employee) {
+          .map(
+            function(employee) {
 
-            return employee.position;
+              return employee.position;
 
-          })
+            }
+          )
           .filter(Boolean)
       );
 
 
     document.getElementById(
       "totalEmployees"
-    ).textContent = total;
+    ).textContent =
+      total;
 
 
     document.getElementById(
       "activeEmployees"
-    ).textContent = active;
+    ).textContent =
+      active;
 
 
     document.getElementById(
       "inactiveEmployees"
-    ).textContent = inactive;
+    ).textContent =
+      inactive;
 
 
     document.getElementById(
@@ -1219,4 +1220,4 @@
 </script>
 
 </body>
-</html>ظ
+</html>
