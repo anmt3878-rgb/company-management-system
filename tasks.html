@@ -1,752 +1,759 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tasks - CompanyFlow</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasks - CompanyFlow</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f5f7fb;color:#1f2937}
 
-    body {
-      background: #f5f7fb;
-      color: #1f2937;
-    }
+.sidebar{
+position:fixed;left:0;top:0;width:240px;height:100vh;
+background:#111827;color:white;padding:25px 15px
+}
+.logo{font-size:24px;font-weight:bold;margin-bottom:30px;padding-left:10px}
+.sidebar a{
+display:block;color:#d1d5db;text-decoration:none;padding:12px 15px;
+border-radius:8px;margin-bottom:5px
+}
+.sidebar a:hover,.sidebar a.active{background:#2563eb;color:white}
 
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 240px;
-      height: 100vh;
-      background: #111827;
-      color: white;
-      padding: 25px 15px;
-    }
+.main{margin-left:240px;padding:30px}
 
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 30px;
-      padding-left: 10px;
-    }
+.top{
+display:flex;justify-content:space-between;align-items:center;
+margin-bottom:25px;gap:15px
+}
 
-    .sidebar a {
-      display: block;
-      color: #d1d5db;
-      text-decoration: none;
-      padding: 12px 15px;
-      border-radius: 8px;
-      margin-bottom: 5px;
-    }
+h1{font-size:30px}
 
-    .sidebar a:hover,
-    .sidebar a.active {
-      background: #2563eb;
-      color: white;
-    }
+.btn{
+background:#2563eb;color:white;border:none;padding:12px 18px;
+border-radius:8px;cursor:pointer;font-weight:bold
+}
+.btn:hover{background:#1d4ed8}
 
-    .main {
-      margin-left: 240px;
-      padding: 30px;
-    }
+.stats{
+display:grid;grid-template-columns:repeat(4,1fr);
+gap:18px;margin-bottom:25px
+}
 
-    .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-      gap: 15px;
-    }
+.card{
+background:white;padding:20px;border-radius:12px;
+box-shadow:0 3px 12px rgba(0,0,0,.06)
+}
 
-    h1 {
-      font-size: 30px;
-    }
+.stat-number{font-size:28px;font-weight:bold;margin-top:8px}
 
-    .btn {
-      background: #2563eb;
-      color: white;
-      border: none;
-      padding: 12px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
+.search{
+width:100%;padding:13px;border:1px solid #d1d5db;
+border-radius:8px;margin-bottom:20px
+}
 
-    .btn:hover {
-      background: #1d4ed8;
-    }
+.table-card{
+background:white;border-radius:12px;padding:20px;
+box-shadow:0 3px 12px rgba(0,0,0,.06);overflow-x:auto
+}
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-bottom: 25px;
-    }
+table{width:100%;border-collapse:collapse;min-width:800px}
+th,td{padding:14px 10px;border-bottom:1px solid #eee;text-align:left}
+th{color:#6b7280;font-size:14px}
 
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 3px 12px rgba(0,0,0,.06);
-    }
+.badge{
+padding:6px 10px;border-radius:20px;font-size:12px;
+font-weight:bold;display:inline-block
+}
 
-    .stat-number {
-      font-size: 28px;
-      font-weight: bold;
-      margin-top: 8px;
-    }
+.high{background:#fee2e2;color:#b91c1c}
+.medium{background:#fef3c7;color:#92400e}
+.low{background:#dcfce7;color:#166534}
+.status{background:#dbeafe;color:#1d4ed8}
 
-    .search {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
+.delete-btn{
+background:#ef4444;color:white;border:none;padding:7px 11px;
+border-radius:6px;cursor:pointer
+}
 
-    .table-card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 3px 12px rgba(0,0,0,.06);
-      overflow-x: auto;
-    }
+.empty{text-align:center;padding:35px;color:#6b7280}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 750px;
-    }
+.modal{
+display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+align-items:center;justify-content:center;padding:20px
+}
 
-    th, td {
-      padding: 14px 10px;
-      border-bottom: 1px solid #eee;
-      text-align: left;
-    }
+.modal-box{
+background:white;width:100%;max-width:550px;
+border-radius:14px;padding:25px
+}
 
-    th {
-      color: #6b7280;
-      font-size: 14px;
-    }
+.modal-box h2{margin-bottom:20px}
 
-    .badge {
-      padding: 6px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-      display: inline-block;
-    }
+.form-group{margin-bottom:15px}
 
-    .high {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
+label{
+display:block;margin-bottom:7px;
+font-weight:bold;font-size:14px
+}
 
-    .medium {
-      background: #fef3c7;
-      color: #92400e;
-    }
+input,select{
+width:100%;padding:12px;border:1px solid #d1d5db;
+border-radius:8px
+}
 
-    .low {
-      background: #dcfce7;
-      color: #166534;
-    }
+.form-buttons{
+display:flex;gap:10px;margin-top:20px
+}
 
-    .status {
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
+.cancel{background:#6b7280}
 
-    .delete-btn {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 7px 11px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+.message{
+margin-bottom:15px;padding:10px;border-radius:8px;
+display:none
+}
 
-    .empty {
-      text-align: center;
-      padding: 35px;
-      color: #6b7280;
-    }
+.success{background:#dcfce7;color:#166534}
+.error{background:#fee2e2;color:#991b1b}
 
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.5);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+@media(max-width:900px){
+.stats{grid-template-columns:repeat(2,1fr)}
+}
 
-    .modal-box {
-      background: white;
-      width: 100%;
-      max-width: 550px;
-      border-radius: 14px;
-      padding: 25px;
-    }
-
-    .modal-box h2 {
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 7px;
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-    }
-
-    .form-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .cancel {
-      background: #6b7280;
-    }
-
-    .message {
-      margin-bottom: 15px;
-      padding: 10px;
-      border-radius: 8px;
-      display: none;
-    }
-
-    .success {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .error {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    @media (max-width: 900px) {
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 700px) {
-      .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-      }
-
-      .main {
-        margin-left: 0;
-        padding: 20px;
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .top {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-  </style>
+@media(max-width:700px){
+.sidebar{position:relative;width:100%;height:auto}
+.main{margin-left:0;padding:20px}
+.stats{grid-template-columns:1fr}
+.top{flex-direction:column;align-items:flex-start}
+}
+</style>
 </head>
 
 <body>
 
-  <aside class="sidebar">
-    <div class="logo">CompanyFlow</div>
+<aside class="sidebar">
 
-    <a href="dashboard.html">Dashboard</a>
-    <a href="employees.html">Employees</a>
-    <a href="customers.html">Customers</a>
-    <a href="projects.html">Projects</a>
-    <a href="tasks.html" class="active">Tasks</a>
-    <a href="finance.html">Finance</a>
-    <a href="inventory.html">Inventory</a>
-    <a href="documents.html">Documents</a>
-    <a href="reports.html">Reports</a>
-    <a href="roles.html">Roles & Permissions</a>
-    <a href="notifications.html">Notifications</a>
-    <a href="settings.html">Settings</a>
-    <a href="index.html">Back to Website</a>
-  </aside>
+<div class="logo">CompanyFlow</div>
 
-  <main class="main">
+<a href="dashboard.html">Dashboard</a>
+<a href="employees.html">Employees</a>
+<a href="customers.html">Customers</a>
+<a href="projects.html">Projects</a>
+<a href="tasks.html" class="active">Tasks</a>
+<a href="finance.html">Finance</a>
+<a href="inventory.html">Inventory</a>
+<a href="documents.html">Documents</a>
+<a href="reports.html">Reports</a>
+<a href="roles.html">Roles & Permissions</a>
+<a href="notifications.html">Notifications</a>
+<a href="settings.html">Settings</a>
+<a href="index.html">Back to Website</a>
 
-    <div class="top">
-      <div>
-        <h1>Tasks</h1>
-        <p>Manage your company tasks.</p>
-      </div>
+</aside>
 
-      <button class="btn" onclick="openModal()">+ Add Task</button>
-    </div>
+<main class="main">
 
-    <div class="stats">
-      <div class="card">
-        <div>Total Tasks</div>
-        <div class="stat-number" id="totalTasks">0</div>
-      </div>
+<div class="top">
 
-      <div class="card">
-        <div>Pending</div>
-        <div class="stat-number" id="pendingTasks">0</div>
-      </div>
+<div>
+<h1>Tasks</h1>
+<p>Manage your company tasks.</p>
+</div>
 
-      <div class="card">
-        <div>In Progress</div>
-        <div class="stat-number" id="progressTasks">0</div>
-      </div>
+<button class="btn" onclick="openModal()">+ Add Task</button>
 
-      <div class="card">
-        <div>Completed</div>
-        <div class="stat-number" id="completedTasks">0</div>
-      </div>
-    </div>
+</div>
 
-    <input
-      type="text"
-      id="search"
-      class="search"
-      placeholder="Search tasks..."
-      oninput="renderTasks()"
-    >
+<div class="stats">
 
-    <div id="message" class="message"></div>
+<div class="card">
+<div>Total Tasks</div>
+<div class="stat-number" id="totalTasks">0</div>
+</div>
 
-    <div class="table-card">
-      <table>
-        <thead>
-          <tr>
-            <th>Task</th>
-            <th>Project</th>
-            <th>Assignee</th>
-            <th>Deadline</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
+<div class="card">
+<div>Pending</div>
+<div class="stat-number" id="pendingTasks">0</div>
+</div>
 
-        <tbody id="taskTable">
-        </tbody>
-      </table>
-    </div>
+<div class="card">
+<div>In Progress</div>
+<div class="stat-number" id="progressTasks">0</div>
+</div>
 
-  </main>
+<div class="card">
+<div>Completed</div>
+<div class="stat-number" id="completedTasks">0</div>
+</div>
 
-  <!-- Modal -->
+</div>
 
-  <div class="modal" id="taskModal">
+<input
+type="text"
+id="search"
+class="search"
+placeholder="Search tasks..."
+oninput="renderTasks()"
+>
 
-    <div class="modal-box">
+<div id="message" class="message"></div>
 
-      <h2>Add New Task</h2>
+<div class="table-card">
 
-      <div class="form-group">
-        <label>Task Title</label>
-        <input type="text" id="title" placeholder="Enter task title">
-      </div>
+<table>
 
-      <div class="form-group">
-        <label>Project</label>
-        <input type="text" id="projectId" placeholder="Project ID (optional)">
-      </div>
+<thead>
 
-      <div class="form-group">
-        <label>Assignee</label>
-        <input type="text" id="assignee" placeholder="Employee name">
-      </div>
+<tr>
+<th>Task</th>
+<th>Project</th>
+<th>Assignee</th>
+<th>Deadline</th>
+<th>Priority</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
 
-      <div class="form-group">
-        <label>Deadline</label>
-        <input type="date" id="deadline">
-      </div>
+</thead>
 
-      <div class="form-group">
-        <label>Priority</label>
+<tbody id="taskTable"></tbody>
 
-        <select id="priority">
-          <option value="Low">Low</option>
-          <option value="Medium" selected>Medium</option>
-          <option value="High">High</option>
-        </select>
-      </div>
+</table>
 
-      <div class="form-group">
-        <label>Status</label>
+</div>
 
-        <select id="status">
-          <option value="Pending">Pending</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
-        </select>
-      </div>
+</main>
 
-      <div class="form-buttons">
 
-        <button class="btn" onclick="addTask()">
-          Save Task
-        </button>
+<div class="modal" id="taskModal">
 
-        <button class="btn cancel" onclick="closeModal()">
-          Cancel
-        </button>
+<div class="modal-box">
 
-      </div>
+<h2>Add New Task</h2>
 
-    </div>
+<div class="form-group">
 
-  </div>
+<label>Task Title</label>
+
+<input
+type="text"
+id="title"
+placeholder="Enter task title"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Project</label>
+
+<select id="projectId">
+
+<option value="">No Project</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Assignee</label>
+
+<input
+type="text"
+id="assignee"
+placeholder="Employee name"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Deadline</label>
+
+<input type="date" id="deadline">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Priority</label>
+
+<select id="priority">
+
+<option value="Low">Low</option>
+<option value="Medium" selected>Medium</option>
+<option value="High">High</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Status</label>
+
+<select id="status">
+
+<option value="Pending">Pending</option>
+<option value="In Progress">In Progress</option>
+<option value="Completed">Completed</option>
+
+</select>
+
+</div>
+
+
+<div class="form-buttons">
+
+<button class="btn" onclick="addTask()">
+Save Task
+</button>
+
+<button class="btn cancel" onclick="closeModal()">
+Cancel
+</button>
+
+</div>
+
+</div>
+
+</div>
+
 
 <script>
 
 let tasks = [];
+let projects = [];
 let companyId = null;
 
-async function loadTasks() {
 
-  showMessage("Loading...", false);
+async function loadTasks(){
 
-  const {
-    data: { user },
-    error: userError
-  } = await supabaseClient.auth.getUser();
-
-  if (userError || !user) {
-    window.location.href = "signin.html";
-    return;
-  }
-
-  const { data: profile, error: profileError } =
-    await supabaseClient
-      .from("profiles")
-      .select("company_id")
-      .eq("id", user.id)
-      .single();
-
-  if (profileError || !profile) {
-    showMessage("Could not load company information.", true);
-    return;
-  }
-
-  companyId = profile.company_id;
-
-  const { data, error } = await supabaseClient
-    .from("tasks")
-    .select("*")
-    .eq("company_id", companyId)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    showMessage("Could not load tasks: " + error.message, true);
-    return;
-  }
-
-  tasks = data || [];
-
-  hideMessage();
-  renderTasks();
-}
+const {
+data:{user},
+error:userError
+}=await supabaseClient.auth.getUser();
 
 
-function renderTasks() {
+if(userError || !user){
 
-  const table = document.getElementById("taskTable");
-  const search = document.getElementById("search").value
-    .toLowerCase();
-
-  const filtered = tasks.filter(task => {
-
-    return (
-      (task.title || "").toLowerCase().includes(search) ||
-      (task.assignee || "").toLowerCase().includes(search) ||
-      (task.status || "").toLowerCase().includes(search)
-    );
-
-  });
-
-  document.getElementById("totalTasks").textContent =
-    tasks.length;
-
-  document.getElementById("pendingTasks").textContent =
-    tasks.filter(t => t.status === "Pending").length;
-
-  document.getElementById("progressTasks").textContent =
-    tasks.filter(t => t.status === "In Progress").length;
-
-  document.getElementById("completedTasks").textContent =
-    tasks.filter(t => t.status === "Completed").length;
-
-
-  if (filtered.length === 0) {
-
-    table.innerHTML = `
-      <tr>
-        <td colspan="7" class="empty">
-          No tasks found.
-        </td>
-      </tr>
-    `;
-
-    return;
-  }
-
-
-  table.innerHTML = filtered.map(task => {
-
-    let priorityClass =
-      (task.priority || "Medium").toLowerCase();
-
-    return `
-      <tr>
-
-        <td>
-          <strong>${escapeHTML(task.title || "")}</strong>
-        </td>
-
-        <td>
-          ${escapeHTML(task.project_id || "-")}
-        </td>
-
-        <td>
-          ${escapeHTML(task.assignee || "-")}
-        </td>
-
-        <td>
-          ${task.deadline || "-"}
-        </td>
-
-        <td>
-          <span class="badge ${priorityClass}">
-            ${escapeHTML(task.priority || "-")}
-          </span>
-        </td>
-
-        <td>
-          <span class="badge status">
-            ${escapeHTML(task.status || "-")}
-          </span>
-        </td>
-
-        <td>
-          <button
-            class="delete-btn"
-            onclick="deleteTask('${task.id}')">
-            Delete
-          </button>
-        </td>
-
-      </tr>
-    `;
-
-  }).join("");
+window.location.href="signin.html";
+return;
 
 }
 
 
-async function addTask() {
-
-  const title =
-    document.getElementById("title").value.trim();
-
-  const projectId =
-    document.getElementById("projectId").value.trim();
-
-  const assignee =
-    document.getElementById("assignee").value.trim();
-
-  const deadline =
-    document.getElementById("deadline").value;
-
-  const priority =
-    document.getElementById("priority").value;
-
-  const status =
-    document.getElementById("status").value;
+const {data:profile,error:profileError}=
+await supabaseClient
+.from("profiles")
+.select("company_id")
+.eq("id",user.id)
+.single();
 
 
-  if (!title) {
+if(profileError || !profile){
 
-    alert("Please enter a task title.");
+showMessage(
+"Could not load company information.",
+true
+);
 
-    return;
-  }
-
-
-  if (!companyId) {
-
-    alert("Company information is missing.");
-
-    return;
-  }
-
-
-  const { data, error } =
-    await supabaseClient
-      .from("tasks")
-      .insert([
-
-        {
-          company_id: companyId,
-          title: title,
-          project_id: projectId || null,
-          assignee: assignee || null,
-          deadline: deadline || null,
-          priority: priority,
-          status: status
-        }
-
-      ])
-      .select()
-      .single();
-
-
-  if (error) {
-
-    showMessage(
-      "Could not add task: " + error.message,
-      true
-    );
-
-    return;
-  }
-
-
-  tasks.unshift(data);
-
-  renderTasks();
-
-  closeModal();
-
-  showMessage(
-    "Task added successfully.",
-    false
-  );
+return;
 
 }
 
 
-async function deleteTask(id) {
-
-  if (!confirm("Delete this task?")) {
-    return;
-  }
+companyId=profile.company_id;
 
 
-  const { error } =
-    await supabaseClient
-      .from("tasks")
-      .delete()
-      .eq("id", id)
-      .eq("company_id", companyId);
+await loadProjects();
 
 
-  if (error) {
-
-    showMessage(
-      "Could not delete task: " + error.message,
-      true
-    );
-
-    return;
-  }
+const {data,error}=
+await supabaseClient
+.from("tasks")
+.select("*")
+.eq("company_id",companyId)
+.order("created_at",{ascending:false});
 
 
-  tasks =
-    tasks.filter(task => task.id !== id);
+if(error){
 
-  renderTasks();
+showMessage(
+"Could not load tasks: "+error.message,
+true
+);
 
-  showMessage(
-    "Task deleted successfully.",
-    false
-  );
+return;
 
 }
 
 
-function openModal() {
+tasks=data||[];
 
-  document.getElementById("taskModal").style.display =
-    "flex";
+hideMessage();
 
-}
-
-
-function closeModal() {
-
-  document.getElementById("taskModal").style.display =
-    "none";
-
-  document.getElementById("title").value = "";
-  document.getElementById("projectId").value = "";
-  document.getElementById("assignee").value = "";
-  document.getElementById("deadline").value = "";
-  document.getElementById("priority").value = "Medium";
-  document.getElementById("status").value = "Pending";
+renderTasks();
 
 }
 
 
-function showMessage(message, isError) {
+async function loadProjects(){
 
-  const box =
-    document.getElementById("message");
-
-  box.textContent = message;
-
-  box.className =
-    "message " + (isError ? "error" : "success");
-
-  box.style.display = "block";
-
-}
+const {data,error}=
+await supabaseClient
+.from("projects")
+.select("id,name")
+.eq("company_id",companyId)
+.order("name",{ascending:true});
 
 
-function hideMessage() {
+if(error){
 
-  document.getElementById("message").style.display =
-    "none";
+console.log("Projects could not load:",error.message);
+return;
 
 }
 
 
-function escapeHTML(value) {
+projects=data||[];
 
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+
+const select=
+document.getElementById("projectId");
+
+
+select.innerHTML=
+'<option value="">No Project</option>';
+
+
+projects.forEach(project=>{
+
+const option=document.createElement("option");
+
+option.value=project.id;
+
+option.textContent=project.name;
+
+select.appendChild(option);
+
+});
+
+}
+
+
+function renderTasks(){
+
+const table=document.getElementById("taskTable");
+
+const search=
+document.getElementById("search").value.toLowerCase();
+
+
+const filtered=tasks.filter(task=>{
+
+return(
+(task.title||"").toLowerCase().includes(search)||
+(task.assignee||"").toLowerCase().includes(search)||
+(task.status||"").toLowerCase().includes(search)
+);
+
+});
+
+
+document.getElementById("totalTasks").textContent=
+tasks.length;
+
+
+document.getElementById("pendingTasks").textContent=
+tasks.filter(t=>t.status==="Pending").length;
+
+
+document.getElementById("progressTasks").textContent=
+tasks.filter(t=>t.status==="In Progress").length;
+
+
+document.getElementById("completedTasks").textContent=
+tasks.filter(t=>t.status==="Completed").length;
+
+
+if(filtered.length===0){
+
+table.innerHTML=`
+<tr>
+<td colspan="7" class="empty">
+No tasks found.
+</td>
+</tr>
+`;
+
+return;
+
+}
+
+
+table.innerHTML=filtered.map(task=>{
+
+const project=
+projects.find(p=>p.id===task.project_id);
+
+
+const projectName=
+project ? project.name : "-";
+
+
+const priorityClass=
+(task.priority||"Medium").toLowerCase();
+
+
+return`
+
+<tr>
+
+<td>
+<strong>
+${escapeHTML(task.title||"")}
+</strong>
+</td>
+
+<td>
+${escapeHTML(projectName)}
+</td>
+
+<td>
+${escapeHTML(task.assignee||"-")}
+</td>
+
+<td>
+${task.deadline||"-"}
+</td>
+
+<td>
+
+<span class="badge ${priorityClass}">
+${escapeHTML(task.priority||"-")}
+</span>
+
+</td>
+
+<td>
+
+<span class="badge status">
+${escapeHTML(task.status||"-")}
+</span>
+
+</td>
+
+<td>
+
+<button
+class="delete-btn"
+onclick="deleteTask('${task.id}')">
+Delete
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+}).join("");
+
+}
+
+
+async function addTask(){
+
+const title=
+document.getElementById("title").value.trim();
+
+
+const projectId=
+document.getElementById("projectId").value;
+
+
+const assignee=
+document.getElementById("assignee").value.trim();
+
+
+const deadline=
+document.getElementById("deadline").value;
+
+
+const priority=
+document.getElementById("priority").value;
+
+
+const status=
+document.getElementById("status").value;
+
+
+if(!title){
+
+alert("Please enter a task title.");
+return;
+
+}
+
+
+const {data,error}=
+await supabaseClient
+.from("tasks")
+.insert([{
+
+company_id:companyId,
+
+title:title,
+
+project_id:
+projectId || null,
+
+assignee:
+assignee || null,
+
+deadline:
+deadline || null,
+
+priority:priority,
+
+status:status
+
+}])
+.select()
+.single();
+
+
+if(error){
+
+showMessage(
+"Could not add task: "+error.message,
+true
+);
+
+return;
+
+}
+
+
+tasks.unshift(data);
+
+renderTasks();
+
+closeModal();
+
+showMessage(
+"Task added successfully.",
+false
+);
+
+}
+
+
+async function deleteTask(id){
+
+if(!confirm("Delete this task?")){
+return;
+}
+
+
+const {error}=
+await supabaseClient
+.from("tasks")
+.delete()
+.eq("id",id)
+.eq("company_id",companyId);
+
+
+if(error){
+
+showMessage(
+"Could not delete task: "+error.message,
+true
+);
+
+return;
+
+}
+
+
+tasks=
+tasks.filter(task=>task.id!==id);
+
+
+renderTasks();
+
+
+showMessage(
+"Task deleted successfully.",
+false
+);
+
+}
+
+
+function openModal(){
+
+document.getElementById("taskModal").style.display=
+"flex";
+
+}
+
+
+function closeModal(){
+
+document.getElementById("taskModal").style.display=
+"none";
+
+document.getElementById("title").value="";
+document.getElementById("projectId").value="";
+document.getElementById("assignee").value="";
+document.getElementById("deadline").value="";
+document.getElementById("priority").value="Medium";
+document.getElementById("status").value="Pending";
+
+}
+
+
+function showMessage(message,isError){
+
+const box=
+document.getElementById("message");
+
+box.textContent=message;
+
+box.className=
+"message "+(isError?"error":"success");
+
+box.style.display="block";
+
+}
+
+
+function hideMessage(){
+
+document.getElementById("message").style.display="none";
+
+}
+
+
+function escapeHTML(value){
+
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
 }
 
