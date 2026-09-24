@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Customers - CompanyFlow</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -265,12 +264,19 @@
     }
 
     .form-group input,
-    .form-group select {
+    .form-group select,
+    .form-group textarea {
       width: 100%;
       padding: 11px;
       border: 1px solid #dbe2ea;
       border-radius: 8px;
       outline: none;
+      font-family: Arial, sans-serif;
+    }
+
+    .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
     }
 
     .modal-actions {
@@ -326,7 +332,7 @@
       }
 
       table {
-        min-width: 750px;
+        min-width: 850px;
       }
     }
   </style>
@@ -345,50 +351,30 @@
     <nav class="nav">
 
       <a href="dashboard.html">Dashboard</a>
-
       <a href="employees.html">Employees</a>
-
-      <a href="customers.html" class="active">
-        Customers
-      </a>
-
+      <a href="customers.html" class="active">Customers</a>
       <a href="projects.html">Projects</a>
-
       <a href="tasks.html">Tasks</a>
-
       <a href="finance.html">Finance</a>
-
       <a href="inventory.html">Inventory</a>
-
       <a href="documents.html">Documents</a>
-
       <a href="reports.html">Reports</a>
-
       <a href="roles.html">Roles & Permissions</a>
-
       <a href="notifications.html">Notifications</a>
-
       <a href="settings.html">Settings</a>
-
       <a href="index.html">Back to Website</a>
 
     </nav>
 
   </aside>
 
-
   <main class="main">
 
     <div class="topbar">
 
       <div class="title">
-
         <h1>Customers</h1>
-
-        <p>
-          Manage your customers and clients
-        </p>
-
+        <p>Manage your customers and clients</p>
       </div>
 
       <div class="user-box" id="userBox">
@@ -396,7 +382,6 @@
       </div>
 
     </div>
-
 
     <div class="stats">
 
@@ -422,7 +407,6 @@
 
     </div>
 
-
     <div class="card">
 
       <div class="actions">
@@ -444,35 +428,26 @@
 
       </div>
 
-
       <div class="table-wrapper">
 
         <table>
 
           <thead>
-
             <tr>
-
               <th>Customer</th>
-
               <th>Company</th>
-
               <th>Email</th>
-
               <th>Phone</th>
-
+              <th>Industry</th>
               <th>Status</th>
-
               <th>Action</th>
-
             </tr>
-
           </thead>
 
           <tbody id="customersTable">
 
             <tr>
-              <td colspan="6" class="loading">
+              <td colspan="7" class="loading">
                 Loading customers...
               </td>
             </tr>
@@ -489,7 +464,6 @@
 
 </div>
 
-
 <!-- ADD CUSTOMER MODAL -->
 
 <div class="modal" id="customerModal">
@@ -498,72 +472,58 @@
 
     <h2>Add Customer</h2>
 
-
     <div class="form-group">
-
-      <label>
-        Customer Name
-      </label>
+      <label>Customer Name</label>
 
       <input
         type="text"
         id="customerName"
         placeholder="John Smith"
       >
-
     </div>
 
-
     <div class="form-group">
-
-      <label>
-        Company
-      </label>
+      <label>Company</label>
 
       <input
         type="text"
         id="customerCompany"
         placeholder="Apex Solutions"
       >
-
     </div>
 
-
     <div class="form-group">
-
-      <label>
-        Email
-      </label>
+      <label>Email</label>
 
       <input
         type="email"
         id="customerEmail"
         placeholder="john@apexsolutions.com"
       >
-
     </div>
 
-
     <div class="form-group">
-
-      <label>
-        Phone
-      </label>
+      <label>Phone</label>
 
       <input
         type="text"
         id="customerPhone"
         placeholder="+1 555 123 4567"
       >
-
     </div>
 
+    <div class="form-group">
+      <label>Industry</label>
+
+      <input
+        type="text"
+        id="customerIndustry"
+        placeholder="Technology"
+      >
+    </div>
 
     <div class="form-group">
-
-      <label>
-        Status
-      </label>
+      <label>Status</label>
 
       <select id="customerStatus">
 
@@ -576,9 +536,16 @@
         </option>
 
       </select>
-
     </div>
 
+    <div class="form-group">
+      <label>Notes</label>
+
+      <textarea
+        id="customerNotes"
+        placeholder="Additional notes..."
+      ></textarea>
+    </div>
 
     <div class="modal-actions">
 
@@ -602,14 +569,11 @@
 
 </div>
 
-
 <div id="message" class="message"></div>
-
 
 <script>
 
   let customers = [];
-
   let companyId = null;
 
 
@@ -626,9 +590,7 @@
     message.style.display = "block";
 
     setTimeout(function() {
-
       message.style.display = "none";
-
     }, 3500);
 
   }
@@ -666,8 +628,16 @@
     ).value = "";
 
     document.getElementById(
+      "customerIndustry"
+    ).value = "";
+
+    document.getElementById(
       "customerStatus"
     ).value = "Active";
+
+    document.getElementById(
+      "customerNotes"
+    ).value = "";
 
   }
 
@@ -726,6 +696,18 @@
 
     companyId =
       profile.company_id;
+
+
+    if (!companyId) {
+
+      showMessage(
+        "No company is linked to this account.",
+        "error"
+      );
+
+      return false;
+
+    }
 
 
     if (profile.full_name) {
@@ -798,7 +780,7 @@
         .trim();
 
 
-    const company =
+    const companyName =
       document
         .getElementById("customerCompany")
         .value
@@ -819,10 +801,24 @@
         .trim();
 
 
+    const industry =
+      document
+        .getElementById("customerIndustry")
+        .value
+        .trim();
+
+
     const status =
       document
         .getElementById("customerStatus")
         .value;
+
+
+    const notes =
+      document
+        .getElementById("customerNotes")
+        .value
+        .trim();
 
 
     if (!name) {
@@ -861,13 +857,23 @@
 
           name: name,
 
-          company: company || null,
+          company_nar:
+            companyName || null,
 
-          email: email || null,
+          email:
+            email || null,
 
-          phone: phone || null,
+          phone:
+            phone || null,
 
-          status: status
+          industry:
+            industry || null,
+
+          status:
+            status,
+
+          notes:
+            notes || null
 
         })
         .select()
@@ -891,9 +897,7 @@
 
     customers.unshift(data);
 
-
     renderCustomers();
-
 
     closeModal();
 
@@ -981,23 +985,42 @@
       customers.filter(function(customer) {
 
         const name =
-          customer.name ||
-          customer.full_name ||
-          "";
+          customer.name || "";
 
         const company =
-          customer.company ||
-          customer.company_name ||
-          "";
+          customer.company_nar || "";
 
         const email =
-          customer.email ||
-          "";
+          customer.email || "";
+
+        const industry =
+          customer.industry || "";
+
 
         return (
-          name.toLowerCase().includes(search) ||
-          company.toLowerCase().includes(search) ||
-          email.toLowerCase().includes(search)
+
+          name
+            .toLowerCase()
+            .includes(search)
+
+          ||
+
+          company
+            .toLowerCase()
+            .includes(search)
+
+          ||
+
+          email
+            .toLowerCase()
+            .includes(search)
+
+          ||
+
+          industry
+            .toLowerCase()
+            .includes(search)
+
         );
 
       });
@@ -1010,7 +1033,7 @@
 
       table.innerHTML = `
         <tr>
-          <td colspan="6" class="empty">
+          <td colspan="7" class="empty">
             No customers found.
           </td>
         </tr>
@@ -1026,13 +1049,11 @@
 
         const name =
           customer.name ||
-          customer.full_name ||
           "Unknown";
 
 
         const company =
-          customer.company ||
-          customer.company_name ||
+          customer.company_nar ||
           "-";
 
 
@@ -1046,6 +1067,11 @@
           "-";
 
 
+        const industry =
+          customer.industry ||
+          "-";
+
+
         const status =
           customer.status ||
           "Active";
@@ -1053,7 +1079,9 @@
 
         const statusClass =
           String(status).toLowerCase() === "inactive"
+
             ? "status inactive"
+
             : "status";
 
 
@@ -1077,6 +1105,10 @@
 
             <td>
               ${escapeHTML(phone)}
+            </td>
+
+            <td>
+              ${escapeHTML(industry)}
             </td>
 
             <td>
@@ -1117,8 +1149,12 @@
       customers.filter(function(customer) {
 
         return (
-          String(customer.status || "Active")
-            .toLowerCase() === "active"
+
+          String(
+            customer.status || "Active"
+          )
+          .toLowerCase() === "active"
+
         );
 
       }).length;
@@ -1130,32 +1166,36 @@
 
     const companies =
       new Set(
+
         customers
+
           .map(function(customer) {
 
-            return (
-              customer.company ||
-              customer.company_name
-            );
+            return customer.company_nar;
 
           })
+
           .filter(Boolean)
+
       );
 
 
     document.getElementById(
       "totalCustomers"
-    ).textContent = total;
+    ).textContent =
+      total;
 
 
     document.getElementById(
       "activeCustomers"
-    ).textContent = active;
+    ).textContent =
+      active;
 
 
     document.getElementById(
       "inactiveCustomers"
-    ).textContent = inactive;
+    ).textContent =
+      inactive;
 
 
     document.getElementById(
