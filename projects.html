@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Projects - CompanyFlow</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -12,59 +11,51 @@
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
       background: #f5f7fb;
-      color: #172033;
-    }
-
-    .layout {
-      display: flex;
-      min-height: 100vh;
+      color: #1f2937;
     }
 
     .sidebar {
-      width: 240px;
-      background: #111827;
-      color: white;
-      padding: 24px 16px;
       position: fixed;
       left: 0;
       top: 0;
-      bottom: 0;
+      width: 240px;
+      height: 100vh;
+      background: #111827;
+      color: white;
+      padding: 25px 15px;
       overflow-y: auto;
     }
 
     .logo {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: bold;
       margin-bottom: 30px;
-      padding: 0 10px;
+      padding-left: 10px;
     }
 
-    .nav a {
+    .sidebar a {
       display: block;
-      color: #cbd5e1;
+      color: #d1d5db;
       text-decoration: none;
       padding: 12px 14px;
       border-radius: 8px;
       margin-bottom: 5px;
-      font-size: 14px;
     }
 
-    .nav a:hover,
-    .nav a.active {
+    .sidebar a:hover,
+    .sidebar a.active {
       background: #2563eb;
       color: white;
     }
 
     .main {
       margin-left: 240px;
-      width: calc(100% - 240px);
       padding: 30px;
     }
 
@@ -74,24 +65,19 @@
       align-items: center;
       margin-bottom: 25px;
       gap: 15px;
+      flex-wrap: wrap;
     }
 
-    .title h1 {
+    h1 {
+      margin: 0;
       font-size: 30px;
-      margin-bottom: 6px;
     }
 
-    .title p {
-      color: #64748b;
-      font-size: 14px;
-    }
-
-    .user-box {
+    .plan-box {
       background: white;
-      padding: 10px 15px;
+      padding: 12px 18px;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,.05);
-      font-size: 14px;
     }
 
     .stats {
@@ -108,47 +94,57 @@
       box-shadow: 0 2px 10px rgba(0,0,0,.05);
     }
 
-    .stat span {
-      color: #64748b;
-      font-size: 13px;
+    .stat-title {
+      color: #6b7280;
+      font-size: 14px;
     }
 
-    .stat strong {
-      display: block;
+    .stat-number {
       font-size: 28px;
+      font-weight: bold;
       margin-top: 8px;
     }
 
     .card {
       background: white;
-      border-radius: 14px;
-      padding: 22px;
+      padding: 25px;
+      border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      margin-bottom: 25px;
     }
 
-    .actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+    .card h2 {
+      margin-top: 0;
     }
 
-    .search {
-      flex: 1;
-      min-width: 220px;
-      padding: 12px 14px;
-      border: 1px solid #dbe2ea;
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
       border-radius: 8px;
-      outline: none;
+      font-size: 15px;
+      font-family: Arial, sans-serif;
     }
 
-    .btn {
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    button {
       border: none;
-      border-radius: 8px;
       padding: 12px 18px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: bold;
+      font-size: 15px;
     }
 
     .btn-primary {
@@ -161,169 +157,91 @@
     }
 
     .btn-danger {
-      background: #fee2e2;
-      color: #b91c1c;
+      background: #dc2626;
+      color: white;
       padding: 8px 12px;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .limit-box {
+      background: #eff6ff;
+      color: #1e40af;
+      padding: 14px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+    }
+
+    .search {
+      margin-bottom: 18px;
+    }
+
+    .table-container {
+      overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
+      min-width: 800px;
     }
 
     th,
     td {
+      padding: 13px;
       text-align: left;
-      padding: 14px 10px;
-      border-bottom: 1px solid #edf0f4;
-      font-size: 14px;
+      border-bottom: 1px solid #e5e7eb;
     }
 
     th {
-      color: #64748b;
-      font-size: 12px;
-      text-transform: uppercase;
+      background: #f9fafb;
     }
 
-    .status {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-size: 12px;
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .status.pending {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .status.completed {
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
-
-    .status.cancelled {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 40px;
-      color: #64748b;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 30px;
-      color: #64748b;
-    }
-
-    .message {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      padding: 14px 18px;
-      border-radius: 10px;
-      color: white;
-      display: none;
-      z-index: 1000;
-    }
-
-    .message.success {
-      background: #16a34a;
-    }
-
-    .message.error {
-      background: #dc2626;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.5);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 999;
-    }
-
-    .modal-box {
-      background: white;
-      width: 100%;
-      max-width: 540px;
-      border-radius: 14px;
-      padding: 25px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-box h2 {
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 13px;
+    .status-active {
+      color: #15803d;
       font-weight: bold;
-      margin-bottom: 6px;
     }
 
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 11px;
-      border: 1px solid #dbe2ea;
-      border-radius: 8px;
-      outline: none;
-      font-family: Arial, sans-serif;
+    .status-completed {
+      color: #2563eb;
+      font-weight: bold;
     }
 
-    .form-group textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .btn-secondary {
-      background: #e5e7eb;
-      color: #111827;
+    .status-pending {
+      color: #b45309;
+      font-weight: bold;
     }
 
     @media (max-width: 900px) {
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
       .sidebar {
         width: 200px;
       }
 
       .main {
         margin-left: 200px;
-        width: calc(100% - 200px);
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 700px) {
-      .layout {
-        display: block;
-      }
-
+    @media (max-width: 650px) {
       .sidebar {
         position: relative;
         width: 100%;
@@ -332,20 +250,12 @@
 
       .main {
         margin-left: 0;
-        width: 100%;
         padding: 18px;
       }
 
-      .stats {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .table-wrapper {
-        overflow-x: auto;
-      }
-
-      table {
-        min-width: 850px;
+      .stats,
+      .form-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -353,45 +263,25 @@
 
 <body>
 
-<div class="layout">
-
   <aside class="sidebar">
 
     <div class="logo">
       CompanyFlow
     </div>
 
-    <nav class="nav">
-
-      <a href="dashboard.html">Dashboard</a>
-
-      <a href="employees.html">Employees</a>
-
-      <a href="customers.html">Customers</a>
-
-      <a href="projects.html" class="active">
-        Projects
-      </a>
-
-      <a href="tasks.html">Tasks</a>
-
-      <a href="finance.html">Finance</a>
-
-      <a href="inventory.html">Inventory</a>
-
-      <a href="documents.html">Documents</a>
-
-      <a href="reports.html">Reports</a>
-
-      <a href="roles.html">Roles & Permissions</a>
-
-      <a href="notifications.html">Notifications</a>
-
-      <a href="settings.html">Settings</a>
-
-      <a href="index.html">Back to Website</a>
-
-    </nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="employees.html">Employees</a>
+    <a href="customers.html">Customers</a>
+    <a href="projects.html" class="active">Projects</a>
+    <a href="tasks.html">Tasks</a>
+    <a href="finance.html">Finance</a>
+    <a href="inventory.html">Inventory</a>
+    <a href="documents.html">Documents</a>
+    <a href="reports.html">Reports</a>
+    <a href="roles.html">Roles & Permissions</a>
+    <a href="notifications.html">Notifications</a>
+    <a href="settings.html">Settings</a>
+    <a href="index.html">Back to Website</a>
 
   </aside>
 
@@ -400,18 +290,14 @@
 
     <div class="topbar">
 
-      <div class="title">
-
+      <div>
         <h1>Projects</h1>
-
-        <p>
-          Manage your company projects
-        </p>
-
+        <p>Manage your company projects.</p>
       </div>
 
-      <div class="user-box" id="userBox">
-        Loading...
+      <div class="plan-box">
+        Plan:
+        <strong id="currentPlan">Loading...</strong>
       </div>
 
     </div>
@@ -420,23 +306,23 @@
     <div class="stats">
 
       <div class="stat">
-        <span>Total Projects</span>
-        <strong id="totalProjects">0</strong>
+        <div class="stat-title">Total Projects</div>
+        <div class="stat-number" id="totalProjects">0</div>
       </div>
 
       <div class="stat">
-        <span>Active</span>
-        <strong id="activeProjects">0</strong>
+        <div class="stat-title">Active Projects</div>
+        <div class="stat-number" id="activeProjects">0</div>
       </div>
 
       <div class="stat">
-        <span>Completed</span>
-        <strong id="completedProjects">0</strong>
+        <div class="stat-title">Completed Projects</div>
+        <div class="stat-number" id="completedProjects">0</div>
       </div>
 
       <div class="stat">
-        <span>Pending</span>
-        <strong id="pendingProjects">0</strong>
+        <div class="stat-title">Pending Projects</div>
+        <div class="stat-number" id="pendingProjects">0</div>
       </div>
 
     </div>
@@ -444,59 +330,123 @@
 
     <div class="card">
 
-      <div class="actions">
+      <h2>Add Project</h2>
 
-        <input
-          type="text"
-          id="searchInput"
-          class="search"
-          placeholder="Search projects..."
-          oninput="renderProjects()"
-        >
-
-        <button
-          class="btn btn-primary"
-          onclick="openModal()"
-        >
-          + Add Project
-        </button>
-
+      <div class="limit-box">
+        Project limit:
+        <strong id="limitText">Loading...</strong>
       </div>
 
+      <form id="projectForm">
 
-      <div class="table-wrapper">
+        <div class="form-grid">
+
+          <input
+            type="text"
+            id="name"
+            placeholder="Project Name"
+            required
+          >
+
+          <input
+            type="text"
+            id="client"
+            placeholder="Client Name"
+          >
+
+          <input
+            type="date"
+            id="start_date"
+          >
+
+          <input
+            type="date"
+            id="due_date"
+          >
+
+          <select id="status">
+
+            <option value="Active">
+              Active
+            </option>
+
+            <option value="Pending">
+              Pending
+            </option>
+
+            <option value="Completed">
+              Completed
+            </option>
+
+          </select>
+
+          <input
+            type="number"
+            id="budget"
+            placeholder="Budget"
+            min="0"
+            step="0.01"
+          >
+
+        </div>
+
+        <br>
+
+        <textarea
+          id="description"
+          placeholder="Project Description"
+        ></textarea>
+
+        <br><br>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          id="addButton"
+        >
+          Add Project
+        </button>
+
+      </form>
+
+      <div
+        id="message"
+        class="message"
+      ></div>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>Project List</h2>
+
+      <input
+        class="search"
+        type="text"
+        id="searchInput"
+        placeholder="Search projects..."
+      >
+
+      <div class="table-container">
 
         <table>
 
           <thead>
 
             <tr>
-
               <th>Project</th>
-
               <th>Client</th>
-
-              <th>Start Date</th>
-
-              <th>Due Date</th>
-
               <th>Status</th>
-
+              <th>Start Date</th>
+              <th>Due Date</th>
+              <th>Budget</th>
               <th>Action</th>
-
             </tr>
 
           </thead>
 
-          <tbody id="projectsTable">
-
-            <tr>
-              <td colspan="6" class="loading">
-                Loading projects...
-              </td>
-            </tr>
-
-          </tbody>
+          <tbody id="projectTableBody"></tbody>
 
         </table>
 
@@ -506,144 +456,6 @@
 
   </main>
 
-</div>
-
-
-<!-- ADD PROJECT MODAL -->
-
-<div class="modal" id="projectModal">
-
-  <div class="modal-box">
-
-    <h2>Add Project</h2>
-
-
-    <div class="form-group">
-
-      <label>
-        Project Name
-      </label>
-
-      <input
-        type="text"
-        id="projectName"
-        placeholder="Website Redesign"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Client
-      </label>
-
-      <input
-        type="text"
-        id="projectClient"
-        placeholder="Apex Solutions"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Start Date
-      </label>
-
-      <input
-        type="date"
-        id="projectStartDate"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Due Date
-      </label>
-
-      <input
-        type="date"
-        id="projectDueDate"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Status
-      </label>
-
-      <select id="projectStatus">
-
-        <option value="Active">
-          Active
-        </option>
-
-        <option value="Pending">
-          Pending
-        </option>
-
-        <option value="Completed">
-          Completed
-        </option>
-
-        <option value="Cancelled">
-          Cancelled
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Description
-      </label>
-
-      <textarea
-        id="projectDescription"
-        placeholder="Project description..."
-      ></textarea>
-
-    </div>
-
-
-    <div class="modal-actions">
-
-      <button
-        class="btn btn-secondary"
-        onclick="closeModal()"
-      >
-        Cancel
-      </button>
-
-      <button
-        class="btn btn-primary"
-        onclick="addProject()"
-      >
-        Add Project
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<div id="message" class="message"></div>
-
 
 <script>
 
@@ -651,82 +463,57 @@
 
   let companyId = null;
 
+  let currentPlan = "Free";
 
-  function showMessage(text, type) {
 
-    const message =
+  const PLAN_LIMITS = {
+
+    "Free": 1,
+
+    "Starter": 20,
+
+    "Business": 100,
+
+    "Professional": 500,
+
+    "Enterprise": Infinity
+
+  };
+
+
+  function showMessage(message, type) {
+
+    const box =
       document.getElementById("message");
 
-    message.textContent = text;
+    box.textContent = message;
 
-    message.className =
+    box.className =
       "message " + type;
 
-    message.style.display = "block";
+    box.style.display = "block";
 
     setTimeout(function() {
 
-      message.style.display = "none";
+      box.style.display = "none";
 
-    }, 3500);
-
-  }
-
-
-  function openModal() {
-
-    document.getElementById(
-      "projectModal"
-    ).style.display = "flex";
+    }, 4000);
 
   }
 
 
-  function closeModal() {
-
-    document.getElementById(
-      "projectModal"
-    ).style.display = "none";
-
-    document.getElementById(
-      "projectName"
-    ).value = "";
-
-    document.getElementById(
-      "projectClient"
-    ).value = "";
-
-    document.getElementById(
-      "projectStartDate"
-    ).value = "";
-
-    document.getElementById(
-      "projectDueDate"
-    ).value = "";
-
-    document.getElementById(
-      "projectStatus"
-    ).value = "Active";
-
-    document.getElementById(
-      "projectDescription"
-    ).value = "";
-
-  }
-
-
-  async function loadCompany() {
+  async function getCompanyData() {
 
     const {
       data: {
         user
       },
-      error: userError
+      error: authError
     } =
       await supabaseClient.auth.getUser();
 
 
-    if (userError || !user) {
+    if (authError || !user) {
 
       window.location.href =
         "signin.html";
@@ -736,26 +523,25 @@
     }
 
 
-    document.getElementById(
-      "userBox"
-    ).textContent =
-      user.email || "User";
-
-
     const {
       data: profile,
       error: profileError
     } =
       await supabaseClient
+
         .from("profiles")
-        .select("company_id, full_name")
+
+        .select("company_id")
+
         .eq("id", user.id)
+
         .single();
 
 
-    if (profileError || !profile) {
-
-      console.error(profileError);
+    if (
+      profileError ||
+      !profile
+    ) {
 
       showMessage(
         "Could not load company information.",
@@ -771,14 +557,64 @@
       profile.company_id;
 
 
-    if (profile.full_name) {
+    const {
+      data: company,
+      error: companyError
+    } =
+      await supabaseClient
 
-      document.getElementById(
-        "userBox"
-      ).textContent =
-        profile.full_name;
+        .from("companies")
+
+        .select("plan")
+
+        .eq("id", companyId)
+
+        .single();
+
+
+    if (
+      companyError ||
+      !company
+    ) {
+
+      currentPlan = "Free";
+
+    } else {
+
+      currentPlan =
+        company.plan || "Free";
 
     }
+
+
+    if (
+      !PLAN_LIMITS.hasOwnProperty(
+        currentPlan
+      )
+    ) {
+
+      currentPlan = "Free";
+
+    }
+
+
+    document.getElementById(
+      "currentPlan"
+    ).textContent =
+      currentPlan;
+
+
+    const limit =
+      PLAN_LIMITS[currentPlan];
+
+
+    document.getElementById(
+      "limitText"
+    ).textContent =
+      limit === Infinity
+        ? "Unlimited"
+        : limit + " project" +
+          (limit === 1 ? "" : "s");
 
 
     return true;
@@ -789,7 +625,7 @@
   async function loadProjects() {
 
     const ready =
-      await loadCompany();
+      await getCompanyData();
 
 
     if (!ready) return;
@@ -800,17 +636,25 @@
       error
     } =
       await supabaseClient
+
         .from("projects")
+
         .select("*")
-        .eq("company_id", companyId)
-        .order("created_at", {
-          ascending: false
-        });
+
+        .eq(
+          "company_id",
+          companyId
+        )
+
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        );
 
 
     if (error) {
-
-      console.error(error);
 
       showMessage(
         "Could not load projects: " +
@@ -829,134 +673,247 @@
 
     renderProjects();
 
+    updateStats();
+
+    updateLimitButton();
+
   }
 
 
-  async function addProject() {
+  function updateLimitButton() {
 
-    const name =
-      document
-        .getElementById("projectName")
-        .value
-        .trim();
+    const limit =
+      PLAN_LIMITS[currentPlan];
 
 
-    const client =
-      document
-        .getElementById("projectClient")
-        .value
-        .trim();
-
-
-    const startDate =
-      document
-        .getElementById("projectStartDate")
-        .value;
-
-
-    const dueDate =
-      document
-        .getElementById("projectDueDate")
-        .value;
-
-
-    const status =
-      document
-        .getElementById("projectStatus")
-        .value;
-
-
-    const description =
-      document
-        .getElementById("projectDescription")
-        .value
-        .trim();
-
-
-    if (!name) {
-
-      showMessage(
-        "Please enter the project name.",
-        "error"
+    const button =
+      document.getElementById(
+        "addButton"
       );
 
-      return;
+
+    if (
+      limit !== Infinity &&
+      projects.length >= limit
+    ) {
+
+      button.disabled =
+        true;
+
+      button.style.opacity =
+        "0.5";
+
+      button.style.cursor =
+        "not-allowed";
+
+      button.textContent =
+        "Plan Limit Reached";
+
+    } else {
+
+      button.disabled =
+        false;
+
+      button.style.opacity =
+        "1";
+
+      button.style.cursor =
+        "pointer";
+
+      button.textContent =
+        "Add Project";
 
     }
 
-
-    if (!companyId) {
-
-      showMessage(
-        "Company information is missing.",
-        "error"
-      );
-
-      return;
-
-    }
+  }
 
 
-    const {
-      data,
-      error
-    } =
+  document.getElementById(
+    "projectForm"
+  ).addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const limit =
+        PLAN_LIMITS[currentPlan];
+
+
+      if (
+        limit !== Infinity &&
+        projects.length >= limit
+      ) {
+
+        showMessage(
+          "Your " +
+          currentPlan +
+          " plan allows only " +
+          limit +
+          " project" +
+          (limit === 1 ? "." : "s."),
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const name =
+        document.getElementById(
+          "name"
+        ).value.trim();
+
+
+      const client =
+        document.getElementById(
+          "client"
+        ).value.trim();
+
+
+      const startDate =
+        document.getElementById(
+          "start_date"
+        ).value;
+
+
+      const dueDate =
+        document.getElementById(
+          "due_date"
+        ).value;
+
+
+      const status =
+        document.getElementById(
+          "status"
+        ).value;
+
+
+      const budget =
+        document.getElementById(
+          "budget"
+        ).value;
+
+
+      const description =
+        document.getElementById(
+          "description"
+        ).value.trim();
+
+
+      if (!name) {
+
+        showMessage(
+          "Project name is required.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const button =
+        document.getElementById(
+          "addButton"
+        );
+
+
+      button.disabled =
+        true;
+
+      button.textContent =
+        "Adding...";
+
+
+      const insertData = {
+
+        company_id:
+          companyId,
+
+        name:
+          name,
+
+        description:
+          description || null,
+
+        due_date:
+          dueDate || null,
+
+        status:
+          status
+
+      };
+
+
+      if (client) {
+
+        insertData.client =
+          client;
+
+      }
+
+
+      if (startDate) {
+
+        insertData.start_date =
+          startDate;
+
+      }
+
+
+      if (budget) {
+
+        insertData.budget =
+          Number(budget);
+
+      }
+
+
+      const {
+        error
+      } =
       await supabaseClient
+
         .from("projects")
-        .insert({
 
-          company_id: companyId,
-
-          name: name,
-
-          client: client || null,
-
-          start_date:
-            startDate || null,
-
-          due_date:
-            dueDate || null,
-
-          status: status,
-
-          description:
-            description || null
-
-        })
-        .select()
-        .single();
+        .insert(
+          insertData
+        );
 
 
-    if (error) {
+      if (error) {
 
-      console.error(error);
+        showMessage(
+          "Could not add project: " +
+          error.message,
+          "error"
+        );
+
+        updateLimitButton();
+
+        return;
+
+      }
+
 
       showMessage(
-        "Could not add project: " +
-        error.message,
-        "error"
+        "Project added successfully.",
+        "success"
       );
 
-      return;
+
+      document.getElementById(
+        "projectForm"
+      ).reset();
+
+
+      await loadProjects();
 
     }
-
-
-    projects.unshift(data);
-
-
-    renderProjects();
-
-
-    closeModal();
-
-
-    showMessage(
-      "Project added successfully.",
-      "success"
-    );
-
-  }
+  );
 
 
   async function deleteProject(id) {
@@ -974,15 +931,23 @@
       error
     } =
       await supabaseClient
+
         .from("projects")
+
         .delete()
-        .eq("id", id)
-        .eq("company_id", companyId);
+
+        .eq(
+          "id",
+          id
+        )
+
+        .eq(
+          "company_id",
+          companyId
+        );
 
 
     if (error) {
-
-      console.error(error);
 
       showMessage(
         "Could not delete project: " +
@@ -995,195 +960,194 @@
     }
 
 
-    projects =
-      projects.filter(function(project) {
-
-        return project.id !== id;
-
-      });
-
-
-    renderProjects();
-
-
     showMessage(
       "Project deleted successfully.",
       "success"
     );
+
+
+    await loadProjects();
 
   }
 
 
   function renderProjects() {
 
-    const table =
+    const tbody =
       document.getElementById(
-        "projectsTable"
+        "projectTableBody"
       );
 
 
     const search =
-      document
-        .getElementById("searchInput")
-        .value
+      document.getElementById(
+        "searchInput"
+      ).value
         .toLowerCase()
         .trim();
 
 
     const filtered =
-      projects.filter(function(project) {
+      projects.filter(
+        function(project) {
 
-        const name =
-          project.name ||
-          project.project_name ||
-          "";
+          const text = (
 
-        const client =
-          project.client ||
-          project.client_name ||
-          "";
+            (project.name || "") +
+            " " +
+            (project.client || "") +
+            " " +
+            (project.status || "") +
+            " " +
+            (project.description || "")
 
-        return (
-          name.toLowerCase().includes(search) ||
-          client.toLowerCase().includes(search)
-        );
-
-      });
+          ).toLowerCase();
 
 
-    updateStats();
+          return text.includes(search);
+
+        }
+      );
 
 
     if (filtered.length === 0) {
 
-      table.innerHTML = `
+      tbody.innerHTML =
+        `
         <tr>
-          <td colspan="6" class="empty">
+          <td colspan="7" style="text-align:center;">
             No projects found.
           </td>
         </tr>
-      `;
+        `;
 
       return;
 
     }
 
 
-    table.innerHTML =
-      filtered.map(function(project) {
+    tbody.innerHTML =
+      filtered.map(
+        function(project) {
 
-        const name =
-          project.name ||
-          project.project_name ||
-          "Unknown";
-
-
-        const client =
-          project.client ||
-          project.client_name ||
-          "-";
+          const status =
+            project.status ||
+            "Active";
 
 
-        const startDate =
-          project.start_date ||
-          "-";
+          let statusClass =
+            "status-active";
 
 
-        const dueDate =
-          project.due_date ||
-          "-";
+          if (
+            String(status)
+              .toLowerCase() ===
+            "completed"
+          ) {
+
+            statusClass =
+              "status-completed";
+
+          }
 
 
-        const status =
-          project.status ||
-          "Active";
+          if (
+            String(status)
+              .toLowerCase() ===
+            "pending"
+          ) {
+
+            statusClass =
+              "status-pending";
+
+          }
 
 
-        let statusClass =
-          "status";
+          let budget = "-";
 
 
-        if (
-          String(status).toLowerCase() ===
-          "pending"
-        ) {
+          if (
+            project.budget !== null &&
+            project.budget !== undefined &&
+            project.budget !== ""
+          ) {
 
-          statusClass =
-            "status pending";
+            budget =
+              "$" +
+              Number(
+                project.budget
+              ).toLocaleString();
 
-        }
-
-
-        if (
-          String(status).toLowerCase() ===
-          "completed"
-        ) {
-
-          statusClass =
-            "status completed";
-
-        }
+          }
 
 
-        if (
-          String(status).toLowerCase() ===
-          "cancelled"
-        ) {
+          return `
 
-          statusClass =
-            "status cancelled";
+            <tr>
 
-        }
+              <td>
+                ${escapeHTML(
+                  project.name ||
+                  ""
+                )}
+              </td>
 
+              <td>
+                ${escapeHTML(
+                  project.client ||
+                  "-"
+                )}
+              </td>
 
-        return `
-
-          <tr>
-
-            <td>
-              <strong>
-                ${escapeHTML(name)}
-              </strong>
-            </td>
-
-            <td>
-              ${escapeHTML(client)}
-            </td>
-
-            <td>
-              ${escapeHTML(formatDate(startDate))}
-            </td>
-
-            <td>
-              ${escapeHTML(formatDate(dueDate))}
-            </td>
-
-            <td>
-
-              <span class="${statusClass}">
+              <td class="${statusClass}">
                 ${escapeHTML(status)}
-              </span>
+              </td>
 
-            </td>
+              <td>
+                ${escapeHTML(
+                  project.start_date ||
+                  "-"
+                )}
+              </td>
 
-            <td>
+              <td>
+                ${escapeHTML(
+                  project.due_date ||
+                  "-"
+                )}
+              </td>
 
-              <button
-                class="btn btn-danger"
-                onclick="deleteProject('${project.id}')"
-              >
-                Delete
-              </button>
+              <td>
+                ${budget}
+              </td>
 
-            </td>
+              <td>
 
-          </tr>
+                <button
+                  class="btn-danger"
+                  onclick="deleteProject('${project.id}')"
+                >
+                  Delete
+                </button>
 
-        `;
+              </td>
 
-      }).join("");
+            </tr>
+
+          `;
+
+        }
+      ).join("");
 
   }
+
+
+  document.getElementById(
+    "searchInput"
+  ).addEventListener(
+    "input",
+    renderProjects
+  );
 
 
   function updateStats() {
@@ -1193,84 +1157,75 @@
 
 
     const active =
-      projects.filter(function(project) {
+      projects.filter(
+        function(project) {
 
-        return (
-          String(project.status || "")
-            .toLowerCase() === "active"
-        );
+          return (
+            String(
+              project.status ||
+              ""
+            ).toLowerCase() ===
+            "active"
+          );
 
-      }).length;
+        }
+      ).length;
 
 
     const completed =
-      projects.filter(function(project) {
+      projects.filter(
+        function(project) {
 
-        return (
-          String(project.status || "")
-            .toLowerCase() === "completed"
-        );
+          return (
+            String(
+              project.status ||
+              ""
+            ).toLowerCase() ===
+            "completed"
+          );
 
-      }).length;
+        }
+      ).length;
 
 
     const pending =
-      projects.filter(function(project) {
+      projects.filter(
+        function(project) {
 
-        return (
-          String(project.status || "")
-            .toLowerCase() === "pending"
-        );
+          return (
+            String(
+              project.status ||
+              ""
+            ).toLowerCase() ===
+            "pending"
+          );
 
-      }).length;
+        }
+      ).length;
 
 
     document.getElementById(
       "totalProjects"
-    ).textContent = total;
+    ).textContent =
+      total;
 
 
     document.getElementById(
       "activeProjects"
-    ).textContent = active;
+    ).textContent =
+      active;
 
 
     document.getElementById(
       "completedProjects"
-    ).textContent = completed;
+    ).textContent =
+      completed;
 
 
     document.getElementById(
       "pendingProjects"
-    ).textContent = pending;
-
-  }
-
-
-  function formatDate(value) {
-
-    if (!value || value === "-") {
-      return "-";
-    }
-
-
-    const date =
-      new Date(value);
-
-
-    if (isNaN(date.getTime())) {
-      return value;
-    }
-
-
-    return date.toLocaleDateString(
-      "en-US",
-      {
-        year: "numeric",
-        month: "short",
-        day: "numeric"
-      }
-    );
+    ).textContent =
+      pending;
 
   }
 
