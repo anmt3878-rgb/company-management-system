@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Reports - CompanyFlow</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
 
   <style>
     * {
@@ -15,37 +19,38 @@
 
     body {
       background: #f5f7fb;
-      color: #172033;
+      color: #1f2937;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
     }
 
     .sidebar {
+      width: 240px;
+      background: #111827;
+      color: white;
+      padding: 24px 16px;
       position: fixed;
       left: 0;
       top: 0;
-      width: 240px;
-      height: 100vh;
-      background: #111827;
-      color: white;
-      padding: 25px 15px;
+      bottom: 0;
       overflow-y: auto;
     }
 
     .logo {
-      font-size: 23px;
+      font-size: 24px;
       font-weight: bold;
-      margin-bottom: 35px;
-      padding-left: 10px;
-    }
-
-    .logo span {
-      color: #4f8cff;
+      margin-bottom: 30px;
+      padding: 0 10px;
     }
 
     .nav a {
       display: block;
-      color: #cbd5e1;
+      color: #d1d5db;
       text-decoration: none;
-      padding: 13px 15px;
+      padding: 12px 14px;
       border-radius: 8px;
       margin-bottom: 5px;
       font-size: 14px;
@@ -59,173 +64,143 @@
 
     .main {
       margin-left: 240px;
-      min-height: 100vh;
-    }
-
-    .topbar {
-      height: 75px;
-      background: white;
-      border-bottom: 1px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-    }
-
-    .topbar h1 {
-      font-size: 24px;
-    }
-
-    .user {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #2563eb;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
-
-    .content {
+      width: calc(100% - 240px);
       padding: 30px;
     }
 
-    .page-header {
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 25px;
     }
 
-    .page-header h2 {
-      font-size: 26px;
-      margin-bottom: 6px;
+    h1 {
+      font-size: 28px;
     }
 
-    .page-header p {
-      color: #64748b;
+    .subtitle {
+      color: #6b7280;
+      margin-top: 6px;
       font-size: 14px;
     }
 
-    .report-grid {
+    .user-email {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .stat-title {
+      color: #6b7280;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 27px;
+      font-weight: bold;
+    }
+
+    .cards {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 20px;
     }
 
-    .report-card {
+    .card {
       background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
+      border-radius: 12px;
       padding: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
-    .report-card h3 {
-      font-size: 18px;
-      margin-bottom: 8px;
+    .card h2 {
+      font-size: 19px;
+      margin-bottom: 18px;
     }
 
-    .report-card p {
-      color: #64748b;
-      font-size: 13px;
-      margin-bottom: 20px;
-      line-height: 1.5;
+    .report-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 1px solid #e5e7eb;
     }
 
-    .report-value {
-      font-size: 30px;
-      font-weight: bold;
-      margin-bottom: 8px;
+    .report-row:last-child {
+      border-bottom: none;
     }
 
     .report-label {
-      color: #64748b;
-      font-size: 13px;
+      color: #6b7280;
+      font-size: 14px;
     }
 
-    .bar-area {
-      margin-top: 20px;
-    }
-
-    .bar-row {
-      margin-bottom: 15px;
-    }
-
-    .bar-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 6px;
-      font-size: 13px;
-    }
-
-    .bar-bg {
-      width: 100%;
-      height: 9px;
-      background: #e5e7eb;
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    .bar {
-      height: 100%;
-      background: #2563eb;
-      border-radius: 20px;
-      transition: width 0.4s;
-    }
-
-    .financial-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .financial-box {
-      background: #f8fafc;
-      padding: 16px;
-      border-radius: 10px;
-    }
-
-    .financial-box small {
-      display: block;
-      color: #64748b;
-      margin-bottom: 7px;
-    }
-
-    .financial-box strong {
-      font-size: 19px;
+    .report-value {
+      font-weight: bold;
+      font-size: 15px;
     }
 
     .positive {
-      color: #15803d;
+      color: #16a34a;
     }
 
     .negative {
-      color: #b91c1c;
+      color: #dc2626;
     }
 
-    .empty {
-      color: #64748b;
+    .blue {
+      color: #2563eb;
+    }
+
+    .orange {
+      color: #ea580c;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: #6b7280;
+    }
+
+    .message {
+      display: none;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 18px;
       font-size: 14px;
-      padding: 10px 0;
     }
 
-    .full {
-      grid-column: 1 / -1;
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
     }
 
     .refresh-btn {
-      margin-top: 25px;
-      padding: 11px 17px;
-      border: none;
-      border-radius: 8px;
       background: #2563eb;
       color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
     }
@@ -234,56 +209,43 @@
       background: #1d4ed8;
     }
 
-    @media (max-width: 900px) {
-      .sidebar {
-        width: 190px;
+    @media (max-width: 1000px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
       }
 
-      .main {
-        margin-left: 190px;
-      }
-
-      .report-grid {
+      .cards {
         grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 650px) {
+      .layout {
+        display: block;
+      }
+
       .sidebar {
-        position: static;
+        position: relative;
         width: 100%;
         height: auto;
       }
 
       .main {
         margin-left: 0;
-      }
-
-      .nav {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .content {
+        width: 100%;
         padding: 18px;
       }
 
       .topbar {
-        padding: 0 15px;
+        display: block;
       }
 
-      .financial-grid {
+      .user-email {
+        margin-top: 10px;
+      }
+
+      .stats {
         grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 430px) {
-      .nav {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar h1 {
-        font-size: 19px;
       }
     }
   </style>
@@ -291,828 +253,1041 @@
 
 <body>
 
+<div class="layout">
+
   <aside class="sidebar">
 
     <div class="logo">
-      Company<span>Flow</span>
+      CompanyFlow
     </div>
 
     <nav class="nav">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="employees.html">Employees</a>
-      <a href="customers.html">Customers</a>
-      <a href="projects.html">Projects</a>
-      <a href="tasks.html">Tasks</a>
-      <a href="finance.html">Finance</a>
-      <a href="inventory.html">Inventory</a>
-      <a href="documents.html">Documents</a>
-      <a href="reports.html" class="active">Reports</a>
-      <a href="settings.html">Settings</a>
+
+      <a href="dashboard.html">
+        Dashboard
+      </a>
+
+      <a href="employees.html">
+        Employees
+      </a>
+
+      <a href="customers.html">
+        Customers
+      </a>
+
+      <a href="projects.html">
+        Projects
+      </a>
+
+      <a href="tasks.html">
+        Tasks
+      </a>
+
+      <a href="finance.html">
+        Finance
+      </a>
+
+      <a href="inventory.html">
+        Inventory
+      </a>
+
+      <a href="documents.html">
+        Documents
+      </a>
+
+      <a href="reports.html" class="active">
+        Reports
+      </a>
+
+      <a href="roles.html">
+        Roles & Permissions
+      </a>
+
+      <a href="notifications.html">
+        Notifications
+      </a>
+
+      <a href="settings.html">
+        Settings
+      </a>
+
+      <a href="index.html">
+        Back to Website
+      </a>
+
     </nav>
 
   </aside>
 
-
   <main class="main">
 
-    <header class="topbar">
+    <div class="topbar">
 
-      <h1>Reports</h1>
+      <div>
 
-      <div class="user">
-        <span id="ownerName">Owner</span>
-        <div class="avatar" id="avatar">O</div>
-      </div>
+        <h1>
+          Reports
+        </h1>
 
-    </header>
-
-
-    <section class="content">
-
-      <div class="page-header">
-        <h2>Business Reports</h2>
-        <p>
-          Review your company's key performance information.
+        <p class="subtitle">
+          Real-time business reports from your CompanyFlow data.
         </p>
+
       </div>
 
+      <div>
 
-      <div class="report-grid">
+        <div
+          class="user-email"
+          id="userEmail"
+        >
+          Loading...
+        </div>
 
+        <button
+          class="refresh-btn"
+          onclick="loadReports()"
+          style="margin-top:8px;"
+        >
+          Refresh Reports
+        </button>
 
-        <!-- Employees -->
+      </div>
 
-        <div class="report-card">
+    </div>
 
-          <h3>Employee Report</h3>
+    <div
+      id="message"
+      class="message"
+    ></div>
 
-          <p>
-            Overview of your company's employee records.
-          </p>
+    <div class="stats">
 
-          <div class="report-value" id="employeeCount">
-            0
-          </div>
+      <div class="stat-card">
 
-          <div class="report-label">
-            Total Employees
-          </div>
+        <div class="stat-title">
+          Total Employees
+        </div>
 
-          <div class="bar-area">
+        <div
+          class="stat-value"
+          id="employeesCount"
+        >
+          0
+        </div>
 
-            <div class="bar-row">
+      </div>
 
-              <div class="bar-header">
-                <span>Active</span>
-                <span id="activeEmployeeText">0%</span>
-              </div>
+      <div class="stat-card">
 
-              <div class="bar-bg">
-                <div
-                  class="bar"
-                  id="activeEmployeeBar"
-                  style="width:0%"
-                ></div>
-              </div>
+        <div class="stat-title">
+          Total Customers
+        </div>
 
-            </div>
+        <div
+          class="stat-value"
+          id="customersCount"
+        >
+          0
+        </div>
 
-            <div class="bar-row">
+      </div>
 
-              <div class="bar-header">
-                <span>Inactive</span>
-                <span id="inactiveEmployeeText">0%</span>
-              </div>
+      <div class="stat-card">
 
-              <div class="bar-bg">
-                <div
-                  class="bar"
-                  id="inactiveEmployeeBar"
-                  style="width:0%"
-                ></div>
-              </div>
+        <div class="stat-title">
+          Active Projects
+        </div>
 
-            </div>
+        <div
+          class="stat-value"
+          id="projectsCount"
+        >
+          0
+        </div>
 
-          </div>
+      </div>
+
+      <div class="stat-card">
+
+        <div class="stat-title">
+          Total Products
+        </div>
+
+        <div
+          class="stat-value"
+          id="productsCount"
+        >
+          0
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="cards">
+
+      <!-- Finance -->
+
+      <section class="card">
+
+        <h2>
+          Financial Overview
+        </h2>
+
+        <div class="report-row">
+
+          <span class="report-label">
+            Total Income
+          </span>
+
+          <span
+            class="report-value positive"
+            id="totalIncome"
+          >
+            $0.00
+          </span>
 
         </div>
 
+        <div class="report-row">
 
-        <!-- Customers -->
+          <span class="report-label">
+            Total Expenses
+          </span>
 
-        <div class="report-card">
-
-          <h3>Customer Report</h3>
-
-          <p>
-            Overview of customers and potential leads.
-          </p>
-
-          <div class="report-value" id="customerCount">
-            0
-          </div>
-
-          <div class="report-label">
-            Total Customers
-          </div>
-
-          <div class="bar-area">
-
-            <div class="bar-row">
-
-              <div class="bar-header">
-                <span>Active Customers</span>
-                <span id="activeCustomerText">0%</span>
-              </div>
-
-              <div class="bar-bg">
-                <div
-                  class="bar"
-                  id="activeCustomerBar"
-                  style="width:0%"
-                ></div>
-              </div>
-
-            </div>
-
-            <div class="bar-row">
-
-              <div class="bar-header">
-                <span>Leads</span>
-                <span id="leadCustomerText">0%</span>
-              </div>
-
-              <div class="bar-bg">
-                <div
-                  class="bar"
-                  id="leadCustomerBar"
-                  style="width:0%"
-                ></div>
-              </div>
-
-            </div>
-
-          </div>
+          <span
+            class="report-value negative"
+            id="totalExpenses"
+          >
+            $0.00
+          </span>
 
         </div>
 
+        <div class="report-row">
 
-        <!-- Projects -->
+          <span class="report-label">
+            Net Balance
+          </span>
 
-        <div class="report-card">
+          <span
+            class="report-value blue"
+            id="netBalance"
+          >
+            $0.00
+          </span>
 
-          <h3>Project Report</h3>
+        </div>
 
-          <p>
-            Track project progress and current workload.
-          </p>
+        <div class="report-row">
 
-          <div class="report-value" id="projectCount">
+          <span class="report-label">
+            Transactions
+          </span>
+
+          <span
+            class="report-value"
+            id="transactionsCount"
+          >
             0
-          </div>
+          </span>
 
-          <div class="report-label">
+        </div>
+
+      </section>
+
+
+      <!-- Projects -->
+
+      <section class="card">
+
+        <h2>
+          Project Overview
+        </h2>
+
+        <div class="report-row">
+
+          <span class="report-label">
             Total Projects
-          </div>
+          </span>
 
-          <div class="bar-area">
-
-            <div class="bar-row">
-
-              <div class="bar-header">
-                <span>Active</span>
-                <span id="activeProjectText">0%</span>
-              </div>
-
-              <div class="bar-bg">
-                <div
-                  class="bar"
-                  id="activeProjectBar"
-                  style="width:0%"
-                ></div>
-              </div>
-
-            </div>
-
-            <div class="bar-row">
-
-              <div class="bar-header">
-                <span>Completed</span>
-                <span id="completedProjectText">0%</span>
-              </div>
-
-              <div class="bar-bg">
-                <div
-                  class="bar"
-                  id="completedProjectBar"
-                  style="width:0%"
-                ></div>
-              </div>
-
-            </div>
-
-          </div>
+          <span
+            class="report-value"
+            id="totalProjects"
+          >
+            0
+          </span>
 
         </div>
 
+        <div class="report-row">
 
-        <!-- Tasks -->
+          <span class="report-label">
+            Active Projects
+          </span>
 
-        <div class="report-card">
-
-          <h3>Task Report</h3>
-
-          <p>
-            Monitor task status and completion progress.
-          </p>
-
-          <div class="report-value" id="taskCount">
+          <span
+            class="report-value blue"
+            id="activeProjects"
+          >
             0
-          </div>
+          </span>
 
-          <div class="report-label">
+        </div>
+
+        <div class="report-row">
+
+          <span class="report-label">
+            Completed Projects
+          </span>
+
+          <span
+            class="report-value positive"
+            id="completedProjects"
+          >
+            0
+          </span>
+
+        </div>
+
+      </section>
+
+
+      <!-- Tasks -->
+
+      <section class="card">
+
+        <h2>
+          Task Overview
+        </h2>
+
+        <div class="report-row">
+
+          <span class="report-label">
             Total Tasks
-          </div>
+          </span>
 
-          <div class="bar-area">
-
-            <div class="bar-row">
-
-              <div class="bar-header">
-                <span>Completed</span>
-                <span id="completedTaskText">0%</span>
-              </div>
-
-              <div class="bar-bg">
-                <div
-                  class="bar"
-                  id="completedTaskBar"
-                  style="width:0%"
-                ></div>
-              </div>
-
-            </div>
-
-            <div class="bar-row">
-
-              <div class="bar-header">
-                <span>In Progress</span>
-                <span id="progressTaskText">0%</span>
-              </div>
-
-              <div class="bar-bg">
-                <div
-                  class="bar"
-                  id="progressTaskBar"
-                  style="width:0%"
-                ></div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- Finance -->
-
-        <div class="report-card full">
-
-          <h3>Financial Report</h3>
-
-          <p>
-            Summary of income, expenses and estimated net profit.
-          </p>
-
-          <div class="financial-grid">
-
-            <div class="financial-box">
-              <small>Total Revenue</small>
-              <strong
-                class="positive"
-                id="totalRevenue"
-              >
-                $0.00
-              </strong>
-            </div>
-
-            <div class="financial-box">
-              <small>Total Expenses</small>
-              <strong
-                class="negative"
-                id="totalExpenses"
-              >
-                $0.00
-              </strong>
-            </div>
-
-            <div class="financial-box">
-              <small>Net Profit</small>
-              <strong id="netProfit">
-                $0.00
-              </strong>
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- Inventory -->
-
-        <div class="report-card">
-
-          <h3>Inventory Report</h3>
-
-          <p>
-            Overview of products and stock levels.
-          </p>
-
-          <div class="report-value" id="productCount">
+          <span
+            class="report-value"
+            id="totalTasks"
+          >
             0
-          </div>
+          </span>
 
-          <div class="report-label">
+        </div>
+
+        <div class="report-row">
+
+          <span class="report-label">
+            Completed Tasks
+          </span>
+
+          <span
+            class="report-value positive"
+            id="completedTasks"
+          >
+            0
+          </span>
+
+        </div>
+
+        <div class="report-row">
+
+          <span class="report-label">
+            Pending Tasks
+          </span>
+
+          <span
+            class="report-value orange"
+            id="pendingTasks"
+          >
+            0
+          </span>
+
+        </div>
+
+      </section>
+
+
+      <!-- Inventory -->
+
+      <section class="card">
+
+        <h2>
+          Inventory Overview
+        </h2>
+
+        <div class="report-row">
+
+          <span class="report-label">
             Total Products
-          </div>
+          </span>
 
-          <div class="bar-area">
-
-            <div class="bar-row">
-
-              <div class="bar-header">
-                <span>Low Stock</span>
-                <span id="lowStockText">0%</span>
-              </div>
-
-              <div class="bar-bg">
-                <div
-                  class="bar"
-                  id="lowStockBar"
-                  style="width:0%"
-                ></div>
-              </div>
-
-            </div>
-
-            <div class="bar-row">
-
-              <div class="bar-header">
-                <span>Out of Stock</span>
-                <span id="outStockText">0%</span>
-              </div>
-
-              <div class="bar-bg">
-                <div
-                  class="bar"
-                  id="outStockBar"
-                  style="width:0%"
-                ></div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- Documents -->
-
-        <div class="report-card">
-
-          <h3>Document Report</h3>
-
-          <p>
-            Summary of company documents.
-          </p>
-
-          <div class="report-value" id="documentCount">
+          <span
+            class="report-value"
+            id="inventoryProducts"
+          >
             0
-          </div>
-
-          <div class="report-label">
-            Total Documents
-          </div>
-
-          <div class="bar-area">
-
-            <div class="bar-row">
-
-              <div class="bar-header">
-                <span>Active</span>
-                <span id="activeDocumentText">0%</span>
-              </div>
-
-              <div class="bar-bg">
-                <div
-                  class="bar"
-                  id="activeDocumentBar"
-                  style="width:0%"
-                ></div>
-              </div>
-
-            </div>
-
-            <div class="bar-row">
-
-              <div class="bar-header">
-                <span>Archived</span>
-                <span id="archivedDocumentText">0%</span>
-              </div>
-
-              <div class="bar-bg">
-                <div
-                  class="bar"
-                  id="archivedDocumentBar"
-                  style="width:0%"
-                ></div>
-              </div>
-
-            </div>
-
-          </div>
+          </span>
 
         </div>
 
-      </div>
+        <div class="report-row">
+
+          <span class="report-label">
+            Total Stock
+          </span>
+
+          <span
+            class="report-value"
+            id="totalStock"
+          >
+            0
+          </span>
+
+        </div>
+
+        <div class="report-row">
+
+          <span class="report-label">
+            Low Stock Products
+          </span>
+
+          <span
+            class="report-value orange"
+            id="lowStock"
+          >
+            0
+          </span>
+
+        </div>
+
+        <div class="report-row">
+
+          <span class="report-label">
+            Inventory Value
+          </span>
+
+          <span
+            class="report-value blue"
+            id="inventoryValue"
+          >
+            $0.00
+          </span>
+
+        </div>
+
+      </section>
 
 
-      <button
-        class="refresh-btn"
-        onclick="loadReports()"
-      >
-        Refresh Reports
-      </button>
+      <!-- Customers -->
 
-    </section>
+      <section class="card">
+
+        <h2>
+          Customer Overview
+        </h2>
+
+        <div class="report-row">
+
+          <span class="report-label">
+            Total Customers
+          </span>
+
+          <span
+            class="report-value"
+            id="totalCustomers"
+          >
+            0
+          </span>
+
+        </div>
+
+        <div class="report-row">
+
+          <span class="report-label">
+            Active Customers
+          </span>
+
+          <span
+            class="report-value positive"
+            id="activeCustomers"
+          >
+            0
+          </span>
+
+        </div>
+
+      </section>
+
+
+      <!-- Documents -->
+
+      <section class="card">
+
+        <h2>
+          Documents Overview
+        </h2>
+
+        <div class="report-row">
+
+          <span class="report-label">
+            Total Documents
+          </span>
+
+          <span
+            class="report-value"
+            id="totalDocuments"
+          >
+            0
+          </span>
+
+        </div>
+
+        <div class="report-row">
+
+          <span class="report-label">
+            Active Documents
+          </span>
+
+          <span
+            class="report-value positive"
+            id="activeDocuments"
+          >
+            0
+          </span>
+
+        </div>
+
+        <div class="report-row">
+
+          <span class="report-label">
+            Pending Documents
+          </span>
+
+          <span
+            class="report-value orange"
+            id="pendingDocuments"
+          >
+            0
+          </span>
+
+        </div>
+
+        <div class="report-row">
+
+          <span class="report-label">
+            Archived Documents
+          </span>
+
+          <span
+            class="report-value"
+            id="archivedDocuments"
+          >
+            0
+          </span>
+
+        </div>
+
+      </section>
+
+    </div>
 
   </main>
 
-
-  <script>
-
-    const owner =
-      localStorage.getItem("ownerName") || "Owner";
-
-    document.getElementById("ownerName").textContent =
-      owner;
-
-    document.getElementById("avatar").textContent =
-      owner.charAt(0).toUpperCase();
+</div>
 
 
-    function getData(key) {
+<script>
 
-      try {
+  let currentUser = null;
+  let currentCompanyId = null;
 
-        return JSON.parse(
-          localStorage.getItem(key) || "[]"
-        );
 
-      } catch (error) {
+  function showMessage(text, type) {
 
-        return [];
+    const box = document.getElementById("message");
 
+    box.textContent = text;
+
+    box.className = "message " + type;
+
+    box.style.display = "block";
+
+    setTimeout(() => {
+
+      box.style.display = "none";
+
+    }, 3500);
+
+  }
+
+
+  async function getCurrentUser() {
+
+    const {
+      data: { user },
+      error
+    } = await supabaseClient.auth.getUser();
+
+    if (error || !user) {
+
+      window.location.href = "signin.html";
+
+      return null;
+    }
+
+    return user;
+  }
+
+
+  async function loadCompany() {
+
+    const { data, error } = await supabaseClient
+      .from("profiles")
+      .select("company_id")
+      .eq("id", currentUser.id)
+      .single();
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        "Could not load company information.",
+        "error"
+      );
+
+      return false;
+    }
+
+    currentCompanyId = data.company_id;
+
+    return true;
+  }
+
+
+  async function getCount(table) {
+
+    const { count, error } = await supabaseClient
+      .from(table)
+      .select("id", {
+        count: "exact",
+        head: true
+      })
+      .eq("company_id", currentCompanyId);
+
+    if (error) {
+
+      console.error(table, error);
+
+      return 0;
+    }
+
+    return count || 0;
+  }
+
+
+  async function loadEmployees() {
+
+    const { data, error } = await supabaseClient
+      .from("employees")
+      .select("id")
+      .eq("company_id", currentCompanyId);
+
+    if (error) {
+
+      console.error(error);
+
+      return;
+    }
+
+    document.getElementById("employeesCount").textContent =
+      data.length;
+  }
+
+
+  async function loadCustomers() {
+
+    const { data, error } = await supabaseClient
+      .from("customers")
+      .select("*")
+      .eq("company_id", currentCompanyId);
+
+    if (error) {
+
+      console.error(error);
+
+      return;
+    }
+
+    const total = data.length;
+
+    const active = data.filter(customer => {
+
+      const status =
+        String(customer.status || "").toLowerCase();
+
+      return (
+        status === "active" ||
+        status === "customer" ||
+        status === ""
+      );
+
+    }).length;
+
+    document.getElementById("customersCount").textContent =
+      total;
+
+    document.getElementById("totalCustomers").textContent =
+      total;
+
+    document.getElementById("activeCustomers").textContent =
+      active;
+  }
+
+
+  async function loadProjects() {
+
+    const { data, error } = await supabaseClient
+      .from("projects")
+      .select("*")
+      .eq("company_id", currentCompanyId);
+
+    if (error) {
+
+      console.error(error);
+
+      return;
+    }
+
+    const projects = data || [];
+
+    const total = projects.length;
+
+    const completed = projects.filter(project => {
+
+      return String(project.status || "")
+        .toLowerCase() === "completed";
+
+    }).length;
+
+    const active = projects.filter(project => {
+
+      return String(project.status || "")
+        .toLowerCase() !== "completed";
+
+    }).length;
+
+    document.getElementById("projectsCount").textContent =
+      active;
+
+    document.getElementById("totalProjects").textContent =
+      total;
+
+    document.getElementById("activeProjects").textContent =
+      active;
+
+    document.getElementById("completedProjects").textContent =
+      completed;
+  }
+
+
+  async function loadTasks() {
+
+    const { data, error } = await supabaseClient
+      .from("tasks")
+      .select("*")
+      .eq("company_id", currentCompanyId);
+
+    if (error) {
+
+      console.error(error);
+
+      return;
+    }
+
+    const tasks = data || [];
+
+    const total = tasks.length;
+
+    const completed = tasks.filter(task => {
+
+      return String(task.status || "")
+        .toLowerCase() === "completed";
+
+    }).length;
+
+    const pending = total - completed;
+
+    document.getElementById("totalTasks").textContent =
+      total;
+
+    document.getElementById("completedTasks").textContent =
+      completed;
+
+    document.getElementById("pendingTasks").textContent =
+      pending;
+  }
+
+
+  async function loadFinance() {
+
+    const { data, error } = await supabaseClient
+      .from("transactions")
+      .select("*")
+      .eq("company_id", currentCompanyId);
+
+    if (error) {
+
+      console.error(error);
+
+      return;
+    }
+
+    const transactions = data || [];
+
+    let income = 0;
+    let expenses = 0;
+
+    transactions.forEach(transaction => {
+
+      const amount =
+        Number(transaction.amount) || 0;
+
+      const type =
+        String(transaction.type || "")
+          .toLowerCase();
+
+      if (
+        type === "income" ||
+        type === "revenue"
+      ) {
+
+        income += amount;
+
+      } else if (
+        type === "expense" ||
+        type === "expenses"
+      ) {
+
+        expenses += amount;
       }
 
-    }
+    });
 
+    const balance = income - expenses;
 
-    function percentage(value, total) {
-
-      if (!total) return 0;
-
-      return Math.round(
-        (value / total) * 100
-      );
-
-    }
-
-
-    function setBar(
-      barId,
-      textId,
-      value,
-      total
-    ) {
-
-      const percent =
-        percentage(value, total);
-
-      document.getElementById(barId).style.width =
-        percent + "%";
-
-      document.getElementById(textId).textContent =
-        percent + "%";
-
-    }
-
-
-    function money(value) {
-
-      return "$" + Number(value || 0)
-        .toLocaleString("en-US", {
+    document.getElementById("totalIncome").textContent =
+      "$" + income.toLocaleString(
+        undefined,
+        {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2
-        });
-
-    }
-
-
-    function loadReports() {
-
-      /* Employees */
-
-      const employees =
-        getData("employees");
-
-      const activeEmployees =
-        employees.filter(
-          item =>
-            String(item.status).toLowerCase() ===
-            "active"
-        );
-
-      const inactiveEmployees =
-        employees.length -
-        activeEmployees.length;
-
-      document.getElementById("employeeCount")
-        .textContent =
-        employees.length;
-
-      setBar(
-        "activeEmployeeBar",
-        "activeEmployeeText",
-        activeEmployees.length,
-        employees.length
-      );
-
-      setBar(
-        "inactiveEmployeeBar",
-        "inactiveEmployeeText",
-        inactiveEmployees,
-        employees.length
-      );
-
-
-      /* Customers */
-
-      const customers =
-        getData("customers");
-
-      const activeCustomers =
-        customers.filter(
-          item =>
-            String(item.status).toLowerCase() ===
-            "active"
-        );
-
-      const leads =
-        customers.filter(
-          item =>
-            String(item.status).toLowerCase() ===
-            "lead"
-        );
-
-      document.getElementById("customerCount")
-        .textContent =
-        customers.length;
-
-      setBar(
-        "activeCustomerBar",
-        "activeCustomerText",
-        activeCustomers.length,
-        customers.length
-      );
-
-      setBar(
-        "leadCustomerBar",
-        "leadCustomerText",
-        leads.length,
-        customers.length
-      );
-
-
-      /* Projects */
-
-      const projects =
-        getData("projects");
-
-      const activeProjects =
-        projects.filter(
-          item =>
-            String(item.status).toLowerCase() ===
-            "active"
-        );
-
-      const completedProjects =
-        projects.filter(
-          item =>
-            String(item.status).toLowerCase() ===
-            "completed"
-        );
-
-      document.getElementById("projectCount")
-        .textContent =
-        projects.length;
-
-      setBar(
-        "activeProjectBar",
-        "activeProjectText",
-        activeProjects.length,
-        projects.length
-      );
-
-      setBar(
-        "completedProjectBar",
-        "completedProjectText",
-        completedProjects.length,
-        projects.length
-      );
-
-
-      /* Tasks */
-
-      const tasks =
-        getData("tasks");
-
-      const completedTasks =
-        tasks.filter(
-          item =>
-            String(item.status).toLowerCase() ===
-            "completed"
-        );
-
-      const progressTasks =
-        tasks.filter(
-          item =>
-            String(item.status).toLowerCase() ===
-            "in progress"
-        );
-
-      document.getElementById("taskCount")
-        .textContent =
-        tasks.length;
-
-      setBar(
-        "completedTaskBar",
-        "completedTaskText",
-        completedTasks.length,
-        tasks.length
-      );
-
-      setBar(
-        "progressTaskBar",
-        "progressTaskText",
-        progressTasks.length,
-        tasks.length
-      );
-
-
-      /* Finance */
-
-      const transactions =
-        getData("transactions");
-
-      let revenue = 0;
-      let expenses = 0;
-
-      transactions.forEach(item => {
-
-        const amount =
-          Number(item.amount) || 0;
-
-        const type =
-          String(item.type).toLowerCase();
-
-        if (type === "income") {
-
-          revenue += amount;
-
-        } else if (type === "expense") {
-
-          expenses += amount;
-
         }
-
-      });
-
-      const profit =
-        revenue - expenses;
-
-      document.getElementById("totalRevenue")
-        .textContent =
-        money(revenue);
-
-      document.getElementById("totalExpenses")
-        .textContent =
-        money(expenses);
-
-      const profitElement =
-        document.getElementById("netProfit");
-
-      profitElement.textContent =
-        money(profit);
-
-      profitElement.className =
-        profit >= 0
-          ? "positive"
-          : "negative";
-
-
-      /* Inventory */
-
-      const products =
-        getData("products");
-
-      const lowStock =
-        products.filter(item => {
-
-          const stock =
-            Number(item.stock) || 0;
-
-          const minimum =
-            Number(
-              item.lowStockAlert ||
-              item.lowStock ||
-              0
-            );
-
-          return stock > 0 && stock <= minimum;
-
-        });
-
-      const outOfStock =
-        products.filter(item =>
-          Number(item.stock) === 0
-        );
-
-      document.getElementById("productCount")
-        .textContent =
-        products.length;
-
-      setBar(
-        "lowStockBar",
-        "lowStockText",
-        lowStock.length,
-        products.length
       );
 
-      setBar(
-        "outStockBar",
-        "outStockText",
-        outOfStock.length,
-        products.length
+    document.getElementById("totalExpenses").textContent =
+      "$" + expenses.toLocaleString(
+        undefined,
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }
       );
 
-
-      /* Documents */
-
-      const documents =
-        getData("documents");
-
-      const activeDocuments =
-        documents.filter(
-          item =>
-            String(item.status).toLowerCase() ===
-            "active"
-        );
-
-      const archivedDocuments =
-        documents.filter(
-          item =>
-            String(item.status).toLowerCase() ===
-            "archived"
-        );
-
-      document.getElementById("documentCount")
-        .textContent =
-        documents.length;
-
-      setBar(
-        "activeDocumentBar",
-        "activeDocumentText",
-        activeDocuments.length,
-        documents.length
+    document.getElementById("netBalance").textContent =
+      "$" + balance.toLocaleString(
+        undefined,
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }
       );
 
-      setBar(
-        "archivedDocumentBar",
-        "archivedDocumentText",
-        archivedDocuments.length,
-        documents.length
-      );
+    document.getElementById("transactionsCount").textContent =
+      transactions.length;
+  }
 
+
+  async function loadInventory() {
+
+    const { data, error } = await supabaseClient
+      .from("products")
+      .select("*")
+      .eq("company_id", currentCompanyId);
+
+    if (error) {
+
+      console.error(error);
+
+      return;
     }
 
+    const products = data || [];
 
-    loadReports();
+    let stock = 0;
+    let value = 0;
+    let low = 0;
 
-  </script>
+    products.forEach(product => {
+
+      const quantity =
+        Number(product.stock_quantity) || 0;
+
+      const buyPrice =
+        Number(product.buy_price) || 0;
+
+      const lowAlert =
+        Number(product.low_stock_alert) || 0;
+
+      stock += quantity;
+
+      value += quantity * buyPrice;
+
+      if (quantity <= lowAlert) {
+        low++;
+      }
+
+    });
+
+    document.getElementById("productsCount").textContent =
+      products.length;
+
+    document.getElementById("inventoryProducts").textContent =
+      products.length;
+
+    document.getElementById("totalStock").textContent =
+      stock;
+
+    document.getElementById("lowStock").textContent =
+      low;
+
+    document.getElementById("inventoryValue").textContent =
+      "$" + value.toLocaleString(
+        undefined,
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }
+      );
+  }
+
+
+  async function loadDocuments() {
+
+    const { data, error } = await supabaseClient
+      .from("documents")
+      .select("*")
+      .eq("company_id", currentCompanyId);
+
+    if (error) {
+
+      console.error(error);
+
+      return;
+    }
+
+    const documents = data || [];
+
+    const total = documents.length;
+
+    const active = documents.filter(document => {
+
+      return String(document.status || "")
+        .toLowerCase() === "active";
+
+    }).length;
+
+    const pending = documents.filter(document => {
+
+      return String(document.status || "")
+        .toLowerCase() === "pending";
+
+    }).length;
+
+    const archived = documents.filter(document => {
+
+      return String(document.status || "")
+        .toLowerCase() === "archived";
+
+    }).length;
+
+    document.getElementById("totalDocuments").textContent =
+      total;
+
+    document.getElementById("activeDocuments").textContent =
+      active;
+
+    document.getElementById("pendingDocuments").textContent =
+      pending;
+
+    document.getElementById("archivedDocuments").textContent =
+      archived;
+  }
+
+
+  async function loadReports() {
+
+    if (!currentCompanyId) {
+      return;
+    }
+
+    try {
+
+      await Promise.all([
+        loadEmployees(),
+        loadCustomers(),
+        loadProjects(),
+        loadTasks(),
+        loadFinance(),
+        loadInventory(),
+        loadDocuments()
+      ]);
+
+      showMessage(
+        "Reports updated successfully.",
+        "success"
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      showMessage(
+        "Some reports could not be loaded.",
+        "error"
+      );
+    }
+  }
+
+
+  async function init() {
+
+    currentUser = await getCurrentUser();
+
+    if (!currentUser) {
+      return;
+    }
+
+    document.getElementById("userEmail").textContent =
+      currentUser.email || "";
+
+    const companyLoaded =
+      await loadCompany();
+
+    if (!companyLoaded) {
+      return;
+    }
+
+    await loadReports();
+  }
+
+
+  init();
+
+</script>
 
 </body>
 </html>
