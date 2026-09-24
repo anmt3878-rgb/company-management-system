@@ -3,44 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customers | CompanyFlow</title>
+
+  <title>Customers - CompanyFlow</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
 
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
+      font-family: Arial, sans-serif;
       background: #f5f7fb;
       color: #172033;
     }
 
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
     .sidebar {
+      width: 240px;
+      background: #111827;
+      color: white;
+      padding: 24px 16px;
       position: fixed;
       left: 0;
       top: 0;
-      width: 230px;
-      height: 100vh;
-      background: #172033;
-      color: white;
-      padding: 25px 15px;
+      bottom: 0;
+      overflow-y: auto;
     }
 
     .logo {
-      font-size: 23px;
-      font-weight: 800;
-      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
       margin-bottom: 30px;
+      padding: 0 10px;
     }
 
-    .logo span {
-      color: #60a5fa;
-    }
-
-    .menu a {
+    .nav a {
       display: block;
       color: #cbd5e1;
       text-decoration: none;
@@ -50,14 +56,15 @@
       font-size: 14px;
     }
 
-    .menu a:hover,
-    .menu a.active {
+    .nav a:hover,
+    .nav a.active {
       background: #2563eb;
       color: white;
     }
 
     .main {
-      margin-left: 230px;
+      margin-left: 240px;
+      width: calc(100% - 240px);
       padding: 30px;
     }
 
@@ -65,31 +72,31 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       gap: 15px;
     }
 
-    .topbar h1 {
-      font-size: 28px;
+    .title h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
     }
 
-    .topbar p {
+    .title p {
       color: #64748b;
-      margin-top: 5px;
       font-size: 14px;
     }
 
-    .user {
+    .user-box {
       background: white;
-      border: 1px solid #e5e7eb;
       padding: 10px 15px;
       border-radius: 10px;
-      font-size: 13px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      font-size: 14px;
     }
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 18px;
       margin-bottom: 25px;
     }
@@ -97,109 +104,99 @@
     .stat {
       background: white;
       padding: 20px;
-      border: 1px solid #e5e7eb;
       border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
     }
 
-    .stat p {
+    .stat span {
       color: #64748b;
       font-size: 13px;
-      margin-bottom: 8px;
     }
 
-    .stat h2 {
-      font-size: 27px;
+    .stat strong {
+      display: block;
+      font-size: 28px;
+      margin-top: 8px;
     }
 
-    .toolbar {
+    .card {
       background: white;
-      padding: 18px;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+    }
+
+    .actions {
       display: flex;
+      justify-content: space-between;
       gap: 12px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
-    .toolbar input {
+    .search {
       flex: 1;
-      padding: 12px;
-      border: 1px solid #d1d5db;
+      min-width: 220px;
+      padding: 12px 14px;
+      border: 1px solid #dbe2ea;
       border-radius: 8px;
       outline: none;
     }
 
-    .toolbar input:focus {
-      border-color: #2563eb;
-    }
-
-    button {
+    .btn {
       border: none;
       border-radius: 8px;
       padding: 12px 18px;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: bold;
     }
 
-    .add-btn {
+    .btn-primary {
       background: #2563eb;
       color: white;
     }
 
-    .add-btn:hover {
+    .btn-primary:hover {
       background: #1d4ed8;
     }
 
-    .table-card {
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      overflow-x: auto;
+    .btn-danger {
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 8px 12px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 800px;
     }
 
     th,
     td {
-      padding: 15px;
       text-align: left;
-      border-bottom: 1px solid #eef2f7;
-      font-size: 13px;
+      padding: 14px 10px;
+      border-bottom: 1px solid #edf0f4;
+      font-size: 14px;
     }
 
     th {
       color: #64748b;
-      background: #f8fafc;
       font-size: 12px;
+      text-transform: uppercase;
     }
 
     .status {
       display: inline-block;
       padding: 5px 9px;
       border-radius: 20px;
-      font-size: 11px;
-      font-weight: bold;
-    }
-
-    .active-status {
+      font-size: 12px;
       background: #dcfce7;
       color: #166534;
     }
 
-    .inactive-status {
+    .inactive {
       background: #fee2e2;
       color: #991b1b;
-    }
-
-    .delete-btn {
-      background: #fee2e2;
-      color: #b91c1c;
-      padding: 7px 10px;
-      font-size: 11px;
     }
 
     .empty {
@@ -208,26 +205,51 @@
       color: #64748b;
     }
 
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: #64748b;
+    }
+
+    .message {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      color: white;
+      display: none;
+      z-index: 1000;
+    }
+
+    .message.success {
+      background: #16a34a;
+    }
+
+    .message.error {
+      background: #dc2626;
+    }
+
     .modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.55);
+      background: rgba(0,0,0,.5);
       align-items: center;
       justify-content: center;
       padding: 20px;
-      z-index: 100;
+      z-index: 999;
     }
 
-    .modal-card {
+    .modal-box {
       background: white;
       width: 100%;
-      max-width: 500px;
+      max-width: 520px;
       border-radius: 14px;
       padding: 25px;
     }
 
-    .modal-card h2 {
+    .modal-box h2 {
       margin-bottom: 20px;
     }
 
@@ -235,91 +257,76 @@
       margin-bottom: 15px;
     }
 
-    label {
+    .form-group label {
       display: block;
-      margin-bottom: 6px;
       font-size: 13px;
       font-weight: bold;
+      margin-bottom: 6px;
     }
 
     .form-group input,
     .form-group select {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
+      padding: 11px;
+      border: 1px solid #dbe2ea;
       border-radius: 8px;
       outline: none;
     }
 
     .modal-actions {
       display: flex;
+      justify-content: flex-end;
       gap: 10px;
       margin-top: 20px;
     }
 
-    .save-btn {
-      flex: 1;
-      background: #2563eb;
-      color: white;
-    }
-
-    .cancel-btn {
-      flex: 1;
+    .btn-secondary {
       background: #e5e7eb;
-      color: #334155;
+      color: #111827;
     }
 
-    .message {
-      display: none;
-      padding: 12px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      font-size: 13px;
-    }
+    @media (max-width: 900px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
 
-    .error {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .success {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    @media (max-width: 800px) {
       .sidebar {
-        position: static;
+        width: 200px;
+      }
+
+      .main {
+        margin-left: 200px;
+        width: calc(100% - 200px);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .layout {
+        display: block;
+      }
+
+      .sidebar {
+        position: relative;
         width: 100%;
         height: auto;
       }
 
-      .menu {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-      }
-
-      .menu a {
-        margin: 0;
-      }
-
       .main {
         margin-left: 0;
-        padding: 20px;
+        width: 100%;
+        padding: 18px;
       }
 
       .stats {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
       }
 
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
+      .table-wrapper {
+        overflow-x: auto;
       }
 
-      .toolbar {
-        flex-direction: column;
+      table {
+        min-width: 750px;
       }
     }
   </style>
@@ -327,26 +334,44 @@
 
 <body>
 
+<div class="layout">
+
   <aside class="sidebar">
 
     <div class="logo">
-      Company<span>Flow</span>
+      CompanyFlow
     </div>
 
-    <nav class="menu">
+    <nav class="nav">
+
       <a href="dashboard.html">Dashboard</a>
+
       <a href="employees.html">Employees</a>
-      <a href="customers.html" class="active">Customers</a>
+
+      <a href="customers.html" class="active">
+        Customers
+      </a>
+
       <a href="projects.html">Projects</a>
+
       <a href="tasks.html">Tasks</a>
+
       <a href="finance.html">Finance</a>
+
       <a href="inventory.html">Inventory</a>
+
       <a href="documents.html">Documents</a>
+
       <a href="reports.html">Reports</a>
+
       <a href="roles.html">Roles & Permissions</a>
+
       <a href="notifications.html">Notifications</a>
+
       <a href="settings.html">Settings</a>
+
       <a href="index.html">Back to Website</a>
+
     </nav>
 
   </aside>
@@ -356,672 +381,826 @@
 
     <div class="topbar">
 
-      <div>
+      <div class="title">
+
         <h1>Customers</h1>
-        <p>Manage your company's customers and clients.</p>
+
+        <p>
+          Manage your customers and clients
+        </p>
+
       </div>
 
-      <div class="user" id="userEmail">
+      <div class="user-box" id="userBox">
         Loading...
       </div>
 
     </div>
 
 
-    <div id="message" class="message"></div>
-
-
-    <section class="stats">
+    <div class="stats">
 
       <div class="stat">
-        <p>Total Customers</p>
-        <h2 id="totalCustomers">0</h2>
+        <span>Total Customers</span>
+        <strong id="totalCustomers">0</strong>
       </div>
 
       <div class="stat">
-        <p>Active Customers</p>
-        <h2 id="activeCustomers">0</h2>
+        <span>Active</span>
+        <strong id="activeCustomers">0</strong>
       </div>
 
       <div class="stat">
-        <p>Inactive Customers</p>
-        <h2 id="inactiveCustomers">0</h2>
+        <span>Inactive</span>
+        <strong id="inactiveCustomers">0</strong>
       </div>
 
-    </section>
-
-
-    <div class="toolbar">
-
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Search customers..."
-        oninput="renderCustomers()"
-      >
-
-      <button
-        class="add-btn"
-        onclick="openModal()"
-      >
-        + Add Customer
-      </button>
+      <div class="stat">
+        <span>Companies</span>
+        <strong id="companyCount">0</strong>
+      </div>
 
     </div>
 
 
-    <div class="table-card">
+    <div class="card">
 
-      <table>
+      <div class="actions">
 
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Company</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
+        <input
+          type="text"
+          id="searchInput"
+          class="search"
+          placeholder="Search customers..."
+          oninput="renderCustomers()"
+        >
 
-        <tbody id="customerTable"></tbody>
+        <button
+          class="btn btn-primary"
+          onclick="openModal()"
+        >
+          + Add Customer
+        </button>
 
-      </table>
+      </div>
 
-      <div
-        id="emptyMessage"
-        class="empty"
-        style="display:none;"
-      >
-        No customers found.
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Customer</th>
+
+              <th>Company</th>
+
+              <th>Email</th>
+
+              <th>Phone</th>
+
+              <th>Status</th>
+
+              <th>Action</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="customersTable">
+
+            <tr>
+              <td colspan="6" class="loading">
+                Loading customers...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
       </div>
 
     </div>
 
   </main>
 
+</div>
 
-  <div
-    class="modal"
-    id="customerModal"
-  >
 
-    <div class="modal-card">
+<!-- ADD CUSTOMER MODAL -->
 
-      <h2>Add Customer</h2>
+<div class="modal" id="customerModal">
 
-      <div class="form-group">
-        <label>Customer Name</label>
-        <input
-          type="text"
-          id="customerName"
-          placeholder="John Smith"
-        >
-      </div>
+  <div class="modal-box">
 
-      <div class="form-group">
-        <label>Company</label>
-        <input
-          type="text"
-          id="customerCompany"
-          placeholder="ABC Company"
-        >
-      </div>
+    <h2>Add Customer</h2>
 
-      <div class="form-group">
-        <label>Email</label>
-        <input
-          type="email"
-          id="customerEmail"
-          placeholder="john@company.com"
-        >
-      </div>
 
-      <div class="form-group">
-        <label>Phone</label>
-        <input
-          type="text"
-          id="customerPhone"
-          placeholder="+1 555 123 4567"
-        >
-      </div>
+    <div class="form-group">
 
-      <div class="form-group">
+      <label>
+        Customer Name
+      </label>
 
-        <label>Status</label>
+      <input
+        type="text"
+        id="customerName"
+        placeholder="John Smith"
+      >
 
-        <select id="customerStatus">
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
-        </select>
+    </div>
 
-      </div>
 
-      <div class="modal-actions">
+    <div class="form-group">
 
-        <button
-          class="cancel-btn"
-          onclick="closeModal()"
-        >
-          Cancel
-        </button>
+      <label>
+        Company
+      </label>
 
-        <button
-          class="save-btn"
-          onclick="addCustomer()"
-        >
-          Save Customer
-        </button>
+      <input
+        type="text"
+        id="customerCompany"
+        placeholder="Apex Solutions"
+      >
 
-      </div>
+    </div>
+
+
+    <div class="form-group">
+
+      <label>
+        Email
+      </label>
+
+      <input
+        type="email"
+        id="customerEmail"
+        placeholder="john@apexsolutions.com"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>
+        Phone
+      </label>
+
+      <input
+        type="text"
+        id="customerPhone"
+        placeholder="+1 555 123 4567"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>
+        Status
+      </label>
+
+      <select id="customerStatus">
+
+        <option value="Active">
+          Active
+        </option>
+
+        <option value="Inactive">
+          Inactive
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="modal-actions">
+
+      <button
+        class="btn btn-secondary"
+        onclick="closeModal()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="btn btn-primary"
+        onclick="addCustomer()"
+      >
+        Add Customer
+      </button>
 
     </div>
 
   </div>
 
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js"></script>
+</div>
 
 
-  <script>
-
-    let customers = [];
-    let companyId = null;
+<div id="message" class="message"></div>
 
 
-    function showMessage(text, type) {
+<script>
 
-      const message =
-        document.getElementById("message");
+  let customers = [];
 
-      message.textContent = text;
-
-      message.className =
-        "message " + type;
-
-      message.style.display = "block";
-
-      setTimeout(function() {
-
-        message.style.display = "none";
-
-      }, 4000);
-
-    }
+  let companyId = null;
 
 
-    function openModal() {
+  function showMessage(text, type) {
 
-      document
-        .getElementById("customerModal")
-        .style.display = "flex";
+    const message =
+      document.getElementById("message");
 
-    }
+    message.textContent = text;
 
+    message.className =
+      "message " + type;
 
-    function closeModal() {
+    message.style.display = "block";
 
-      document
-        .getElementById("customerModal")
-        .style.display = "none";
+    setTimeout(function() {
 
-      document.getElementById("customerName").value = "";
-      document.getElementById("customerCompany").value = "";
-      document.getElementById("customerEmail").value = "";
-      document.getElementById("customerPhone").value = "";
-      document.getElementById("customerStatus").value = "Active";
+      message.style.display = "none";
 
-    }
+    }, 3500);
+
+  }
 
 
-    async function getCompanyId() {
+  function openModal() {
 
-      const {
-        data: {
-          user
-        },
-        error: userError
-      } =
-        await supabaseClient.auth.getUser();
+    document.getElementById(
+      "customerModal"
+    ).style.display = "flex";
+
+  }
 
 
-      if (userError || !user) {
+  function closeModal() {
 
-        window.location.href =
-          "signin.html";
+    document.getElementById(
+      "customerModal"
+    ).style.display = "none";
 
-        return null;
+    document.getElementById(
+      "customerName"
+    ).value = "";
 
-      }
+    document.getElementById(
+      "customerCompany"
+    ).value = "";
 
+    document.getElementById(
+      "customerEmail"
+    ).value = "";
 
-      document.getElementById("userEmail").textContent =
-        user.email;
+    document.getElementById(
+      "customerPhone"
+    ).value = "";
 
+    document.getElementById(
+      "customerStatus"
+    ).value = "Active";
 
-      const {
-        data: profile,
-        error
-      } =
-        await supabaseClient
-          .from("profiles")
-          .select("company_id")
-          .eq("id", user.id)
-          .single();
-
-
-      if (error || !profile) {
-
-        console.error(error);
-
-        showMessage(
-          "Unable to load company information.",
-          "error"
-        );
-
-        return null;
-
-      }
+  }
 
 
-      return profile.company_id;
+  async function loadCompany() {
+
+    const {
+      data: {
+        user
+      },
+      error: userError
+    } =
+      await supabaseClient.auth.getUser();
+
+
+    if (userError || !user) {
+
+      window.location.href =
+        "signin.html";
+
+      return false;
 
     }
 
 
-    async function loadCustomers() {
-
-      companyId =
-        await getCompanyId();
-
-
-      if (!companyId) return;
+    document.getElementById(
+      "userBox"
+    ).textContent =
+      user.email || "User";
 
 
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from("customers")
-          .select("*")
-          .eq("company_id", companyId)
-          .order("created_at", {
-            ascending: false
-          });
+    const {
+      data: profile,
+      error: profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select("company_id, full_name")
+        .eq("id", user.id)
+        .single();
 
 
-      if (error) {
+    if (profileError || !profile) {
 
-        console.error(error);
+      console.error(profileError);
 
-        showMessage(
-          "Unable to load customers.",
-          "error"
-        );
+      showMessage(
+        "Could not load company information.",
+        "error"
+      );
 
-        return;
-
-      }
-
-
-      customers =
-        data || [];
-
-
-      renderCustomers();
+      return false;
 
     }
 
 
-    function renderCustomers() {
-
-      const table =
-        document.getElementById("customerTable");
-
-      const empty =
-        document.getElementById("emptyMessage");
-
-      const search =
-        document
-          .getElementById("searchInput")
-          .value
-          .toLowerCase()
-          .trim();
+    companyId =
+      profile.company_id;
 
 
-      const filtered =
-        customers.filter(function(customer) {
+    if (profile.full_name) {
 
-          return (
+      document.getElementById(
+        "userBox"
+      ).textContent =
+        profile.full_name;
 
-            (customer.name || "")
-              .toLowerCase()
-              .includes(search)
+    }
 
-            ||
 
-            (customer.company || "")
-              .toLowerCase()
-              .includes(search)
+    return true;
 
-            ||
+  }
 
-            (customer.email || "")
-              .toLowerCase()
-              .includes(search)
 
-            ||
+  async function loadCustomers() {
 
-            (customer.phone || "")
-              .toLowerCase()
-              .includes(search)
+    const ready =
+      await loadCompany();
 
-          );
 
+    if (!ready) return;
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("customers")
+        .select("*")
+        .eq("company_id", companyId)
+        .order("created_at", {
+          ascending: false
         });
 
 
-      table.innerHTML = "";
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        "Could not load customers: " +
+        error.message,
+        "error"
+      );
+
+      return;
+
+    }
 
 
-      if (filtered.length === 0) {
-
-        empty.style.display = "block";
-
-      } else {
-
-        empty.style.display = "none";
-
-      }
+    customers =
+      data || [];
 
 
-      filtered.forEach(function(customer) {
+    renderCustomers();
 
-        const row =
-          document.createElement("tr");
-
-
-        const status =
-          customer.status || "Active";
+  }
 
 
-        const statusClass =
-          status === "Active"
-            ? "active-status"
-            : "inactive-status";
+  async function addCustomer() {
+
+    const name =
+      document
+        .getElementById("customerName")
+        .value
+        .trim();
 
 
-        row.innerHTML = `
-
-          <td>
-            <strong>
-              ${escapeHTML(customer.name || "-")}
-            </strong>
-          </td>
-
-          <td>
-            ${escapeHTML(customer.company || "-")}
-          </td>
-
-          <td>
-            ${escapeHTML(customer.email || "-")}
-          </td>
-
-          <td>
-            ${escapeHTML(customer.phone || "-")}
-          </td>
-
-          <td>
-            <span class="status ${statusClass}">
-              ${escapeHTML(status)}
-            </span>
-          </td>
-
-          <td>
-
-            <button
-              class="delete-btn"
-              onclick="deleteCustomer('${customer.id}')"
-            >
-              Delete
-            </button>
-
-          </td>
-
-        `;
+    const company =
+      document
+        .getElementById("customerCompany")
+        .value
+        .trim();
 
 
-        table.appendChild(row);
+    const email =
+      document
+        .getElementById("customerEmail")
+        .value
+        .trim();
+
+
+    const phone =
+      document
+        .getElementById("customerPhone")
+        .value
+        .trim();
+
+
+    const status =
+      document
+        .getElementById("customerStatus")
+        .value;
+
+
+    if (!name) {
+
+      showMessage(
+        "Please enter the customer name.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    if (!companyId) {
+
+      showMessage(
+        "Company information is missing.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("customers")
+        .insert({
+
+          company_id: companyId,
+
+          name: name,
+
+          company: company || null,
+
+          email: email || null,
+
+          phone: phone || null,
+
+          status: status
+
+        })
+        .select()
+        .single();
+
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        "Could not add customer: " +
+        error.message,
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    customers.unshift(data);
+
+
+    renderCustomers();
+
+
+    closeModal();
+
+
+    showMessage(
+      "Customer added successfully.",
+      "success"
+    );
+
+  }
+
+
+  async function deleteCustomer(id) {
+
+    const confirmed =
+      confirm(
+        "Are you sure you want to delete this customer?"
+      );
+
+
+    if (!confirmed) return;
+
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("customers")
+        .delete()
+        .eq("id", id)
+        .eq("company_id", companyId);
+
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        "Could not delete customer: " +
+        error.message,
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    customers =
+      customers.filter(function(customer) {
+
+        return customer.id !== id;
 
       });
 
 
-      updateStats();
+    renderCustomers();
+
+
+    showMessage(
+      "Customer deleted successfully.",
+      "success"
+    );
+
+  }
+
+
+  function renderCustomers() {
+
+    const table =
+      document.getElementById(
+        "customersTable"
+      );
+
+
+    const search =
+      document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    const filtered =
+      customers.filter(function(customer) {
+
+        const name =
+          customer.name ||
+          customer.full_name ||
+          "";
+
+        const company =
+          customer.company ||
+          customer.company_name ||
+          "";
+
+        const email =
+          customer.email ||
+          "";
+
+        return (
+          name.toLowerCase().includes(search) ||
+          company.toLowerCase().includes(search) ||
+          email.toLowerCase().includes(search)
+        );
+
+      });
+
+
+    updateStats();
+
+
+    if (filtered.length === 0) {
+
+      table.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty">
+            No customers found.
+          </td>
+        </tr>
+      `;
+
+      return;
 
     }
 
 
-    function updateStats() {
+    table.innerHTML =
+      filtered.map(function(customer) {
 
-      const total =
-        customers.length;
-
-
-      const active =
-        customers.filter(function(customer) {
-
-          return customer.status === "Active";
-
-        }).length;
+        const name =
+          customer.name ||
+          customer.full_name ||
+          "Unknown";
 
 
-      const inactive =
-        customers.filter(function(customer) {
-
-          return customer.status === "Inactive";
-
-        }).length;
+        const company =
+          customer.company ||
+          customer.company_name ||
+          "-";
 
 
-      document.getElementById("totalCustomers")
-        .textContent = total;
-
-      document.getElementById("activeCustomers")
-        .textContent = active;
-
-      document.getElementById("inactiveCustomers")
-        .textContent = inactive;
-
-    }
+        const email =
+          customer.email ||
+          "-";
 
 
-    async function addCustomer() {
-
-      const name =
-        document
-          .getElementById("customerName")
-          .value
-          .trim();
+        const phone =
+          customer.phone ||
+          "-";
 
 
-      const company =
-        document
-          .getElementById("customerCompany")
-          .value
-          .trim();
+        const status =
+          customer.status ||
+          "Active";
 
 
-      const email =
-        document
-          .getElementById("customerEmail")
-          .value
-          .trim();
+        const statusClass =
+          String(status).toLowerCase() === "inactive"
+            ? "status inactive"
+            : "status";
 
 
-      const phone =
-        document
-          .getElementById("customerPhone")
-          .value
-          .trim();
+        return `
+
+          <tr>
+
+            <td>
+              <strong>
+                ${escapeHTML(name)}
+              </strong>
+            </td>
+
+            <td>
+              ${escapeHTML(company)}
+            </td>
+
+            <td>
+              ${escapeHTML(email)}
+            </td>
+
+            <td>
+              ${escapeHTML(phone)}
+            </td>
+
+            <td>
+
+              <span class="${statusClass}">
+                ${escapeHTML(status)}
+              </span>
+
+            </td>
+
+            <td>
+
+              <button
+                class="btn btn-danger"
+                onclick="deleteCustomer('${customer.id}')"
+              >
+                Delete
+              </button>
+
+            </td>
+
+          </tr>
+
+        `;
+
+      }).join("");
+
+  }
 
 
-      const status =
-        document
-          .getElementById("customerStatus")
-          .value;
+  function updateStats() {
+
+    const total =
+      customers.length;
 
 
-      if (!name) {
+    const active =
+      customers.filter(function(customer) {
 
-        showMessage(
-          "Please enter customer name.",
-          "error"
+        return (
+          String(customer.status || "Active")
+            .toLowerCase() === "active"
         );
 
-        return;
-
-      }
+      }).length;
 
 
-      if (!companyId) {
-
-        showMessage(
-          "Company information is missing.",
-          "error"
-        );
-
-        return;
-
-      }
+    const inactive =
+      total - active;
 
 
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from("customers")
-          .insert({
+    const companies =
+      new Set(
+        customers
+          .map(function(customer) {
 
-            company_id: companyId,
-
-            name: name,
-
-            company: company || null,
-
-            email: email || null,
-
-            phone: phone || null,
-
-            status: status
+            return (
+              customer.company ||
+              customer.company_name
+            );
 
           })
-          .select()
-          .single();
-
-
-      if (error) {
-
-        console.error(error);
-
-        showMessage(
-          "Could not add customer: " +
-          error.message,
-          "error"
-        );
-
-        return;
-
-      }
-
-
-      customers.unshift(data);
-
-      renderCustomers();
-
-      closeModal();
-
-
-      showMessage(
-        "Customer added successfully.",
-        "success"
+          .filter(Boolean)
       );
 
-    }
+
+    document.getElementById(
+      "totalCustomers"
+    ).textContent = total;
 
 
-    async function deleteCustomer(id) {
-
-      const confirmed =
-        confirm(
-          "Are you sure you want to delete this customer?"
-        );
+    document.getElementById(
+      "activeCustomers"
+    ).textContent = active;
 
 
-      if (!confirmed) return;
+    document.getElementById(
+      "inactiveCustomers"
+    ).textContent = inactive;
 
 
-      const {
-        error
-      } =
-        await supabaseClient
-          .from("customers")
-          .delete()
-          .eq("id", id)
-          .eq("company_id", companyId);
+    document.getElementById(
+      "companyCount"
+    ).textContent =
+      companies.size;
+
+  }
 
 
-      if (error) {
+  function escapeHTML(value) {
 
-        console.error(error);
+    return String(value)
 
-        showMessage(
-          "Could not delete customer.",
-          "error"
-        );
+      .replace(
+        /&/g,
+        "&amp;"
+      )
 
-        return;
+      .replace(
+        /</g,
+        "&lt;"
+      )
 
-      }
+      .replace(
+        />/g,
+        "&gt;"
+      )
 
+      .replace(
+        /"/g,
+        "&quot;"
+      )
 
-      customers =
-        customers.filter(function(customer) {
-
-          return customer.id !== id;
-
-        });
-
-
-      renderCustomers();
-
-
-      showMessage(
-        "Customer deleted successfully.",
-        "success"
+      .replace(
+        /'/g,
+        "&#039;"
       );
 
-    }
+  }
 
 
-    function escapeHTML(value) {
+  loadCustomers();
 
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    }
-
-
-    loadCustomers();
-
-  </script>
+</script>
 
 </body>
 </html>
