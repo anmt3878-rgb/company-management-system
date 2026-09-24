@@ -3,176 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - CompanyFlow</title>
 
-  <title>Dashboard | CompanyFlow</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
 
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
+      margin: 0;
+      font-family: Arial, sans-serif;
       background: #f5f7fb;
-      color: #172033;
+      color: #1f2937;
     }
 
-    a {
-      text-decoration: none;
-    }
-
-    button {
-      font-family: inherit;
-    }
-
-    /* SIDEBAR */
-
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 245px;
-      background: #111827;
-      color: white;
-      padding: 22px 14px;
-      overflow-y: auto;
-      z-index: 1000;
-    }
-
-    .brand {
-      padding: 0 12px 25px;
-      font-size: 24px;
-      font-weight: 800;
-    }
-
-    .brand span {
-      color: #60a5fa;
-    }
-
-    .menu-title {
-      color: #64748b;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 0 12px;
-      margin: 15px 0 8px;
-    }
-
-    .nav-link {
+    .layout {
       display: flex;
-      align-items: center;
-      gap: 11px;
-      padding: 11px 12px;
-      margin-bottom: 4px;
-      border-radius: 8px;
-      color: #cbd5e1;
-      font-size: 13px;
-      font-weight: 600;
-      transition: 0.2s;
-    }
-
-    .nav-link:hover {
-      background: #1f2937;
-      color: white;
-    }
-
-    .nav-link.active {
-      background: #2563eb;
-      color: white;
-    }
-
-    .logout {
-      margin-top: 20px;
-      border-top: 1px solid #293548;
-      padding-top: 18px;
-    }
-
-    /* MAIN */
-
-    .main {
-      margin-left: 245px;
       min-height: 100vh;
     }
 
-    /* TOPBAR */
-
-    .topbar {
-      height: 72px;
-      background: white;
-      border-bottom: 1px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-      position: sticky;
-      top: 0;
-      z-index: 500;
-    }
-
-    .page-title {
-      font-size: 22px;
-      font-weight: 800;
-    }
-
-    .page-subtitle {
-      color: #64748b;
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
-    .profile {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #2563eb;
+    .sidebar {
+      width: 240px;
+      background: #111827;
       color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
+      padding: 24px 16px;
     }
 
-    .profile-name {
-      font-size: 13px;
-      font-weight: 700;
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      padding-left: 10px;
     }
 
-    .profile-role {
-      font-size: 11px;
-      color: #64748b;
-      margin-top: 3px;
-    }
-
-    /* CONTENT */
-
-    .content {
-      padding: 30px;
-    }
-
-    .welcome {
-      margin-bottom: 25px;
-    }
-
-    .welcome h1 {
-      font-size: 27px;
-      margin-bottom: 7px;
-    }
-
-    .welcome p {
-      color: #64748b;
+    .nav a {
+      display: block;
+      color: #d1d5db;
+      text-decoration: none;
+      padding: 11px 12px;
+      border-radius: 8px;
+      margin-bottom: 5px;
       font-size: 14px;
     }
 
-    /* STATS */
+    .nav a:hover,
+    .nav a.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .main {
+      flex: 1;
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      gap: 15px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .company-name {
+      color: #6b7280;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .refresh {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
 
     .stats {
       display: grid;
@@ -181,255 +96,175 @@
       margin-bottom: 25px;
     }
 
-    .stat-card {
+    .stat {
       background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
       padding: 20px;
-      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
     }
 
-    .stat-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-
-    .stat-label {
-      color: #64748b;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .stat-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: #eff6ff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
+    .stat-title {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 10px;
     }
 
     .stat-value {
-      font-size: 27px;
-      font-weight: 800;
+      font-size: 28px;
+      font-weight: bold;
     }
 
-    /* GRID */
-
-    .dashboard-grid {
+    .content {
       display: grid;
-      grid-template-columns: 1.4fr 1fr;
+      grid-template-columns: 1.5fr 1fr;
       gap: 20px;
     }
 
     .card {
       background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
       padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
       margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
     }
 
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
+    .card h2 {
+      margin-top: 0;
+      font-size: 19px;
     }
 
-    .card-title {
-      font-size: 16px;
-      font-weight: 800;
+    .task {
+      padding: 13px 0;
+      border-bottom: 1px solid #e5e7eb;
     }
 
-    .view-link {
-      color: #2563eb;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    /* TASKS */
-
-    .task-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 0;
-      border-bottom: 1px solid #eef2f7;
-    }
-
-    .task-item:last-child {
+    .task:last-child {
       border-bottom: none;
     }
 
-    .task-info strong {
-      display: block;
+    .task-title {
+      font-weight: 600;
+    }
+
+    .task-info {
       font-size: 13px;
-      margin-bottom: 5px;
+      color: #6b7280;
+      margin-top: 5px;
     }
-
-    .task-info span {
-      color: #64748b;
-      font-size: 11px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    .badge-pending {
-      background: #fff7ed;
-      color: #c2410c;
-    }
-
-    .badge-progress {
-      background: #eff6ff;
-      color: #1d4ed8;
-    }
-
-    .badge-completed {
-      background: #ecfdf5;
-      color: #047857;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 25px 10px;
-      color: #94a3b8;
-      font-size: 13px;
-    }
-
-    /* FINANCE */
 
     .finance-row {
       display: flex;
       justify-content: space-between;
-      padding: 13px 0;
-      border-bottom: 1px solid #eef2f7;
-      font-size: 13px;
-    }
-
-    .finance-row:last-child {
-      border-bottom: none;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e7eb;
     }
 
     .income {
-      color: #059669;
-      font-weight: 700;
+      color: #16a34a;
     }
 
     .expense {
       color: #dc2626;
-      font-weight: 700;
     }
 
-    .profit {
-      color: #2563eb;
-      font-weight: 800;
+    .balance {
+      font-size: 25px;
+      font-weight: bold;
+      margin-top: 15px;
     }
-
-    /* QUICK ACTIONS */
 
     .quick-actions {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      gap: 10px;
     }
 
-    .quick-btn {
-      display: block;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 15px;
-      color: #172033;
-      font-size: 12px;
-      font-weight: 700;
-      transition: 0.2s;
+    .quick-actions a {
+      text-decoration: none;
+      background: #f3f4f6;
+      color: #111827;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
     }
 
-    .quick-btn:hover {
-      border-color: #2563eb;
-      background: #eff6ff;
-      color: #2563eb;
+    .quick-actions a:hover {
+      background: #e5e7eb;
     }
-
-    /* PLAN */
 
     .plan-box {
       background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-radius: 12px;
       padding: 18px;
+      border-radius: 10px;
     }
 
     .plan-name {
-      font-size: 19px;
-      font-weight: 800;
-      color: #1d4ed8;
-    }
-
-    .plan-price {
-      color: #475569;
-      font-size: 13px;
-      margin-top: 5px;
-    }
-
-    .plan-link {
-      display: inline-block;
-      margin-top: 13px;
       color: #2563eb;
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 22px;
+      font-weight: bold;
     }
 
-    /* MOBILE */
+    .status {
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      display: inline-block;
+    }
+
+    .status-completed {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .loading {
+      color: #6b7280;
+      padding: 10px 0;
+    }
+
+    .error {
+      color: #b91c1c;
+      background: #fee2e2;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
 
     @media (max-width: 1000px) {
       .stats {
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .dashboard-grid {
+      .content {
         grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 650px) {
+      .layout {
+        display: block;
+      }
+
       .sidebar {
-        position: relative;
         width: 100%;
-        height: auto;
-        min-height: auto;
       }
 
       .main {
-        margin-left: 0;
-      }
-
-      .topbar {
-        padding: 0 18px;
-      }
-
-      .content {
-        padding: 20px 15px;
+        padding: 18px;
       }
 
       .stats {
         grid-template-columns: 1fr;
       }
 
-      .profile-role {
-        display: none;
+      .topbar {
+        align-items: flex-start;
       }
     }
   </style>
@@ -437,203 +272,136 @@
 
 <body>
 
-  <!-- SIDEBAR -->
+<div class="layout">
 
   <aside class="sidebar">
 
-    <div class="brand">
-      Company<span>Flow</span>
-    </div>
+    <div class="logo">CompanyFlow</div>
 
-    <div class="menu-title">Main</div>
-
-    <a href="dashboard.html" class="nav-link active">
-      📊 Dashboard
-    </a>
-
-    <a href="employees.html" class="nav-link">
-      👥 Employees
-    </a>
-
-    <a href="customers.html" class="nav-link">
-      🤝 Customers
-    </a>
-
-    <a href="projects.html" class="nav-link">
-      📁 Projects
-    </a>
-
-    <a href="tasks.html" class="nav-link">
-      ✅ Tasks
-    </a>
-
-    <a href="finance.html" class="nav-link">
-      💰 Finance
-    </a>
-
-    <a href="inventory.html" class="nav-link">
-      📦 Inventory
-    </a>
-
-    <a href="documents.html" class="nav-link">
-      📄 Documents
-    </a>
-
-    <div class="menu-title">Management</div>
-
-    <a href="reports.html" class="nav-link">
-      📈 Reports
-    </a>
-
-    <a href="roles.html" class="nav-link">
-      🔐 Roles & Permissions
-    </a>
-
-    <a href="notifications.html" class="nav-link">
-      🔔 Notifications
-    </a>
-
-    <a href="settings.html" class="nav-link">
-      ⚙️ Settings
-    </a>
-
-    <div class="logout">
-      <a href="index.html" class="nav-link">
-        🚪 Back to Website
-      </a>
+    <div class="nav">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="employees.html">Employees</a>
+      <a href="customers.html">Customers</a>
+      <a href="projects.html">Projects</a>
+      <a href="tasks.html">Tasks</a>
+      <a href="finance.html">Finance</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="documents.html">Documents</a>
+      <a href="reports.html">Reports</a>
+      <a href="roles.html">Roles & Permissions</a>
+      <a href="notifications.html">Notifications</a>
+      <a href="settings.html">Settings</a>
+      <a href="index.html">Back to Website</a>
     </div>
 
   </aside>
 
 
-  <!-- MAIN -->
-
   <main class="main">
 
-    <!-- TOPBAR -->
+    <div class="topbar">
+      <div>
+        <h1>Dashboard</h1>
+        <div id="companyName" class="company-name">
+          Loading company...
+        </div>
+      </div>
 
-    <header class="topbar">
+      <button class="refresh" onclick="loadDashboard()">
+        Refresh
+      </button>
+    </div>
+
+
+    <div id="errorBox" class="error"></div>
+
+
+    <!-- Statistics -->
+
+    <div class="stats">
+
+      <div class="stat">
+        <div class="stat-title">Employees</div>
+        <div id="employeesCount" class="stat-value">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">Customers</div>
+        <div id="customersCount" class="stat-value">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">Projects</div>
+        <div id="projectsCount" class="stat-value">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">Tasks</div>
+        <div id="tasksCount" class="stat-value">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">Products</div>
+        <div id="productsCount" class="stat-value">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">Documents</div>
+        <div id="documentsCount" class="stat-value">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">Unread Notifications</div>
+        <div id="notificationsCount" class="stat-value">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">Inventory Value</div>
+        <div id="inventoryValue" class="stat-value">$0</div>
+      </div>
+
+    </div>
+
+
+    <div class="content">
+
+      <!-- LEFT -->
 
       <div>
-        <div class="page-title">Dashboard</div>
-        <div class="page-subtitle">
-          Business overview and performance
-        </div>
-      </div>
 
-      <div class="profile">
+        <div class="card">
 
-        <div class="avatar" id="avatar">
-          U
-        </div>
+          <h2>Recent Tasks</h2>
 
-        <div>
-          <div class="profile-name" id="ownerName">
-            Company Owner
-          </div>
-
-          <div class="profile-role">
-            Owner
-          </div>
-        </div>
-
-      </div>
-
-    </header>
-
-
-    <!-- CONTENT -->
-
-    <section class="content">
-
-      <div class="welcome">
-
-        <h1 id="welcomeTitle">
-          Welcome back!
-        </h1>
-
-        <p>
-          Here is what's happening with your business today.
-        </p>
-
-      </div>
-
-
-      <!-- STATS -->
-
-      <div class="stats">
-
-        <div class="stat-card">
-
-          <div class="stat-top">
-            <div class="stat-label">
-              EMPLOYEES
-            </div>
-
-            <div class="stat-icon">
-              👥
-            </div>
-          </div>
-
-          <div class="stat-value" id="employeeCount">
-            0
+          <div id="recentTasks">
+            <div class="loading">Loading tasks...</div>
           </div>
 
         </div>
 
 
-        <div class="stat-card">
+        <div class="card">
 
-          <div class="stat-top">
-            <div class="stat-label">
-              CUSTOMERS
-            </div>
+          <h2>Financial Overview</h2>
 
-            <div class="stat-icon">
-              🤝
-            </div>
+          <div class="finance-row">
+            <span>Total Income</span>
+            <strong id="totalIncome" class="income">$0</strong>
           </div>
 
-          <div class="stat-value" id="customerCount">
-            0
+          <div class="finance-row">
+            <span>Total Expenses</span>
+            <strong id="totalExpenses" class="expense">$0</strong>
           </div>
 
-        </div>
-
-
-        <div class="stat-card">
-
-          <div class="stat-top">
-            <div class="stat-label">
-              ACTIVE PROJECTS
+          <div>
+            <div style="color:#6b7280;margin-top:15px;">
+              Net Balance
             </div>
 
-            <div class="stat-icon">
-              📁
+            <div id="netBalance" class="balance">
+              $0
             </div>
-          </div>
-
-          <div class="stat-value" id="projectCount">
-            0
-          </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-          <div class="stat-top">
-            <div class="stat-label">
-              NET REVENUE
-            </div>
-
-            <div class="stat-icon">
-              💰
-            </div>
-          </div>
-
-          <div class="stat-value" id="netRevenue">
-            $0
           </div>
 
         </div>
@@ -641,68 +409,57 @@
       </div>
 
 
-      <!-- MAIN DASHBOARD GRID -->
+      <!-- RIGHT -->
 
-      <div class="dashboard-grid">
+      <div>
 
-        <!-- LEFT -->
+        <div class="card">
 
-        <div>
+          <h2>Quick Actions</h2>
 
-          <!-- RECENT TASKS -->
+          <div class="quick-actions">
 
-          <div class="card">
+            <a href="employees.html">
+              Add Employee
+            </a>
 
-            <div class="card-header">
+            <a href="customers.html">
+              Add Customer
+            </a>
 
-              <div class="card-title">
-                Recent Tasks
-              </div>
+            <a href="projects.html">
+              Add Project
+            </a>
 
-              <a href="tasks.html" class="view-link">
-                View All
-              </a>
+            <a href="tasks.html">
+              Add Task
+            </a>
 
-            </div>
+            <a href="finance.html">
+              Add Transaction
+            </a>
 
-            <div id="taskList">
-              <div class="empty">
-                No tasks yet.
-              </div>
-            </div>
+            <a href="inventory.html">
+              Add Product
+            </a>
 
           </div>
 
+        </div>
 
-          <!-- FINANCE -->
 
-          <div class="card">
+        <div class="card">
 
-            <div class="card-header">
+          <h2>Subscription</h2>
 
-              <div class="card-title">
-                Financial Overview
-              </div>
+          <div class="plan-box">
 
-              <a href="finance.html" class="view-link">
-                Manage Finance
-              </a>
-
+            <div style="color:#6b7280;font-size:13px;">
+              Current Plan
             </div>
 
-            <div class="finance-row">
-              <span>Total Income</span>
-              <span class="income" id="totalIncome">$0</span>
-            </div>
-
-            <div class="finance-row">
-              <span>Total Expenses</span>
-              <span class="expense" id="totalExpenses">$0</span>
-            </div>
-
-            <div class="finance-row">
-              <span>Net Profit</span>
-              <span class="profit" id="totalProfit">$0</span>
+            <div id="planName" class="plan-name">
+              Free
             </div>
 
           </div>
@@ -710,307 +467,328 @@
         </div>
 
 
-        <!-- RIGHT -->
+        <div class="card">
 
-        <div>
+          <h2>Company Overview</h2>
 
-          <!-- QUICK ACTIONS -->
-
-          <div class="card">
-
-            <div class="card-header">
-
-              <div class="card-title">
-                Quick Actions
-              </div>
-
-            </div>
-
-            <div class="quick-actions">
-
-              <a href="employees.html" class="quick-btn">
-                👥 Add Employee
-              </a>
-
-              <a href="customers.html" class="quick-btn">
-                🤝 Add Customer
-              </a>
-
-              <a href="projects.html" class="quick-btn">
-                📁 New Project
-              </a>
-
-              <a href="tasks.html" class="quick-btn">
-                ✅ Create Task
-              </a>
-
-              <a href="finance.html" class="quick-btn">
-                💰 Add Transaction
-              </a>
-
-              <a href="inventory.html" class="quick-btn">
-                📦 Add Product
-              </a>
-
-            </div>
-
+          <div class="finance-row">
+            <span>Active Employees</span>
+            <strong id="activeEmployees">0</strong>
           </div>
 
-
-          <!-- PLAN -->
-
-          <div class="card">
-
-            <div class="card-header">
-
-              <div class="card-title">
-                Current Plan
-              </div>
-
-            </div>
-
-            <div class="plan-box">
-
-              <div class="plan-name" id="planName">
-                Free
-              </div>
-
-              <div class="plan-price" id="planPrice">
-                $0 / month
-              </div>
-
-              <a href="pricing.html" class="plan-link">
-                View Plans →
-              </a>
-
-            </div>
-
+          <div class="finance-row">
+            <span>Active Projects</span>
+            <strong id="activeProjects">0</strong>
           </div>
 
+          <div class="finance-row">
+            <span>Completed Tasks</span>
+            <strong id="completedTasks">0</strong>
+          </div>
 
-          <!-- COMPANY -->
-
-          <div class="card">
-
-            <div class="card-header">
-
-              <div class="card-title">
-                Company Overview
-              </div>
-
-            </div>
-
-            <div class="finance-row">
-              <span>Company</span>
-              <strong id="companyName">
-                Your Company
-              </strong>
-            </div>
-
-            <div class="finance-row">
-              <span>Business Email</span>
-              <span id="businessEmail">
-                Not set
-              </span>
-            </div>
-
-            <div class="finance-row">
-              <span>System Status</span>
-              <span class="income">
-                Active
-              </span>
-            </div>
-
+          <div class="finance-row">
+            <span>Low Stock Products</span>
+            <strong id="lowStock">0</strong>
           </div>
 
         </div>
 
       </div>
 
-    </section>
+    </div>
 
   </main>
 
+</div>
 
-  <script>
 
-    /* =========================
-       LOAD COMPANY INFORMATION
-    ========================= */
+<script>
 
-    const companyName =
-      localStorage.getItem("companyName") || "Your Company";
+let currentUser = null;
+let currentCompanyId = null;
 
-    const ownerName =
-      localStorage.getItem("ownerName") || "Company Owner";
 
-    const userEmail =
-      localStorage.getItem("userEmail") || "Not set";
+/* =========================
+   FORMAT MONEY
+========================= */
+
+function money(value) {
+
+  return "$" + Number(value || 0).toLocaleString(
+    "en-US",
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }
+  );
+
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+function showError(message) {
+
+  const box =
+    document.getElementById("errorBox");
+
+  box.textContent = message;
+  box.style.display = "block";
+
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+async function loadDashboard() {
+
+  document.getElementById("errorBox").style.display = "none";
+
+
+  try {
+
+    /* USER */
+
+    const userResult =
+      await supabaseClient.auth.getUser();
+
+    currentUser =
+      userResult.data.user;
+
+    if (!currentUser) {
+
+      window.location.href = "signin.html";
+      return;
+
+    }
+
+
+    /* PROFILE */
+
+    const profileResult =
+      await supabaseClient
+        .from("profiles")
+        .select("company_id, full_name, role")
+        .eq("id", currentUser.id)
+        .single();
+
+
+    if (profileResult.error) {
+      throw profileResult.error;
+    }
+
+
+    currentCompanyId =
+      profileResult.data.company_id;
+
+
+    /* COMPANY */
+
+    const companyResult =
+      await supabaseClient
+        .from("companies")
+        .select("name, plan")
+        .eq("id", currentCompanyId)
+        .single();
+
+
+    if (companyResult.error) {
+      throw companyResult.error;
+    }
 
 
     document.getElementById("companyName").textContent =
-      companyName;
+      companyResult.data.name || "Company";
 
-    document.getElementById("ownerName").textContent =
-      ownerName;
-
-    document.getElementById("welcomeTitle").textContent =
-      "Welcome back, " + ownerName + "!";
-
-    document.getElementById("businessEmail").textContent =
-      userEmail;
-
-
-    /* =========================
-       AVATAR
-    ========================= */
-
-    const firstLetter =
-      ownerName.charAt(0).toUpperCase() || "U";
-
-    document.getElementById("avatar").textContent =
-      firstLetter;
+    document.getElementById("planName").textContent =
+      companyResult.data.plan || "Free";
 
 
     /* =========================
        EMPLOYEES
     ========================= */
 
-    const employees =
-      JSON.parse(localStorage.getItem("employees") || "[]");
+    const employeesResult =
+      await supabaseClient
+        .from("employees")
+        .select("id, status")
+        .eq("company_id", currentCompanyId);
 
-    document.getElementById("employeeCount").textContent =
+
+    if (employeesResult.error) {
+      throw employeesResult.error;
+    }
+
+
+    const employees =
+      employeesResult.data || [];
+
+
+    document.getElementById("employeesCount").textContent =
       employees.length;
+
+
+    document.getElementById("activeEmployees").textContent =
+      employees.filter(
+        e => String(e.status || "").toLowerCase() === "active"
+      ).length;
 
 
     /* =========================
        CUSTOMERS
     ========================= */
 
-    const customers =
-      JSON.parse(localStorage.getItem("customers") || "[]");
+    const customersResult =
+      await supabaseClient
+        .from("customers")
+        .select("id")
+        .eq("company_id", currentCompanyId);
 
-    document.getElementById("customerCount").textContent =
-      customers.length;
+
+    if (customersResult.error) {
+      throw customersResult.error;
+    }
+
+
+    document.getElementById("customersCount").textContent =
+      (customersResult.data || []).length;
 
 
     /* =========================
        PROJECTS
     ========================= */
 
+    const projectsResult =
+      await supabaseClient
+        .from("projects")
+        .select("id, status")
+        .eq("company_id", currentCompanyId);
+
+
+    if (projectsResult.error) {
+      throw projectsResult.error;
+    }
+
+
     const projects =
-      JSON.parse(localStorage.getItem("projects") || "[]");
-
-    const activeProjects =
-      projects.filter(project =>
-        String(project.status || "").toLowerCase() === "active"
-      );
-
-    document.getElementById("projectCount").textContent =
-      activeProjects.length;
+      projectsResult.data || [];
 
 
-    /* =========================
-       FINANCE
-    ========================= */
+    document.getElementById("projectsCount").textContent =
+      projects.length;
 
-    const transactions =
-      JSON.parse(localStorage.getItem("transactions") || "[]");
 
-    let income = 0;
-    let expenses = 0;
+    document.getElementById("activeProjects").textContent =
+      projects.filter(
+        p => {
+          const status =
+            String(p.status || "").toLowerCase();
 
-    transactions.forEach(transaction => {
-
-      const amount =
-        Number(transaction.amount) || 0;
-
-      const type =
-        String(transaction.type || "").toLowerCase();
-
-      if (type === "income") {
-        income += amount;
-      }
-
-      if (type === "expense") {
-        expenses += amount;
-      }
-
-    });
-
-    const profit = income - expenses;
-
-    document.getElementById("totalIncome").textContent =
-      "$" + income.toLocaleString();
-
-    document.getElementById("totalExpenses").textContent =
-      "$" + expenses.toLocaleString();
-
-    document.getElementById("totalProfit").textContent =
-      "$" + profit.toLocaleString();
-
-    document.getElementById("netRevenue").textContent =
-      "$" + profit.toLocaleString();
+          return status !== "completed" &&
+                 status !== "complete";
+        }
+      ).length;
 
 
     /* =========================
        TASKS
     ========================= */
 
-    const tasks =
-      JSON.parse(localStorage.getItem("tasks") || "[]");
+    const tasksResult =
+      await supabaseClient
+        .from("tasks")
+        .select(
+          "id, title, assignee, deadline, priority, status, created_at"
+        )
+        .eq("company_id", currentCompanyId)
+        .order("created_at", { ascending: false });
 
-    const taskList =
-      document.getElementById("taskList");
+
+    if (tasksResult.error) {
+      throw tasksResult.error;
+    }
+
+
+    const tasks =
+      tasksResult.data || [];
+
+
+    document.getElementById("tasksCount").textContent =
+      tasks.length;
+
+
+    document.getElementById("completedTasks").textContent =
+      tasks.filter(
+        t => {
+          const status =
+            String(t.status || "").toLowerCase();
+
+          return status === "completed" ||
+                 status === "complete" ||
+                 status === "done";
+        }
+      ).length;
+
+
+    /* RECENT TASKS */
+
+    const recentTasks =
+      document.getElementById("recentTasks");
 
 
     if (tasks.length === 0) {
 
-      taskList.innerHTML =
-        '<div class="empty">No tasks yet. Create your first task.</div>';
+      recentTasks.innerHTML =
+        '<div class="loading">No tasks yet.</div>';
 
     } else {
 
-      const recentTasks =
-        tasks.slice(-5).reverse();
-
-      taskList.innerHTML =
-        recentTasks.map(task => {
+      recentTasks.innerHTML =
+        tasks.slice(0, 5).map(task => {
 
           const status =
-            String(task.status || "Pending").toLowerCase();
+            String(task.status || "Pending");
 
-          let badgeClass = "badge-pending";
+          const completed =
+            [
+              "completed",
+              "complete",
+              "done"
+            ].includes(status.toLowerCase());
 
-          if (status.includes("progress")) {
-            badgeClass = "badge-progress";
-          }
-
-          if (
-            status.includes("completed") ||
-            status.includes("complete")
-          ) {
-            badgeClass = "badge-completed";
-          }
 
           return `
-            <div class="task-item">
+            <div class="task">
+
+              <div class="task-title">
+                ${escapeHtml(task.title || "Untitled Task")}
+              </div>
 
               <div class="task-info">
 
-                <strong>
-                  ${escapeHTML(task.title || "Untitled Task")}
-                </strong>
+                Assignee:
+                ${escapeHtml(task.assignee || "Unassigned")}
 
-                <span>
-                  ${escapeHTML(task.assignee || "Unassigned")}
+                &nbsp; • &nbsp;
+
+                Deadline:
+                ${escapeHtml(task.deadline || "No deadline")}
+
+                &nbsp; • &nbsp;
+
+                <span class="status ${
+                  completed
+                  ? "status-completed"
+                  : "status-pending"
+                }">
+                  ${escapeHtml(status)}
                 </span>
 
               </div>
-
-              <span class="badge ${badgeClass}">
-                ${escapeHTML(task.status || "Pending")}
-              </span>
 
             </div>
           `;
@@ -1021,38 +799,210 @@
 
 
     /* =========================
-       CURRENT PLAN
+       FINANCE
     ========================= */
 
-    const selectedPlan =
-      localStorage.getItem("selectedPlan") || "Free";
+    const financeResult =
+      await supabaseClient
+        .from("transactions")
+        .select("amount, type")
+        .eq("company_id", currentCompanyId);
 
-    const selectedPrice =
-      localStorage.getItem("selectedPrice") || "0";
 
-    document.getElementById("planName").textContent =
-      selectedPlan;
+    if (financeResult.error) {
+      throw financeResult.error;
+    }
 
-    document.getElementById("planPrice").textContent =
-      "$" + selectedPrice + " / month";
+
+    const transactions =
+      financeResult.data || [];
+
+
+    let income = 0;
+    let expenses = 0;
+
+
+    transactions.forEach(transaction => {
+
+      const amount =
+        Number(transaction.amount || 0);
+
+      const type =
+        String(transaction.type || "")
+          .toLowerCase();
+
+
+      if (
+        type === "income" ||
+        type === "revenue" ||
+        type === "credit"
+      ) {
+
+        income += amount;
+
+      } else {
+
+        expenses += amount;
+
+      }
+
+    });
+
+
+    document.getElementById("totalIncome").textContent =
+      money(income);
+
+    document.getElementById("totalExpenses").textContent =
+      money(expenses);
+
+    document.getElementById("netBalance").textContent =
+      money(income - expenses);
 
 
     /* =========================
-       BASIC HTML SECURITY
+       INVENTORY
     ========================= */
 
-    function escapeHTML(value) {
+    const productsResult =
+      await supabaseClient
+        .from("products")
+        .select(
+          "id, stock_quantity, low_stock_alert, buy_price"
+        )
+        .eq("company_id", currentCompanyId);
 
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
 
+    if (productsResult.error) {
+      throw productsResult.error;
     }
 
-  </script>
+
+    const products =
+      productsResult.data || [];
+
+
+    document.getElementById("productsCount").textContent =
+      products.length;
+
+
+    let inventoryValue = 0;
+    let lowStock = 0;
+
+
+    products.forEach(product => {
+
+      const stock =
+        Number(product.stock_quantity || 0);
+
+      const alert =
+        Number(product.low_stock_alert || 0);
+
+      const buyPrice =
+        Number(product.buy_price || 0);
+
+
+      inventoryValue += stock * buyPrice;
+
+
+      if (stock <= alert) {
+        lowStock++;
+      }
+
+    });
+
+
+    document.getElementById("inventoryValue").textContent =
+      money(inventoryValue);
+
+
+    document.getElementById("lowStock").textContent =
+      lowStock;
+
+
+    /* =========================
+       DOCUMENTS
+    ========================= */
+
+    const documentsResult =
+      await supabaseClient
+        .from("documents")
+        .select("id")
+        .eq("company_id", currentCompanyId);
+
+
+    if (documentsResult.error) {
+      throw documentsResult.error;
+    }
+
+
+    document.getElementById("documentsCount").textContent =
+      (documentsResult.data || []).length;
+
+
+    /* =========================
+       NOTIFICATIONS
+    ========================= */
+
+    const notificationsResult =
+      await supabaseClient
+        .from("notifications")
+        .select("id, is_read")
+        .eq("company_id", currentCompanyId)
+        .eq("user_id", currentUser.id);
+
+
+    if (notificationsResult.error) {
+      throw notificationsResult.error;
+    }
+
+
+    const notifications =
+      notificationsResult.data || [];
+
+
+    document.getElementById("notificationsCount").textContent =
+      notifications.filter(
+        n => n.is_read === false
+      ).length;
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    showError(
+      "Dashboard error: " +
+      (error.message || "Unable to load dashboard.")
+    );
+
+  }
+
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadDashboard();
+
+</script>
 
 </body>
-      </html>
+</html>
