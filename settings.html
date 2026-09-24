@@ -1,586 +1,555 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - CompanyFlow</title>
 
-<title>Settings | CompanyFlow</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-    background: #f8fafc;
-    color: #0f172a;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
 
-header {
-    background: #0f172a;
-    color: white;
-    padding: 18px 7%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
 
-.logo {
-    color: #60a5fa;
-    font-size: 24px;
-    font-weight: 800;
-}
+    .sidebar {
+      width: 240px;
+      background: #111827;
+      color: white;
+      padding: 24px 16px;
+    }
 
-.back {
-    color: #cbd5e1;
-    text-decoration: none;
-    font-size: 14px;
-}
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      padding-left: 10px;
+    }
 
-.container {
-    max-width: 1000px;
-    margin: 35px auto;
-    padding: 0 20px;
-}
+    .nav a {
+      display: block;
+      color: #d1d5db;
+      text-decoration: none;
+      padding: 11px 12px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
 
-h1 {
-    font-size: 30px;
-    margin-bottom: 8px;
-}
+    .nav a:hover,
+    .nav a.active {
+      background: #2563eb;
+      color: white;
+    }
 
-.subtitle {
-    color: #64748b;
-    margin-bottom: 30px;
-}
+    .main {
+      flex: 1;
+      padding: 30px;
+    }
 
-.card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 25px;
-    margin-bottom: 22px;
-}
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
 
-.card h2 {
-    font-size: 19px;
-    margin-bottom: 6px;
-}
+    .topbar h1 {
+      margin: 0;
+      font-size: 28px;
+    }
 
-.card-description {
-    color: #64748b;
-    font-size: 14px;
-    margin-bottom: 22px;
-}
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-}
+    .card h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
 
-.field {
-    display: flex;
-    flex-direction: column;
-}
-
-.field.full {
-    grid-column: 1 / -1;
-}
-
-label {
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 7px;
-}
-
-input,
-select {
-    width: 100%;
-    padding: 12px 13px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    outline: none;
-    font-size: 14px;
-}
-
-input:focus,
-select:focus {
-    border-color: #2563eb;
-}
-
-.plan-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    padding: 18px;
-    border-radius: 12px;
-}
-
-.plan-name {
-    font-size: 18px;
-    font-weight: 800;
-}
-
-.plan-price {
-    color: #2563eb;
-    margin-top: 4px;
-}
-
-.plan-button {
-    background: #2563eb;
-    color: white;
-    text-decoration: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: bold;
-}
-
-.option {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.option:last-child {
-    border-bottom: none;
-}
-
-.option-title {
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
-.option-description {
-    color: #64748b;
-    font-size: 13px;
-}
-
-.toggle {
-    width: 45px;
-    height: 24px;
-    cursor: pointer;
-}
-
-.save-area {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 35px;
-}
-
-.save-button {
-    background: #16a34a;
-    color: white;
-    border: none;
-    padding: 13px 25px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.save-button:hover {
-    opacity: .9;
-}
-
-.success {
-    display: none;
-    background: #dcfce7;
-    color: #166534;
-    padding: 13px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-footer {
-    text-align: center;
-    color: #64748b;
-    padding: 30px;
-}
-
-@media (max-width: 700px) {
+    .card p.description {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
 
     .form-grid {
-        grid-template-columns: 1fr;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
     }
 
     .field.full {
-        grid-column: auto;
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+
+    input,
+    select {
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #2563eb;
+    }
+
+    input[readonly] {
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .primary:hover {
+      background: #1d4ed8;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .success {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
     }
 
     .plan-box {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #eff6ff;
+      padding: 18px;
+      border-radius: 10px;
     }
 
-    .plan-button {
-        width: 100%;
-        text-align: center;
+    .plan-name {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2563eb;
     }
 
-    .save-area {
+    .plan-description {
+      color: #6b7280;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .logout {
+      margin-top: 20px;
+      width: 100%;
+      background: #dc2626;
+      color: white;
+    }
+
+    .logout:hover {
+      background: #b91c1c;
+    }
+
+    @media (max-width: 800px) {
+      .sidebar {
+        width: 190px;
+      }
+
+      .main {
+        padding: 20px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .layout {
         display: block;
-    }
+      }
 
-    .save-button {
+      .sidebar {
         width: 100%;
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+      }
+
+      .nav a {
+        margin: 0;
+      }
+
+      .topbar h1 {
+        font-size: 23px;
+      }
     }
-}
-</style>
+  </style>
 </head>
 
 <body>
 
-<header>
+<div class="layout">
 
-    <div class="logo">
-        CompanyFlow
+  <aside class="sidebar">
+    <div class="logo">CompanyFlow</div>
+
+    <div class="nav">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="employees.html">Employees</a>
+      <a href="customers.html">Customers</a>
+      <a href="projects.html">Projects</a>
+      <a href="tasks.html">Tasks</a>
+      <a href="finance.html">Finance</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="documents.html">Documents</a>
+      <a href="reports.html">Reports</a>
+      <a href="roles.html">Roles & Permissions</a>
+      <a href="notifications.html">Notifications</a>
+      <a href="settings.html" class="active">Settings</a>
+      <a href="index.html">Back to Website</a>
     </div>
 
-    <a href="dashboard.html" class="back">
-        ← Back to Dashboard
-    </a>
+    <button class="logout" onclick="logout()">Sign Out</button>
+  </aside>
 
-</header>
+  <main class="main">
 
-
-<div class="container">
-
-    <h1>Settings</h1>
-
-    <p class="subtitle">
-        Manage your company profile and account preferences.
-    </p>
-
-
-    <div id="successMessage" class="success">
-        Your settings have been saved successfully.
+    <div class="topbar">
+      <h1>Settings</h1>
     </div>
 
-
-    <!-- COMPANY PROFILE -->
-
+    <!-- Company Information -->
     <div class="card">
+      <h2>Company Information</h2>
+      <p class="description">
+        Manage your company profile and business information.
+      </p>
 
-        <h2>Company Profile</h2>
+      <div class="form-grid">
 
-        <p class="card-description">
-            Update your company information.
-        </p>
-
-        <div class="form-grid">
-
-            <div class="field">
-
-                <label>Company Name</label>
-
-                <input
-                    type="text"
-                    id="companyName"
-                    placeholder="Your Company"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>Owner Name</label>
-
-                <input
-                    type="text"
-                    id="ownerName"
-                    placeholder="Owner Name"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>Business Email</label>
-
-                <input
-                    type="email"
-                    id="businessEmail"
-                    placeholder="company@example.com"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label>Phone / WhatsApp</label>
-
-                <input
-                    type="tel"
-                    id="phone"
-                    placeholder="+1 555 000 0000"
-                >
-
-            </div>
-
-
-            <div class="field full">
-
-                <label>Business Address</label>
-
-                <input
-                    type="text"
-                    id="address"
-                    placeholder="Business address"
-                >
-
-            </div>
-
+        <div class="field">
+          <label>Company Name</label>
+          <input id="companyName" type="text" placeholder="Company name">
         </div>
 
-    </div>
-
-
-    <!-- SUBSCRIPTION -->
-
-    <div class="card">
-
-        <h2>Subscription</h2>
-
-        <p class="card-description">
-            View and manage your current CompanyFlow plan.
-        </p>
-
-        <div class="plan-box">
-
-            <div>
-
-                <div class="plan-name" id="planName">
-                    Business Plan
-                </div>
-
-                <div class="plan-price" id="planPrice">
-                    $49 / month
-                </div>
-
-            </div>
-
-            <a href="pricing.html" class="plan-button">
-                View Plans
-            </a>
-
+        <div class="field">
+          <label>Owner Name</label>
+          <input id="ownerName" type="text" placeholder="Owner name">
         </div>
 
-    </div>
-
-
-    <!-- NOTIFICATIONS -->
-
-    <div class="card">
-
-        <h2>Notifications</h2>
-
-        <p class="card-description">
-            Choose which notifications you want to receive.
-        </p>
-
-
-        <div class="option">
-
-            <div>
-
-                <div class="option-title">
-                    Email Notifications
-                </div>
-
-                <div class="option-description">
-                    Receive important business updates by email.
-                </div>
-
-            </div>
-
-            <input
-                type="checkbox"
-                class="toggle"
-                id="emailNotifications"
-                checked
-            >
-
+        <div class="field">
+          <label>Email</label>
+          <input id="email" type="email" readonly>
         </div>
 
-
-        <div class="option">
-
-            <div>
-
-                <div class="option-title">
-                    Task Notifications
-                </div>
-
-                <div class="option-description">
-                    Get notified about task updates and deadlines.
-                </div>
-
-            </div>
-
-            <input
-                type="checkbox"
-                class="toggle"
-                id="taskNotifications"
-                checked
-            >
-
+        <div class="field">
+          <label>Phone</label>
+          <input id="phone" type="text" placeholder="Phone number">
         </div>
 
-
-        <div class="option">
-
-            <div>
-
-                <div class="option-title">
-                    Customer Notifications
-                </div>
-
-                <div class="option-description">
-                    Receive alerts about new customer activity.
-                </div>
-
-            </div>
-
-            <input
-                type="checkbox"
-                class="toggle"
-                id="customerNotifications"
-                checked
-            >
-
+        <div class="field full">
+          <label>Address</label>
+          <input id="address" type="text" placeholder="Company address">
         </div>
 
-    </div>
+      </div>
 
-
-    <!-- SAVE -->
-
-    <div class="save-area">
-
-        <button
-            class="save-button"
-            onclick="saveSettings()">
-
-            Save Changes
-
+      <div class="actions">
+        <button class="primary" onclick="saveSettings()">
+          Save Changes
         </button>
 
+        <button class="secondary" onclick="loadSettings()">
+          Cancel
+        </button>
+      </div>
+
+      <div id="message" class="message"></div>
     </div>
+
+    <!-- Subscription -->
+    <div class="card">
+      <h2>Subscription Plan</h2>
+      <p class="description">
+        Your current CompanyFlow subscription.
+      </p>
+
+      <div class="plan-box">
+        <div>
+          <div id="planName" class="plan-name">Free</div>
+          <div class="plan-description">
+            Manage your company with CompanyFlow.
+          </div>
+        </div>
+
+        <button class="primary" onclick="window.location.href='pricing.html'">
+          View Plans
+        </button>
+      </div>
+    </div>
+
+    <!-- Account -->
+    <div class="card">
+      <h2>Account Information</h2>
+      <p class="description">
+        Your account information is connected to Supabase Authentication.
+      </p>
+
+      <div class="form-grid">
+
+        <div class="field">
+          <label>User ID</label>
+          <input id="userId" type="text" readonly>
+        </div>
+
+        <div class="field">
+          <label>Role</label>
+          <input id="role" type="text" readonly>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
 
 </div>
 
-
-<footer>
-    © 2026 CompanyFlow. All rights reserved.
-</footer>
-
-
 <script>
 
-function loadSettings() {
+let currentUser = null;
+let currentCompanyId = null;
 
-    document.getElementById("companyName").value =
-        localStorage.getItem("companyName") || "";
+async function loadSettings() {
 
-    document.getElementById("ownerName").value =
-        localStorage.getItem("ownerName") || "";
+  showMessage("", "");
 
-    document.getElementById("businessEmail").value =
-        localStorage.getItem("userEmail") || "";
+  const {
+    data: { user },
+    error: userError
+  } = await supabaseClient.auth.getUser();
 
-    document.getElementById("phone").value =
-        localStorage.getItem("companyPhone") || "";
+  if (userError || !user) {
+    window.location.href = "signin.html";
+    return;
+  }
 
-    document.getElementById("address").value =
-        localStorage.getItem("companyAddress") || "";
+  currentUser = user;
 
+  document.getElementById("email").value = user.email || "";
+  document.getElementById("userId").value = user.id || "";
 
-    const plan =
-        localStorage.getItem("selectedPlan");
+  // Get profile
+  const { data: profile, error: profileError } =
+    await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
 
-    const price =
-        localStorage.getItem("selectedPrice");
+  if (profileError) {
+    console.error(profileError);
+    showMessage("Could not load profile information.", "error");
+    return;
+  }
 
+  currentCompanyId = profile.company_id;
 
-    if (plan) {
+  document.getElementById("ownerName").value =
+    profile.full_name || "";
 
-        document.getElementById("planName").textContent =
-            plan + " Plan";
+  document.getElementById("role").value =
+    profile.role || "";
 
-        document.getElementById("planPrice").textContent =
-            "$" + price + " / month";
+  // Get company
+  const { data: company, error: companyError } =
+    await supabaseClient
+      .from("companies")
+      .select("*")
+      .eq("id", profile.company_id)
+      .single();
 
-    }
+  if (companyError) {
+    console.error(companyError);
+    showMessage("Could not load company information.", "error");
+    return;
+  }
 
+  document.getElementById("companyName").value =
+    company.name || "";
+
+  document.getElementById("phone").value =
+    company.phone || "";
+
+  document.getElementById("address").value =
+    company.address || "";
+
+  document.getElementById("planName").textContent =
+    company.plan || "Free";
 }
 
 
-function saveSettings() {
+async function saveSettings() {
 
-    localStorage.setItem(
-        "companyName",
-        document.getElementById("companyName").value
+  if (!currentUser || !currentCompanyId) {
+    showMessage("Please sign in again.", "error");
+    return;
+  }
+
+  const companyName =
+    document.getElementById("companyName").value.trim();
+
+  const ownerName =
+    document.getElementById("ownerName").value.trim();
+
+  const phone =
+    document.getElementById("phone").value.trim();
+
+  const address =
+    document.getElementById("address").value.trim();
+
+  if (!companyName) {
+    showMessage("Company name is required.", "error");
+    return;
+  }
+
+  // Update company
+  const { error: companyError } =
+    await supabaseClient
+      .from("companies")
+      .update({
+        name: companyName,
+        phone: phone,
+        address: address
+      })
+      .eq("id", currentCompanyId);
+
+  if (companyError) {
+    console.error(companyError);
+    showMessage(
+      "Could not update company information.",
+      "error"
     );
+    return;
+  }
 
-    localStorage.setItem(
-        "ownerName",
-        document.getElementById("ownerName").value
+  // Update profile
+  const { error: profileError } =
+    await supabaseClient
+      .from("profiles")
+      .update({
+        full_name: ownerName
+      })
+      .eq("id", currentUser.id);
+
+  if (profileError) {
+    console.error(profileError);
+    showMessage(
+      "Company saved, but owner name could not be updated.",
+      "error"
     );
+    return;
+  }
 
-    localStorage.setItem(
-        "userEmail",
-        document.getElementById("businessEmail").value
-    );
+  showMessage(
+    "Settings saved successfully.",
+    "success"
+  );
 
-    localStorage.setItem(
-        "companyPhone",
-        document.getElementById("phone").value
-    );
-
-    localStorage.setItem(
-        "companyAddress",
-        document.getElementById("address").value
-    );
+  await loadSettings();
+}
 
 
-    localStorage.setItem(
-        "emailNotifications",
-        document.getElementById("emailNotifications").checked
-    );
+function showMessage(text, type) {
 
-    localStorage.setItem(
-        "taskNotifications",
-        document.getElementById("taskNotifications").checked
-    );
+  const message =
+    document.getElementById("message");
 
-    localStorage.setItem(
-        "customerNotifications",
-        document.getElementById("customerNotifications").checked
-    );
+  if (!text) {
+    message.className = "message";
+    message.textContent = "";
+    return;
+  }
+
+  message.textContent = text;
+  message.className = "message " + type;
+}
 
 
-    const message =
-        document.getElementById("successMessage");
+async function logout() {
 
-    message.style.display = "block";
+  await supabaseClient.auth.signOut();
 
-    setTimeout(function() {
-
-        message.style.display = "none";
-
-    }, 3000);
-
+  window.location.href = "signin.html";
 }
 
 
