@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Settings - CompanyFlow</title>
+  <title>Settings | CompanyFlow</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
@@ -11,42 +11,47 @@
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #1f2937;
-    }
-
-    .layout {
-      display: flex;
-      min-height: 100vh;
+      background: #f4f7fb;
+      color: #172033;
     }
 
     .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
       width: 240px;
+      height: 100vh;
       background: #111827;
       color: white;
-      padding: 24px 16px;
+      padding: 25px 15px;
+      overflow-y: auto;
     }
 
     .logo {
-      font-size: 22px;
+      font-size: 25px;
       font-weight: bold;
+      text-align: center;
       margin-bottom: 30px;
-      padding-left: 10px;
+    }
+
+    .logo span {
+      color: #2563eb;
     }
 
     .nav a {
       display: block;
-      color: #d1d5db;
+      color: #cbd5e1;
       text-decoration: none;
-      padding: 11px 12px;
+      padding: 13px 15px;
       border-radius: 8px;
       margin-bottom: 5px;
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .nav a:hover,
@@ -56,79 +61,117 @@
     }
 
     .main {
-      flex: 1;
+      margin-left: 240px;
       padding: 30px;
     }
 
-    h1 {
-      margin-top: 0;
+    .top {
+      margin-bottom: 25px;
+    }
+
+    .top h1 {
+      font-size: 30px;
+      margin-bottom: 7px;
+    }
+
+    .top p {
+      color: #64748b;
     }
 
     .card {
       background: white;
-      padding: 25px;
       border-radius: 14px;
+      padding: 25px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      box-shadow: 0 3px 15px rgba(0,0,0,0.05);
     }
 
     .card h2 {
-      margin-top: 0;
+      font-size: 20px;
+      margin-bottom: 20px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 18px;
     }
 
-    .field {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .full {
-      grid-column: 1 / -1;
-    }
-
     label {
-      font-weight: 600;
+      display: block;
+      font-weight: bold;
       margin-bottom: 7px;
-      font-size: 14px;
+      color: #334155;
     }
 
-    input {
+    input,
+    select {
+      width: 100%;
       padding: 12px;
       border: 1px solid #d1d5db;
       border-radius: 8px;
       font-size: 15px;
+      background: #f8fafc;
     }
 
-    input:focus {
-      outline: none;
-      border-color: #2563eb;
+    input:disabled {
+      color: #64748b;
     }
 
-    input[readonly] {
-      background: #f3f4f6;
+    .plan-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 18px;
+      border-radius: 10px;
     }
 
-    button {
-      margin-top: 20px;
-      padding: 12px 22px;
-      border: none;
-      border-radius: 8px;
+    .plan-name {
+      font-size: 24px;
+      font-weight: bold;
+      color: #2563eb;
+      margin-bottom: 5px;
+    }
+
+    .switch-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .switch-row:last-child {
+      border-bottom: none;
+    }
+
+    .switch-row p {
+      color: #64748b;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: #2563eb;
+    }
+
+    .save-btn {
       background: #2563eb;
       color: white;
-      font-weight: 600;
+      border: none;
+      padding: 13px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
     }
 
-    button:hover {
+    .save-btn:hover {
       background: #1d4ed8;
     }
 
-    .message {
+    #message {
       margin-top: 15px;
       padding: 12px;
       border-radius: 8px;
@@ -136,42 +179,31 @@
     }
 
     .success {
-      display: block;
+      display: block !important;
       background: #dcfce7;
       color: #166534;
     }
 
     .error {
-      display: block;
+      display: block !important;
       background: #fee2e2;
       color: #991b1b;
     }
 
-    .plan {
-      font-size: 22px;
-      font-weight: bold;
-      color: #2563eb;
-    }
-
-    @media (max-width: 700px) {
-      .layout {
-        display: block;
+    @media (max-width: 800px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
       }
 
-      .sidebar {
-        width: 100%;
+      .main {
+        margin-left: 0;
+        padding: 18px;
       }
 
       .grid {
         grid-template-columns: 1fr;
-      }
-
-      .full {
-        grid-column: auto;
-      }
-
-      .main {
-        padding: 18px;
       }
     }
   </style>
@@ -179,13 +211,12 @@
 
 <body>
 
-<div class="layout">
-
   <aside class="sidebar">
+    <div class="logo">
+      Company<span>Flow</span>
+    </div>
 
-    <div class="logo">CompanyFlow</div>
-
-    <div class="nav">
+    <nav class="nav">
       <a href="dashboard.html">Dashboard</a>
       <a href="employees.html">Employees</a>
       <a href="customers.html">Customers</a>
@@ -199,396 +230,281 @@
       <a href="notifications.html">Notifications</a>
       <a href="settings.html" class="active">Settings</a>
       <a href="index.html">Back to Website</a>
-    </div>
-
+    </nav>
   </aside>
-
 
   <main class="main">
 
-    <h1>Settings</h1>
-
+    <div class="top">
+      <h1>Settings</h1>
+      <p>Manage your company profile and preferences.</p>
+    </div>
 
     <div class="card">
-
-      <h2>Company Information</h2>
+      <h2>Company Profile</h2>
 
       <div class="grid">
 
-        <div class="field">
+        <div>
           <label>Company Name</label>
           <input id="companyName" type="text">
         </div>
 
-        <div class="field">
+        <div>
           <label>Owner Name</label>
           <input id="ownerName" type="text">
         </div>
 
-        <div class="field">
-          <label>Email</label>
-          <input id="email" type="email" readonly>
+        <div>
+          <label>Business Email</label>
+          <input id="email" type="email" disabled>
         </div>
 
-        <div class="field">
-          <label>Phone</label>
-          <input id="phone" type="text">
-        </div>
-
-        <div class="field full">
-          <label>Address</label>
-          <input id="address" type="text">
+        <div>
+          <label>Role</label>
+          <input id="role" type="text" disabled>
         </div>
 
       </div>
-
-      <button id="saveButton" onclick="saveSettings()">
-        Save Changes
-      </button>
-
-      <div id="message" class="message"></div>
-
     </div>
 
-
     <div class="card">
-
       <h2>Subscription Plan</h2>
 
-      <div id="plan" class="plan">
-        Loading...
+      <div class="plan-box">
+        <div class="plan-name" id="planName">Free</div>
+        <div>Your current CompanyFlow subscription plan.</div>
       </div>
-
     </div>
 
-
     <div class="card">
+      <h2>Notification Settings</h2>
 
-      <h2>Account</h2>
-
-      <div class="grid">
-
-        <div class="field">
-          <label>User ID</label>
-          <input id="userId" readonly>
+      <div class="switch-row">
+        <div>
+          <strong>Email Notifications</strong>
+          <p>Receive important company notifications.</p>
         </div>
-
-        <div class="field">
-          <label>Role</label>
-          <input id="role" readonly>
-        </div>
-
+        <input id="emailNotifications" type="checkbox">
       </div>
 
+      <div class="switch-row">
+        <div>
+          <strong>Task Notifications</strong>
+          <p>Receive notifications about tasks and deadlines.</p>
+        </div>
+        <input id="taskNotifications" type="checkbox">
+      </div>
+
+      <div class="switch-row">
+        <div>
+          <strong>Finance Notifications</strong>
+          <p>Receive important finance notifications.</p>
+        </div>
+        <input id="financeNotifications" type="checkbox">
+      </div>
+    </div>
+
+    <div class="card">
+      <button class="save-btn" onclick="saveSettings()">
+        Save Settings
+      </button>
+
+      <div id="message"></div>
     </div>
 
   </main>
 
-</div>
-
-
 <script>
 
-let user = null;
-let companyId = null;
-
-
-/* =========================
-   SHOW MESSAGE
-========================= */
-
-function showMessage(text, type) {
-
-  const box = document.getElementById("message");
-
-  box.textContent = text;
-  box.className = "message " + type;
-
-}
-
-
-/* =========================
-   LOAD SETTINGS
-========================= */
+let currentUser = null;
+let currentCompanyId = null;
 
 async function loadSettings() {
 
-  try {
+  const {
+    data: { user },
+    error: userError
+  } = await supabaseClient.auth.getUser();
 
-    const result =
-      await supabaseClient.auth.getUser();
-
-    user = result.data.user;
-
-    if (!user) {
-
-      window.location.href = "signin.html";
-      return;
-
-    }
-
-    document.getElementById("email").value =
-      user.email || "";
-
-    document.getElementById("userId").value =
-      user.id || "";
-
-
-    /* GET PROFILE */
-
-    const profileResult =
-      await supabaseClient
-        .from("profiles")
-        .select("id, company_id, full_name, email, role")
-        .eq("id", user.id)
-        .single();
-
-
-    if (profileResult.error) {
-
-      console.error(profileResult.error);
-
-      showMessage(
-        "Profile error: " +
-        profileResult.error.message,
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    const profile =
-      profileResult.data;
-
-    companyId =
-      profile.company_id;
-
-
-    document.getElementById("ownerName").value =
-      profile.full_name || "";
-
-    document.getElementById("role").value =
-      profile.role || "";
-
-
-    /* GET COMPANY */
-
-    const companyResult =
-      await supabaseClient
-        .from("companies")
-        .select(
-          "id, name, owner_id, email, phone, address, plan"
-        )
-        .eq("id", companyId)
-        .single();
-
-
-    if (companyResult.error) {
-
-      console.error(companyResult.error);
-
-      showMessage(
-        "Company error: " +
-        companyResult.error.message,
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    const company =
-      companyResult.data;
-
-
-    document.getElementById("companyName").value =
-      company.name || "";
-
-    document.getElementById("phone").value =
-      company.phone || "";
-
-    document.getElementById("address").value =
-      company.address || "";
-
-    document.getElementById("plan").textContent =
-      company.plan || "Free";
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    showMessage(
-      "Unexpected error: " + error.message,
-      "error"
-    );
-
+  if (userError || !user) {
+    window.location.href = "signin.html";
+    return;
   }
 
+  currentUser = user;
+
+  // Load profile
+  const { data: profile, error: profileError } =
+    await supabaseClient
+      .from("profiles")
+      .select("company_id, full_name, email, role")
+      .eq("id", user.id)
+      .single();
+
+  if (profileError || !profile) {
+    showMessage("Could not load your profile.", true);
+    return;
+  }
+
+  currentCompanyId = profile.company_id;
+
+  // Show profile information
+  document.getElementById("ownerName").value =
+    profile.full_name || "";
+
+  document.getElementById("email").value =
+    profile.email || user.email || "";
+
+  document.getElementById("role").value =
+    profile.role || "";
+
+  // Load company
+  const { data: company, error: companyError } =
+    await supabaseClient
+      .from("companies")
+      .select("name")
+      .eq("id", currentCompanyId)
+      .single();
+
+  if (!companyError && company) {
+    document.getElementById("companyName").value =
+      company.name || "";
+  }
+
+  // Load settings
+  let { data: settings, error: settingsError } =
+    await supabaseClient
+      .from("company_settings")
+      .select("*")
+      .eq("company_id", currentCompanyId)
+      .maybeSingle();
+
+  // If settings do not exist, create them
+  if (!settings && !settingsError) {
+
+    const { data: newSettings, error: insertError } =
+      await supabaseClient
+        .from("company_settings")
+        .insert({
+          company_id: currentCompanyId,
+          plan: "Free",
+          email_notifications: true,
+          task_notifications: true,
+          finance_notifications: true
+        })
+        .select()
+        .single();
+
+    if (!insertError) {
+      settings = newSettings;
+    }
+  }
+
+  if (settings) {
+
+    document.getElementById("planName").textContent =
+      settings.plan || "Free";
+
+    document.getElementById("emailNotifications").checked =
+      settings.email_notifications !== false;
+
+    document.getElementById("taskNotifications").checked =
+      settings.task_notifications !== false;
+
+    document.getElementById("financeNotifications").checked =
+      settings.finance_notifications !== false;
+  }
 }
 
-
-/* =========================
-   SAVE SETTINGS
-========================= */
 
 async function saveSettings() {
 
-  const button =
-    document.getElementById("saveButton");
-
-  button.disabled = true;
-  button.textContent = "Saving...";
-
-  showMessage("", "");
-
-
-  try {
-
-    if (!user || !companyId) {
-
-      throw new Error(
-        "User or company information is missing."
-      );
-
-    }
-
-
-    const companyName =
-      document
-        .getElementById("companyName")
-        .value
-        .trim();
-
-
-    const ownerName =
-      document
-        .getElementById("ownerName")
-        .value
-        .trim();
-
-
-    const phone =
-      document
-        .getElementById("phone")
-        .value
-        .trim();
-
-
-    const address =
-      document
-        .getElementById("address")
-        .value
-        .trim();
-
-
-    if (!companyName) {
-
-      throw new Error(
-        "Company Name cannot be empty."
-      );
-
-    }
-
-
-    if (!ownerName) {
-
-      throw new Error(
-        "Owner Name cannot be empty."
-      );
-
-    }
-
-
-    /* UPDATE COMPANY */
-
-    const companyUpdate =
-      await supabaseClient
-        .from("companies")
-        .update({
-          name: companyName,
-          phone: phone,
-          address: address
-        })
-        .eq("id", companyId)
-        .select()
-        .single();
-
-
-    if (companyUpdate.error) {
-
-      console.error(
-        "Company update error:",
-        companyUpdate.error
-      );
-
-      throw new Error(
-        "Company update failed: " +
-        companyUpdate.error.message
-      );
-
-    }
-
-
-    /* UPDATE PROFILE */
-
-    const profileUpdate =
-      await supabaseClient
-        .from("profiles")
-        .update({
-          full_name: ownerName
-        })
-        .eq("id", user.id)
-        .select()
-        .single();
-
-
-    if (profileUpdate.error) {
-
-      console.error(
-        "Profile update error:",
-        profileUpdate.error
-      );
-
-      throw new Error(
-        "Owner update failed: " +
-        profileUpdate.error.message
-      );
-
-    }
-
-
-    showMessage(
-      "Settings saved successfully!",
-      "success"
-    );
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    showMessage(
-      error.message,
-      "error"
-    );
-
-  } finally {
-
-    button.disabled = false;
-    button.textContent = "Save Changes";
-
+  if (!currentUser || !currentCompanyId) {
+    showMessage("Please sign in again.", true);
+    return;
   }
 
+  const companyName =
+    document.getElementById("companyName").value.trim();
+
+  const ownerName =
+    document.getElementById("ownerName").value.trim();
+
+  const emailNotifications =
+    document.getElementById("emailNotifications").checked;
+
+  const taskNotifications =
+    document.getElementById("taskNotifications").checked;
+
+  const financeNotifications =
+    document.getElementById("financeNotifications").checked;
+
+
+  // Update company name
+  const { error: companyError } =
+    await supabaseClient
+      .from("companies")
+      .update({
+        name: companyName
+      })
+      .eq("id", currentCompanyId);
+
+  if (companyError) {
+    showMessage(companyError.message, true);
+    return;
+  }
+
+
+  // Update owner name
+  const { error: profileError } =
+    await supabaseClient
+      .from("profiles")
+      .update({
+        full_name: ownerName
+      })
+      .eq("id", currentUser.id);
+
+  if (profileError) {
+    showMessage(profileError.message, true);
+    return;
+  }
+
+
+  // Update settings
+  const { error: settingsError } =
+    await supabaseClient
+      .from("company_settings")
+      .upsert({
+        company_id: currentCompanyId,
+        email_notifications: emailNotifications,
+        task_notifications: taskNotifications,
+        finance_notifications: financeNotifications
+      }, {
+        onConflict: "company_id"
+      });
+
+  if (settingsError) {
+    showMessage(settingsError.message, true);
+    return;
+  }
+
+
+  showMessage("Settings saved successfully.", false);
 }
 
 
-/* =========================
-   START
-========================= */
+function showMessage(message, isError) {
+
+  const box = document.getElementById("message");
+
+  box.textContent = message;
+
+  box.className = isError
+    ? "error"
+    : "success";
+}
+
 
 loadSettings();
 
