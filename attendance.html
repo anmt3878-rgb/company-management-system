@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Attendance - CompanyFlow</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -295,6 +296,7 @@
       padding: 12px 15px;
       border-radius: 9px;
       font-size: 14px;
+      line-height: 1.5;
     }
 
     .success {
@@ -313,6 +315,11 @@
       text-align: center;
       padding: 35px;
       color: #64748b;
+    }
+
+    .loading {
+      color: #64748b;
+      font-size: 14px;
     }
 
     @media (max-width: 1000px) {
@@ -351,6 +358,10 @@
         align-items: flex-start;
         flex-direction: column;
       }
+
+      .company-badge {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -360,9 +371,13 @@
 <div class="layout">
 
   <aside class="sidebar">
-    <div class="logo">Company<span>Flow</span></div>
+
+    <div class="logo">
+      Company<span>Flow</span>
+    </div>
 
     <nav class="nav">
+
       <a href="dashboard.html">Dashboard</a>
       <a href="employees.html">Employees</a>
       <a href="customers.html">Customers</a>
@@ -378,153 +393,358 @@
       <a href="notifications.html">Notifications</a>
       <a href="settings.html">Settings</a>
       <a href="index.html">Back to Website</a>
+
     </nav>
+
   </aside>
+
 
   <main class="main">
 
     <div class="topbar">
+
       <div>
         <h1>Attendance</h1>
-        <div class="subtitle">Track employee attendance and working hours.</div>
+
+        <div class="subtitle">
+          Track employee attendance and working hours.
+        </div>
       </div>
 
       <div class="company-badge">
-        Company: <strong id="companyName">Loading...</strong>
+
+        Company:
+        <strong id="companyName">
+          Loading...
+        </strong>
+
       </div>
+
     </div>
+
 
     <div id="message" class="message"></div>
 
+
     <section class="stats">
-      <div class="stat">
-        <div class="stat-title">Total Records</div>
-        <div class="stat-value" id="totalRecords">0</div>
-      </div>
 
       <div class="stat">
-        <div class="stat-title">Present</div>
-        <div class="stat-value" id="presentCount">0</div>
+        <div class="stat-title">
+          Total Records
+        </div>
+
+        <div
+          class="stat-value"
+          id="totalRecords">
+          0
+        </div>
       </div>
 
-      <div class="stat">
-        <div class="stat-title">Late</div>
-        <div class="stat-value" id="lateCount">0</div>
-      </div>
 
       <div class="stat">
-        <div class="stat-title">Absent</div>
-        <div class="stat-value" id="absentCount">0</div>
+        <div class="stat-title">
+          Present
+        </div>
+
+        <div
+          class="stat-value"
+          id="presentCount">
+          0
+        </div>
       </div>
+
+
+      <div class="stat">
+        <div class="stat-title">
+          Late
+        </div>
+
+        <div
+          class="stat-value"
+          id="lateCount">
+          0
+        </div>
+      </div>
+
+
+      <div class="stat">
+        <div class="stat-title">
+          Absent
+        </div>
+
+        <div
+          class="stat-value"
+          id="absentCount">
+          0
+        </div>
+      </div>
+
     </section>
 
+
     <section class="card">
+
       <div class="card-header">
-        <div class="card-title">Add Attendance Record</div>
+
+        <div class="card-title">
+          Add Attendance Record
+        </div>
+
       </div>
+
 
       <form id="attendanceForm">
 
         <div class="form-grid">
 
           <div class="field">
-            <label>Employee</label>
-            <select id="employeeId" required>
-              <option value="">Select employee</option>
+
+            <label>
+              Employee
+            </label>
+
+            <select
+              id="employeeId"
+              required>
+
+              <option value="">
+                Loading employees...
+              </option>
+
             </select>
+
           </div>
 
-          <div class="field">
-            <label>Date</label>
-            <input type="date" id="attendanceDate" required>
-          </div>
 
           <div class="field">
-            <label>Status</label>
+
+            <label>
+              Date
+            </label>
+
+            <input
+              type="date"
+              id="attendanceDate"
+              required>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Status
+            </label>
+
             <select id="status">
-              <option value="Present">Present</option>
-              <option value="Absent">Absent</option>
-              <option value="Late">Late</option>
-              <option value="Leave">Leave</option>
+
+              <option value="Present">
+                Present
+              </option>
+
+              <option value="Absent">
+                Absent
+              </option>
+
+              <option value="Late">
+                Late
+              </option>
+
+              <option value="Leave">
+                Leave
+              </option>
+
             </select>
+
           </div>
 
-          <div class="field">
-            <label>Check In</label>
-            <input type="time" id="checkIn">
-          </div>
 
           <div class="field">
-            <label>Check Out</label>
-            <input type="time" id="checkOut">
+
+            <label>
+              Check In
+            </label>
+
+            <input
+              type="time"
+              id="checkIn">
+
           </div>
+
+
+          <div class="field">
+
+            <label>
+              Check Out
+            </label>
+
+            <input
+              type="time"
+              id="checkOut">
+
+          </div>
+
 
           <div class="field full">
-            <label>Notes</label>
-            <textarea id="notes" placeholder="Optional notes..."></textarea>
+
+            <label>
+              Notes
+            </label>
+
+            <textarea
+              id="notes"
+              placeholder="Optional notes..."></textarea>
+
           </div>
 
         </div>
 
+
         <div class="actions">
-          <button type="submit" class="btn-primary">Add Attendance</button>
-          <button type="button" class="btn-secondary" onclick="resetForm()">Clear</button>
+
+          <button
+            type="submit"
+            class="btn-primary">
+
+            Add Attendance
+
+          </button>
+
+
+          <button
+            type="button"
+            class="btn-secondary"
+            onclick="resetForm()">
+
+            Clear
+
+          </button>
+
         </div>
 
       </form>
+
     </section>
+
 
     <section class="card">
 
       <div class="card-header">
-        <div class="card-title">Attendance Records</div>
+
+        <div class="card-title">
+          Attendance Records
+        </div>
+
 
         <div class="toolbar">
+
           <input
             type="text"
             id="searchInput"
-            placeholder="Search employee..."
-          >
+            placeholder="Search employee...">
+
 
           <input
             type="date"
-            id="filterDate"
-          >
+            id="filterDate">
+
 
           <select id="filterStatus">
-            <option value="">All Statuses</option>
-            <option value="Present">Present</option>
-            <option value="Absent">Absent</option>
-            <option value="Late">Late</option>
-            <option value="Leave">Leave</option>
+
+            <option value="">
+              All Statuses
+            </option>
+
+            <option value="Present">
+              Present
+            </option>
+
+            <option value="Absent">
+              Absent
+            </option>
+
+            <option value="Late">
+              Late
+            </option>
+
+            <option value="Leave">
+              Leave
+            </option>
+
           </select>
 
-          <button class="btn-secondary" onclick="loadAttendance()">
+
+          <button
+            class="btn-secondary"
+            type="button"
+            onclick="loadAttendance()">
+
             Refresh
+
           </button>
+
         </div>
+
       </div>
+
 
       <div class="table-wrap">
 
         <table>
+
           <thead>
+
             <tr>
-              <th>Employee</th>
-              <th>Date</th>
-              <th>Check In</th>
-              <th>Check Out</th>
-              <th>Status</th>
-              <th>Notes</th>
-              <th>Action</th>
+
+              <th>
+                Employee
+              </th>
+
+              <th>
+                Date
+              </th>
+
+              <th>
+                Check In
+              </th>
+
+              <th>
+                Check Out
+              </th>
+
+              <th>
+                Status
+              </th>
+
+              <th>
+                Notes
+              </th>
+
+              <th>
+                Action
+              </th>
+
             </tr>
+
           </thead>
 
+
           <tbody id="attendanceTable">
+
             <tr>
-              <td colspan="7" class="empty">Loading...</td>
+
+              <td
+                colspan="7"
+                class="empty">
+
+                Loading...
+
+              </td>
+
             </tr>
+
           </tbody>
+
         </table>
 
       </div>
@@ -532,32 +752,66 @@
     </section>
 
   </main>
+
 </div>
+
 
 <script>
 
   let currentUser = null;
+
   let currentCompanyId = null;
+
   let currentCompanyName = "";
+
   let employees = [];
+
   let attendanceRecords = [];
 
-  const today = new Date().toISOString().split("T")[0];
-  document.getElementById("attendanceDate").value = today;
+
+  const today =
+    new Date()
+      .toISOString()
+      .split("T")[0];
+
+
+  document
+    .getElementById("attendanceDate")
+    .value = today;
+
 
   function showMessage(message, type = "success") {
-    const box = document.getElementById("message");
+
+    const box =
+      document.getElementById("message");
 
     box.textContent = message;
-    box.className = "message " + type;
+
+    box.className =
+      "message " + type;
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
 
     setTimeout(() => {
+
       box.className = "message";
-    }, 4000);
+
+    }, 6000);
+
   }
 
+
   function escapeHtml(value) {
-    if (value === null || value === undefined) return "";
+
+    if (
+      value === null ||
+      value === undefined
+    ) {
+      return "";
+    }
 
     return String(value)
       .replace(/&/g, "&amp;")
@@ -565,25 +819,11 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
+
   }
 
-  function formatTime(value) {
-    if (!value) return "—";
 
-    return value.substring(0, 5);
-  }
-
-  function statusClass(status) {
-    if (status === "Present") return "present";
-    if (status === "Absent") return "absent";
-    if (status === "Late") return "late";
-    if (status === "Leave") return "leave";
-
-    return "";
-  }
-
-  function employeeName(employeeId) {
-    const employee = employees.find(e => e.id === employeeId);
+  function getEmployeeName(employee) {
 
     if (!employee) {
       return "Employee";
@@ -597,173 +837,238 @@
       employee.email ||
       "Employee"
     );
+
   }
+
+
+  function employeeName(employeeId) {
+
+    const employee =
+      employees.find(
+        item => item.id === employeeId
+      );
+
+    return getEmployeeName(employee);
+
+  }
+
+
+  function formatTime(value) {
+
+    if (!value) {
+      return "—";
+    }
+
+    return String(value).substring(0, 5);
+
+  }
+
+
+  function statusClass(status) {
+
+    if (status === "Present") {
+      return "present";
+    }
+
+    if (status === "Absent") {
+      return "absent";
+    }
+
+    if (status === "Late") {
+      return "late";
+    }
+
+    if (status === "Leave") {
+      return "leave";
+    }
+
+    return "";
+
+  }
+
 
   async function initialize() {
 
     try {
 
-      const {
-        data: {
-          user
-        },
-        error: authError
-      } = await supabase.auth.getUser();
+      /*
+       * 1. Check logged-in user
+       */
 
-      if (authError || !user) {
-        window.location.href = "signin.html";
+      const {
+        data,
+        error
+      } =
+        await supabase.auth.getUser();
+
+
+      if (error) {
+
+        console.error(
+          "Auth error:",
+          error
+        );
+
+        showMessage(
+          "Authentication error: " +
+          error.message,
+          "error"
+        );
+
         return;
       }
 
+
+      const user =
+        data?.user;
+
+
+      if (!user) {
+
+        window.location.href =
+          "signin.html";
+
+        return;
+      }
+
+
       currentUser = user;
+
+
+      /*
+       * 2. Get user's company
+       */
 
       const {
         data: profile,
         error: profileError
-      } = await supabase
-        .from("profiles")
-        .select("company_id")
-        .eq("id", user.id)
-        .single();
+      } =
+        await supabase
+          .from("profiles")
+          .select("company_id")
+          .eq("id", user.id)
+          .maybeSingle();
 
-      if (profileError || !profile) {
-        showMessage("Company profile could not be loaded.", "error");
+
+      if (profileError) {
+
+        console.error(
+          "Profile error:",
+          profileError
+        );
+
+        showMessage(
+          "Could not load your profile: " +
+          profileError.message,
+          "error"
+        );
+
         return;
       }
 
-      currentCompanyId = profile.company_id;
+
+      if (
+        !profile ||
+        !profile.company_id
+      ) {
+
+        showMessage(
+          "Your account is not connected to a company.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      currentCompanyId =
+        profile.company_id;
+
+
+      /*
+       * 3. Get company information
+       */
 
       const {
         data: company,
         error: companyError
-      } = await supabase
-        .from("companies")
-        .select("id, name, plan")
-        .eq("id", currentCompanyId)
-        .single();
+      } =
+        await supabase
+          .from("companies")
+          .select("id,name,plan")
+          .eq(
+            "id",
+            currentCompanyId
+          )
+          .maybeSingle();
 
-      if (!companyError && company) {
 
-        currentCompanyName = company.name || "Company";
+      if (companyError) {
 
-        document.getElementById("companyName").textContent =
-          currentCompanyName;
-
-      }
-
-      await loadEmployees();
-      await loadAttendance();
-
-    } catch (error) {
-
-      console.error(error);
-
-      showMessage(
-        "Something went wrong while loading Attendance.",
-        "error"
-      );
-
-    }
-
-  }
-
-  async function loadEmployees() {
-
-    try {
-
-      const {
-        data,
-        error
-      } = await supabase
-        .from("employees")
-        .select("*")
-        .eq("company_id", currentCompanyId)
-        .order("created_at", {
-          ascending: false
-        });
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      employees = data || [];
-
-      const select = document.getElementById("employeeId");
-
-      select.innerHTML =
-        '<option value="">Select employee</option>';
-
-      employees.forEach(employee => {
-
-        const name =
-          employee.name ||
-          employee.full_name ||
-          employee.employee_name ||
-          employee.first_name ||
-          employee.email ||
-          "Employee";
-
-        const option = document.createElement("option");
-
-        option.value = employee.id;
-        option.textContent = name;
-
-        select.appendChild(option);
-
-      });
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
-
-  }
-
-  async function loadAttendance() {
-
-    if (!currentCompanyId) return;
-
-    try {
-
-      const {
-        data,
-        error
-      } = await supabase
-        .from("attendance")
-        .select("*")
-        .eq("company_id", currentCompanyId)
-        .order("attendance_date", {
-          ascending: false
-        })
-        .order("created_at", {
-          ascending: false
-        });
-
-      if (error) {
-
-        console.error(error);
+        console.error(
+          "Company error:",
+          companyError
+        );
 
         showMessage(
-          "Could not load attendance records.",
+          "Could not load company: " +
+          companyError.message,
           "error"
         );
 
         return;
       }
 
-      attendanceRecords = data || [];
 
-      updateStats();
-      renderAttendance();
+      if (!company) {
+
+        showMessage(
+          "Company could not be found.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      currentCompanyName =
+        company.name ||
+        "Company";
+
+
+      document
+        .getElementById("companyName")
+        .textContent =
+          currentCompanyName;
+
+
+      /*
+       * 4. Load employees
+       */
+
+      await loadEmployees();
+
+
+      /*
+       * 5. Load attendance
+       */
+
+      await loadAttendance();
+
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        "Attendance initialize error:",
+        error
+      );
 
       showMessage(
-        "Could not load attendance records.",
+        "Attendance could not load: " +
+        (
+          error.message ||
+          "Unknown error"
+        ),
         "error"
       );
 
@@ -771,243 +1076,683 @@
 
   }
 
-  function updateStats() {
 
-    document.getElementById("totalRecords").textContent =
-      attendanceRecords.length;
+  async function loadEmployees() {
 
-    document.getElementById("presentCount").textContent =
-      attendanceRecords.filter(
-        item => item.status === "Present"
-      ).length;
+    const select =
+      document.getElementById(
+        "employeeId"
+      );
 
-    document.getElementById("lateCount").textContent =
-      attendanceRecords.filter(
-        item => item.status === "Late"
-      ).length;
 
-    document.getElementById("absentCount").textContent =
-      attendanceRecords.filter(
-        item => item.status === "Absent"
-      ).length;
+    select.innerHTML =
+      `<option value="">
+        Loading employees...
+      </option>`;
 
-  }
 
-  function renderAttendance() {
+    try {
 
-    const tbody =
-      document.getElementById("attendanceTable");
+      const {
+        data,
+        error
+      } =
+        await supabase
+          .from("employees")
+          .select("*")
+          .eq(
+            "company_id",
+            currentCompanyId
+          );
 
-    const search =
-      document.getElementById("searchInput")
-        .value
-        .toLowerCase()
-        .trim();
 
-    const filterDate =
-      document.getElementById("filterDate").value;
+      if (error) {
 
-    const filterStatus =
-      document.getElementById("filterStatus").value;
+        console.error(
+          "Employees error:",
+          error
+        );
 
-    const filtered =
-      attendanceRecords.filter(record => {
+        select.innerHTML =
+          `<option value="">
+            Could not load employees
+          </option>`;
 
-        const name =
-          employeeName(record.employee_id)
-            .toLowerCase();
+        showMessage(
+          "Could not load employees: " +
+          error.message,
+          "error"
+        );
 
-        const matchesSearch =
-          !search ||
-          name.includes(search);
+        return;
+      }
 
-        const matchesDate =
-          !filterDate ||
-          record.attendance_date === filterDate;
 
-        const matchesStatus =
-          !filterStatus ||
-          record.status === filterStatus;
+      employees =
+        data || [];
 
-        return (
-          matchesSearch &&
-          matchesDate &&
-          matchesStatus
+
+      select.innerHTML =
+        `<option value="">
+          Select employee
+        </option>`;
+
+
+      employees.forEach(employee => {
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+
+        option.value =
+          employee.id;
+
+
+        option.textContent =
+          getEmployeeName(
+            employee
+          );
+
+
+        select.appendChild(
+          option
         );
 
       });
 
-    if (!filtered.length) {
 
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="7" class="empty">
-            No attendance records found.
-          </td>
-        </tr>
-      `;
+      if (!employees.length) {
+
+        select.innerHTML =
+          `<option value="">
+            No employees found
+          </option>`;
+
+        showMessage(
+          "No employees have been added to this company yet.",
+          "error"
+        );
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Employee loading error:",
+        error
+      );
+
+      select.innerHTML =
+        `<option value="">
+          Could not load employees
+        </option>`;
+
+      showMessage(
+        "Employee loading failed: " +
+        (
+          error.message ||
+          "Unknown error"
+        ),
+        "error"
+      );
+
+    }
+
+  }
+
+
+  async function loadAttendance() {
+
+    if (!currentCompanyId) {
 
       return;
     }
 
-    tbody.innerHTML = filtered.map(record => {
 
-      const name =
-        employeeName(record.employee_id);
+    const tbody =
+      document.getElementById(
+        "attendanceTable"
+      );
 
-      const status =
-        record.status || "Present";
 
-      return `
-        <tr>
+    tbody.innerHTML =
+      `<tr>
+        <td
+          colspan="7"
+          class="empty">
+          Loading attendance...
+        </td>
+      </tr>`;
 
-          <td>
-            <strong>
-              ${escapeHtml(name)}
-            </strong>
-          </td>
 
-          <td>
-            ${escapeHtml(record.attendance_date || "—")}
-          </td>
+    try {
 
-          <td>
-            ${escapeHtml(formatTime(record.check_in))}
-          </td>
+      const {
+        data,
+        error
+      } =
+        await supabase
+          .from("attendance")
+          .select("*")
+          .eq(
+            "company_id",
+            currentCompanyId
+          );
 
-          <td>
-            ${escapeHtml(formatTime(record.check_out))}
-          </td>
 
-          <td>
-            <span class="status ${statusClass(status)}">
-              ${escapeHtml(status)}
-            </span>
-          </td>
+      if (error) {
 
-          <td>
-            ${escapeHtml(record.notes || "—")}
-          </td>
+        console.error(
+          "Attendance query error:",
+          error
+        );
 
-          <td>
-            <button
-              class="btn-danger"
-              onclick="deleteAttendance('${record.id}')"
-            >
-              Delete
-            </button>
-          </td>
+        attendanceRecords = [];
 
-        </tr>
-      `;
+        updateStats();
 
-    }).join("");
+        tbody.innerHTML =
+          `<tr>
+            <td
+              colspan="7"
+              class="empty">
+              Could not load attendance records.
+            </td>
+          </tr>`;
+
+
+        showMessage(
+          "Could not load attendance: " +
+          error.message,
+          "error"
+        );
+
+        return;
+      }
+
+
+      attendanceRecords =
+        data || [];
+
+
+      /*
+       * Sort newest first
+       */
+
+      attendanceRecords.sort(
+        (a, b) => {
+
+          const dateA =
+            String(
+              a.attendance_date || ""
+            );
+
+          const dateB =
+            String(
+              b.attendance_date || ""
+            );
+
+          if (dateA !== dateB) {
+
+            return dateB.localeCompare(
+              dateA
+            );
+
+          }
+
+
+          const createdA =
+            String(
+              a.created_at || ""
+            );
+
+          const createdB =
+            String(
+              b.created_at || ""
+            );
+
+          return createdB.localeCompare(
+            createdA
+          );
+
+        }
+      );
+
+
+      updateStats();
+
+      renderAttendance();
+
+
+    } catch (error) {
+
+      console.error(
+        "Attendance loading error:",
+        error
+      );
+
+      showMessage(
+        "Attendance loading failed: " +
+        (
+          error.message ||
+          "Unknown error"
+        ),
+        "error"
+      );
+
+    }
 
   }
 
+
+  function updateStats() {
+
+    document
+      .getElementById(
+        "totalRecords"
+      )
+      .textContent =
+        attendanceRecords.length;
+
+
+    document
+      .getElementById(
+        "presentCount"
+      )
+      .textContent =
+        attendanceRecords.filter(
+          item =>
+            item.status === "Present"
+        ).length;
+
+
+    document
+      .getElementById(
+        "lateCount"
+      )
+      .textContent =
+        attendanceRecords.filter(
+          item =>
+            item.status === "Late"
+        ).length;
+
+
+    document
+      .getElementById(
+        "absentCount"
+      )
+      .textContent =
+        attendanceRecords.filter(
+          item =>
+            item.status === "Absent"
+        ).length;
+
+  }
+
+
+  function renderAttendance() {
+
+    const tbody =
+      document.getElementById(
+        "attendanceTable"
+      );
+
+
+    const search =
+      document
+        .getElementById(
+          "searchInput"
+        )
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    const filterDate =
+      document
+        .getElementById(
+          "filterDate"
+        )
+        .value;
+
+
+    const filterStatus =
+      document
+        .getElementById(
+          "filterStatus"
+        )
+        .value;
+
+
+    const filtered =
+      attendanceRecords.filter(
+        record => {
+
+          const name =
+            employeeName(
+              record.employee_id
+            )
+              .toLowerCase();
+
+
+          const matchesSearch =
+            !search ||
+            name.includes(search);
+
+
+          const matchesDate =
+            !filterDate ||
+            record.attendance_date ===
+              filterDate;
+
+
+          const matchesStatus =
+            !filterStatus ||
+            record.status ===
+              filterStatus;
+
+
+          return (
+            matchesSearch &&
+            matchesDate &&
+            matchesStatus
+          );
+
+        }
+      );
+
+
+    if (!filtered.length) {
+
+      tbody.innerHTML =
+        `<tr>
+          <td
+            colspan="7"
+            class="empty">
+
+            No attendance records found.
+
+          </td>
+        </tr>`;
+
+      return;
+
+    }
+
+
+    tbody.innerHTML =
+      filtered
+        .map(record => {
+
+          const name =
+            employeeName(
+              record.employee_id
+            );
+
+
+          const status =
+            record.status ||
+            "Present";
+
+
+          return `
+            <tr>
+
+              <td>
+                <strong>
+                  ${escapeHtml(name)}
+                </strong>
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  record.attendance_date ||
+                  "—"
+                )}
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  formatTime(
+                    record.check_in
+                  )
+                )}
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  formatTime(
+                    record.check_out
+                  )
+                )}
+              </td>
+
+              <td>
+                <span
+                  class="status ${statusClass(
+                    status
+                  )}">
+
+                  ${escapeHtml(status)}
+
+                </span>
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  record.notes ||
+                  "—"
+                )}
+              </td>
+
+              <td>
+
+                <button
+                  type="button"
+                  class="btn-danger"
+                  onclick="deleteAttendance('${record.id}')">
+
+                  Delete
+
+                </button>
+
+              </td>
+
+            </tr>
+          `;
+
+        })
+        .join("");
+
+  }
+
+
+  /*
+   * ADD ATTENDANCE
+   */
+
   document
-    .getElementById("attendanceForm")
-    .addEventListener("submit", async function(event) {
+    .getElementById(
+      "attendanceForm"
+    )
+    .addEventListener(
+      "submit",
+      async function(event) {
 
-      event.preventDefault();
+        event.preventDefault();
 
-      if (!currentCompanyId) {
 
-        showMessage(
-          "Company information is not available.",
-          "error"
-        );
-
-        return;
-      }
-
-      const employeeId =
-        document.getElementById("employeeId").value;
-
-      const attendanceDate =
-        document.getElementById("attendanceDate").value;
-
-      const status =
-        document.getElementById("status").value;
-
-      const checkIn =
-        document.getElementById("checkIn").value || null;
-
-      const checkOut =
-        document.getElementById("checkOut").value || null;
-
-      const notes =
-        document.getElementById("notes").value.trim();
-
-      if (!employeeId) {
-
-        showMessage(
-          "Please select an employee.",
-          "error"
-        );
-
-        return;
-      }
-
-      if (!attendanceDate) {
-
-        showMessage(
-          "Please select a date.",
-          "error"
-        );
-
-        return;
-      }
-
-      try {
-
-        const {
-          error
-        } = await supabase
-          .from("attendance")
-          .insert([{
-            company_id: currentCompanyId,
-            employee_id: employeeId,
-            attendance_date: attendanceDate,
-            check_in: checkIn,
-            check_out: checkOut,
-            status: status,
-            notes: notes || null
-          }]);
-
-        if (error) {
-
-          console.error(error);
+        if (!currentCompanyId) {
 
           showMessage(
-            error.message ||
-            "Could not add attendance record.",
+            "Company information is not available.",
             "error"
           );
 
           return;
         }
 
-        showMessage(
-          "Attendance record added successfully."
-        );
 
-        resetForm();
+        const employeeId =
+          document
+            .getElementById(
+              "employeeId"
+            )
+            .value;
 
-        await loadAttendance();
 
-      } catch (error) {
+        const attendanceDate =
+          document
+            .getElementById(
+              "attendanceDate"
+            )
+            .value;
 
-        console.error(error);
 
-        showMessage(
-          "Something went wrong.",
-          "error"
-        );
+        const status =
+          document
+            .getElementById(
+              "status"
+            )
+            .value;
+
+
+        const checkIn =
+          document
+            .getElementById(
+              "checkIn"
+            )
+            .value ||
+          null;
+
+
+        const checkOut =
+          document
+            .getElementById(
+              "checkOut"
+            )
+            .value ||
+          null;
+
+
+        const notes =
+          document
+            .getElementById(
+              "notes"
+            )
+            .value
+            .trim();
+
+
+        if (!employeeId) {
+
+          showMessage(
+            "Please select an employee.",
+            "error"
+          );
+
+          return;
+        }
+
+
+        if (!attendanceDate) {
+
+          showMessage(
+            "Please select a date.",
+            "error"
+          );
+
+          return;
+        }
+
+
+        try {
+
+          const {
+            error
+          } =
+            await supabase
+              .from("attendance")
+              .insert([{
+
+                company_id:
+                  currentCompanyId,
+
+                employee_id:
+                  employeeId,
+
+                attendance_date:
+                  attendanceDate,
+
+                check_in:
+                  checkIn,
+
+                check_out:
+                  checkOut,
+
+                status:
+                  status,
+
+                notes:
+                  notes || null
+
+              }]);
+
+
+          if (error) {
+
+            console.error(
+              "Insert attendance error:",
+              error
+            );
+
+            showMessage(
+              "Could not add attendance: " +
+              error.message,
+              "error"
+            );
+
+            return;
+          }
+
+
+          showMessage(
+            "Attendance record added successfully."
+          );
+
+
+          resetForm();
+
+
+          await loadAttendance();
+
+        } catch (error) {
+
+          console.error(
+            "Add attendance error:",
+            error
+          );
+
+          showMessage(
+            "Something went wrong: " +
+            (
+              error.message ||
+              "Unknown error"
+            ),
+            "error"
+          );
+
+        }
 
       }
+    );
 
-    });
+
+  /*
+   * DELETE ATTENDANCE
+   */
 
   async function deleteAttendance(id) {
 
@@ -1016,43 +1761,69 @@
         "Are you sure you want to delete this attendance record?"
       );
 
-    if (!confirmed) return;
+
+    if (!confirmed) {
+
+      return;
+    }
+
 
     try {
 
       const {
         error
-      } = await supabase
-        .from("attendance")
-        .delete()
-        .eq("id", id)
-        .eq("company_id", currentCompanyId);
+      } =
+        await supabase
+          .from("attendance")
+          .delete()
+          .eq(
+            "id",
+            id
+          )
+          .eq(
+            "company_id",
+            currentCompanyId
+          );
+
 
       if (error) {
 
-        console.error(error);
+        console.error(
+          "Delete attendance error:",
+          error
+        );
 
         showMessage(
-          error.message ||
-          "Could not delete attendance record.",
+          "Could not delete attendance: " +
+          error.message,
           "error"
         );
 
         return;
       }
 
+
       showMessage(
         "Attendance record deleted successfully."
       );
 
+
       await loadAttendance();
+
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        "Delete error:",
+        error
+      );
 
       showMessage(
-        "Something went wrong.",
+        "Something went wrong: " +
+        (
+          error.message ||
+          "Unknown error"
+        ),
         "error"
       );
 
@@ -1060,42 +1831,75 @@
 
   }
 
+
+  /*
+   * RESET FORM
+   */
+
   function resetForm() {
 
     document
-      .getElementById("attendanceForm")
+      .getElementById(
+        "attendanceForm"
+      )
       .reset();
 
-    document
-      .getElementById("attendanceDate")
-      .value = today;
 
     document
-      .getElementById("status")
-      .value = "Present";
+      .getElementById(
+        "attendanceDate"
+      )
+      .value =
+        today;
+
+
+    document
+      .getElementById(
+        "status"
+      )
+      .value =
+        "Present";
 
   }
 
+
+  /*
+   * FILTERS
+   */
+
   document
-    .getElementById("searchInput")
+    .getElementById(
+      "searchInput"
+    )
     .addEventListener(
       "input",
       renderAttendance
     );
 
+
   document
-    .getElementById("filterDate")
+    .getElementById(
+      "filterDate"
+    )
     .addEventListener(
       "change",
       renderAttendance
     );
 
+
   document
-    .getElementById("filterStatus")
+    .getElementById(
+      "filterStatus"
+    )
     .addEventListener(
       "change",
       renderAttendance
     );
+
+
+  /*
+   * START
+   */
 
   initialize();
 
