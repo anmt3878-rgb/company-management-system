@@ -8,8 +8,7 @@ const SUPABASE_URL =
 const SUPABASE_ANON_KEY =
   "sb_publishable_GD3xoZfqMMUg46TTmzRGiQ_Uk-zQuzd";
 
-const supabaseClient =
-  window.supabase.createClient(
+window.supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
   );
