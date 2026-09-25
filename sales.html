@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales - CompanyFlow</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:#111827;color:#fff;padding:22px 14px;overflow:auto}
+.logo{font-size:22px;font-weight:800;padding:0 10px 22px}.nav a{display:block;color:#cbd5e1;text-decoration:none;padding:10px 12px;border-radius:8px;margin:3px 0;font-size:14px}.nav a:hover,.nav a.active{background:#1f2937;color:#fff}
+.main{margin-left:240px;padding:28px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.top h1{margin:0}.company{background:#fff;padding:9px 13px;border-radius:9px;box-shadow:0 2px 10px #0000000d}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:22px 0}.card,.panel{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 12px #0000000b}.card small{color:#64748b}.card strong{display:block;font-size:26px;margin-top:8px}
+.panel{margin-top:18px}.panel h2{margin-top:0;font-size:19px}
+form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-size:13px;font-weight:700}input,select,textarea{padding:10px;border:1px solid #dbe2ea;border-radius:8px;font:inherit}button{border:0;background:#2563eb;color:#fff;padding:10px 15px;border-radius:8px;cursor:pointer;font-weight:700}button.danger{background:#dc2626;padding:7px 10px}
+.msg{margin-top:10px;font-size:14px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;border-bottom:1px solid #edf0f4;font-size:13px;white-space:nowrap}th{background:#f8fafc}
+.badge{padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700;background:#e2e8f0}.completed{background:#dcfce7;color:#166534}.pending{background:#fef3c7;color:#92400e}.cancelled{background:#fee2e2;color:#991b1b}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.tools input{max-width:280px}
+@media(max-width:900px){.sidebar{width:190px}.main{margin-left:190px}.cards{grid-template-columns:repeat(2,1fr)}form{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.sidebar{position:static;width:auto}.main{margin-left:0;padding:16px}.cards,form{grid-template-columns:1fr}.field.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<aside class="sidebar"><div class="logo">CompanyFlow</div><nav class="nav">
+<a href="dashboard.html">Dashboard</a><a href="employees.html">Employees</a><a href="customers.html">Customers</a><a href="projects.html">Projects</a><a href="tasks.html">Tasks</a><a href="finance.html">Finance</a><a href="invoices.html">Invoices</a><a class="active" href="sales.html">Sales</a><a href="inventory.html">Inventory</a><a href="documents.html">Documents</a><a href="calendar.html">Calendar</a><a href="attendance.html">Attendance</a><a href="leave.html">Leave Management</a><a href="reports.html">Reports</a><a href="roles.html">Roles & Permissions</a><a href="notifications.html">Notifications</a><a href="settings.html">Settings</a><a href="index.html">Back to Website</a>
+</nav></aside>
+<main class="main">
+<div class="top"><div><h1>Sales</h1><p>Track and manage company sales.</p></div><div class="company">Company: <strong id="companyName">Loading...</strong></div></div>
+<section class="cards">
+<div class="card"><small>Total Sales</small><strong id="totalSales">$0.00</strong></div>
+<div class="card"><small>Completed</small><strong id="completedSales">$0.00</strong></div>
+<div class="card"><small>Pending</small><strong id="pendingSales">$0.00</strong></div>
+<div class="card"><small>Sales Count</small><strong id="salesCount">0</strong></div>
+</section>
+<section class="panel"><h2>Add Sale</h2>
+<form id="saleForm">
+<div class="field"><label>Customer</label><select id="customerId"><option value="">Select customer</option></select></div>
+<div class="field"><label>Product / Service</label><input id="itemName" required></div>
+<div class="field"><label>Amount</label><input id="amount" type="number" step="0.01" min="0" required></div>
+<div class="field"><label>Status</label><select id="status"><option>Pending</option><option>Completed</option><option>Cancelled</option></select></div>
+<div class="field"><label>Sale Date</label><input id="saleDate" type="date" required></div>
+<div class="field"><label>Notes</label><input id="notes"></div>
+<div class="field full"><button type="submit">Add Sale</button><div id="msg" class="msg"></div></div>
+</form></section>
+<section class="panel"><h2>Sales Records</h2>
+<div class="tools"><input id="search" placeholder="Search sales..."><select id="filter"><option value="">All Statuses</option><option>Pending</option><option>Completed</option><option>Cancelled</option></select><button type="button" onclick="loadSales()">Refresh</button></div>
+<div class="table-wrap"><table><thead><tr><th>Customer</th><th>Item</th><th>Amount</th><th>Status</th><th>Date</th><th>Notes</th><th>Action</th></tr></thead><tbody id="salesBody"></tbody></table></div>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+const client=()=>window.supabaseClient;
+let companyId=null, sales=[];
+const money=n=>'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+async function init(){
+ const c=client(); if(!c){document.getElementById('msg').textContent='Supabase connection unavailable.';return}
+ const {data:{user}}=await c.auth.getUser(); if(!user){location.href='signin.html';return}
+ const p=await c.from('profiles').select('company_id').eq('id',user.id).single();
+ if(p.error||!p.data?.company_id){document.getElementById('msg').textContent='Company profile not found.';return}
+ companyId=p.data.company_id;
+ const co=await c.from('companies').select('name').eq('id',companyId).single(); document.getElementById('companyName').textContent=co.data?.name||'Company';
+ const customers=await c.from('customers').select('id,company_name').eq('company_id',companyId).order('company_name');
+ const sel=document.getElementById('customerId'); (customers.data||[]).forEach(x=>{const o=document.createElement('option');o.value=x.id;o.textContent=x.company_name;sel.appendChild(o)});
+ document.getElementById('saleDate').value=new Date().toISOString().slice(0,10);
+ await loadSales();
+}
+async function loadSales(){
+ const c=client(); let q=c.from('sales').select('*,customers(company_name)').eq('company_id',companyId).order('sale_date',{ascending:false});
+ const {data,error}=await q; if(error){document.getElementById('msg').textContent=error.message;return}
+ sales=data||[]; render();
+}
+function render(){
+ const term=document.getElementById('search').value.toLowerCase(), f=document.getElementById('filter').value;
+ const rows=sales.filter(x=>(!f||x.status===f)&&((x.item_name||'').toLowerCase().includes(term)||(x.customers?.company_name||'').toLowerCase().includes(term)));
+ document.getElementById('salesBody').innerHTML=rows.map(x=>'<tr><td>'+((x.customers?.company_name)||'—')+'</td><td>'+x.item_name+'</td><td>'+money(x.amount)+'</td><td><span class="badge '+x.status.toLowerCase()+'">'+x.status+'</span></td><td>'+x.sale_date+'</td><td>'+((x.notes||'—'))+'</td><td><button class="danger" onclick="deleteSale(\''+x.id+'\')">Delete</button></td></tr>').join('')||'<tr><td colspan="7">No sales found.</td></tr>';
+ const total=sales.filter(x=>x.status!=='Cancelled').reduce((a,x)=>a+Number(x.amount||0),0);
+ const done=sales.filter(x=>x.status==='Completed').reduce((a,x)=>a+Number(x.amount||0),0);
+ const pending=sales.filter(x=>x.status==='Pending').reduce((a,x)=>a+Number(x.amount||0),0);
+ document.getElementById('totalSales').textContent=money(total);document.getElementById('completedSales').textContent=money(done);document.getElementById('pendingSales').textContent=money(pending);document.getElementById('salesCount').textContent=sales.length;
+}
+document.getElementById('saleForm').addEventListener('submit',async e=>{
+ e.preventDefault();const c=client();const msg=document.getElementById('msg');msg.textContent='Saving...';
+ const {error}=await c.from('sales').insert({company_id:companyId,customer_id:document.getElementById('customerId').value||null,item_name:document.getElementById('itemName').value,amount:Number(document.getElementById('amount').value),status:document.getElementById('status').value,sale_date:document.getElementById('saleDate').value,notes:document.getElementById('notes').value||null});
+ if(error){msg.textContent=error.message;return}msg.textContent='Sale added successfully.';e.target.reset();document.getElementById('saleDate').value=new Date().toISOString().slice(0,10);await loadSales();
+});
+async function deleteSale(id){if(!confirm('Delete this sale?'))return;const {error}=await client().from('sales').delete().eq('id',id).eq('company_id',companyId);if(error)document.getElementById('msg').textContent=error.message;else loadSales()}
+document.getElementById('search').addEventListener('input',render);document.getElementById('filter').addEventListener('change',render);init();
+</script>
+</body></html>
