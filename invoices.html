@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoices - CompanyFlow</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}body{margin:0;background:#f4f7fb;color:#172033}.layout{display:flex;min-height:100vh}.sidebar{width:240px;background:#111827;color:#fff;padding:20px 14px;position:fixed;inset:0 auto 0 0;overflow:auto}.logo{font-size:24px;font-weight:800;padding:8px 12px 22px}.logo span{color:#60a5fa}.nav a{display:block;color:#cbd5e1;text-decoration:none;padding:10px 12px;border-radius:8px;margin:3px 0;font-size:14px}.nav a:hover,.nav a.active{background:#2563eb;color:#fff}.main{margin-left:240px;width:calc(100% - 240px);padding:28px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.top h1{margin:0 0 5px}.muted{color:#64748b;font-size:14px}.company{background:#fff;border:1px solid #e5e7eb;padding:10px 14px;border-radius:9px}.error{display:none;background:#fee2e2;color:#991b1b;padding:12px;border-radius:9px;margin-bottom:15px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.stat,.card{background:#fff;border:1px solid #e5e7eb;border-radius:13px;padding:18px;box-shadow:0 3px 12px rgba(0,0,0,.04)}.stat small{color:#64748b}.stat strong{display:block;font-size:26px;margin-top:8px}.grid{display:grid;grid-template-columns:1fr 1.5fr;gap:18px}.card h2{font-size:18px;margin:0 0 16px}.form{display:grid;gap:11px}.form input,.form select,.form textarea{width:100%;padding:11px;border:1px solid #dbe2ea;border-radius:8px;background:#fff}.form textarea{min-height:70px;resize:vertical}.btn{border:0;background:#2563eb;color:#fff;padding:11px 15px;border-radius:8px;font-weight:700;cursor:pointer}.btn:hover{background:#1d4ed8}.tools{display:flex;gap:9px;margin-bottom:12px}.tools input,.tools select{padding:10px;border:1px solid #dbe2ea;border-radius:8px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;border-bottom:1px solid #edf0f3;font-size:13px}th{color:#64748b}.badge{padding:5px 8px;border-radius:15px;font-size:11px;font-weight:700}.pending{background:#fef3c7;color:#92400e}.paid{background:#dcfce7;color:#166534}.overdue{background:#fee2e2;color:#991b1b}.cancelled{background:#e5e7eb;color:#374151}.danger{background:#dc2626}.success{background:#16a34a}.empty{text-align:center;color:#64748b;padding:20px}@media(max-width:900px){.sidebar{position:relative;width:100%;inset:auto}.layout{display:block}.main{margin:0;width:100%;padding:18px}.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:550px){.stats{grid-template-columns:1fr}.top{display:block}.company{margin-top:12px}.tools{display:grid}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar"><div class="logo">Company<span>Flow</span></div><nav class="nav">
+<a href="dashboard.html">Dashboard</a><a href="employees.html">Employees</a><a href="customers.html">Customers</a><a href="projects.html">Projects</a><a href="tasks.html">Tasks</a><a href="finance.html">Finance</a><a href="invoices.html" class="active">Invoices</a><a href="inventory.html">Inventory</a><a href="documents.html">Documents</a><a href="calendar.html">Calendar</a><a href="attendance.html">Attendance</a><a href="leave.html">Leave Management</a><a href="reports.html">Reports</a><a href="roles.html">Roles & Permissions</a><a href="notifications.html">Notifications</a><a href="settings.html">Settings</a><a href="index.html">Back to Website</a>
+</nav></aside>
+<main class="main">
+<div class="top"><div><h1>Invoices</h1><div class="muted">Create and manage customer invoices.</div></div><div class="company">Company: <strong id="companyName">Loading...</strong></div></div>
+<div id="error" class="error"></div>
+<section class="stats"><div class="stat"><small>Total Invoices</small><strong id="total">0</strong></div><div class="stat"><small>Draft</small><strong id="draft">0</strong></div><div class="stat"><small>Paid</small><strong id="paid">0</strong></div><div class="stat"><small>Outstanding</small><strong id="outstanding">$0.00</strong></div></section>
+<div class="grid">
+<section class="card"><h2>Create Invoice</h2><form id="invoiceForm" class="form">
+<select id="customerId" required><option value="">Select customer</option></select>
+<input id="invoiceNumber" placeholder="Invoice number (e.g. INV-1001)" required>
+<input id="amount" type="number" step="0.01" min="0" placeholder="Amount" required>
+<select id="status"><option>Draft</option><option>Sent</option><option>Paid</option><option>Overdue</option><option>Cancelled</option></select>
+<input id="dueDate" type="date">
+<textarea id="notes" placeholder="Notes"></textarea>
+<button class="btn" type="submit">Create Invoice</button>
+</form></section>
+<section class="card"><h2>Invoice List</h2><div class="tools"><input id="search" placeholder="Search invoice..."><select id="filter"><option value="">All statuses</option><option>Draft</option><option>Sent</option><option>Paid</option><option>Overdue</option><option>Cancelled</option></select><button class="btn" onclick="loadInvoices()">Refresh</button></div><div class="table-wrap"><table><thead><tr><th>Invoice</th><th>Customer</th><th>Amount</th><th>Status</th><th>Due</th><th>Action</th></tr></thead><tbody id="rows"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody></table></div></section>
+</div>
+</main></div>
+<script>
+let user=null,companyId=null,customers=[],invoices=[];
+const client=()=>window.supabaseClient;
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function err(m){const e=document.getElementById("error");e.textContent=m;e.style.display="block"}
+async function init(){
+ try{
+  const {data,error}=await client().auth.getUser(); if(error||!data.user){location.href="signin.html";return} user=data.user;
+  const p=await client().from("profiles").select("company_id").eq("id",user.id).single(); if(p.error||!p.data?.company_id)throw new Error("Could not find your company profile."); companyId=p.data.company_id;
+  const c=await client().from("companies").select("name").eq("id",companyId).single(); if(c.error)throw c.error; document.getElementById("companyName").textContent=c.data?.name||"Company";
+  await loadCustomers(); await loadInvoices();
+ }catch(e){console.error(e);err("Invoices error: "+(e.message||"Could not load data."))}
+}
+async function loadCustomers(){
+ const r=await client().from("customers").select("id,company_name").eq("company_id",companyId).order("company_name");
+ if(r.error)throw r.error; customers=r.data||[]; document.getElementById("customerId").innerHTML='<option value="">Select customer</option>'+customers.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.company_name||"Customer")+'</option>').join("");
+}
+function customerName(id){const c=customers.find(x=>x.id===id);return c?.company_name||"Customer"}
+async function loadInvoices(){
+ const r=await client().from("invoices").select("*").eq("company_id",companyId).order("created_at",{ascending:false}); if(r.error)throw r.error; invoices=r.data||[]; render();
+}
+function render(){
+ const q=document.getElementById("search").value.toLowerCase(), f=document.getElementById("filter").value;
+ const list=invoices.filter(x=>(!f||x.status===f)&&(!q||String(x.invoice_number||"").toLowerCase().includes(q)||customerName(x.customer_id).toLowerCase().includes(q)));
+ document.getElementById("total").textContent=invoices.length; document.getElementById("draft").textContent=invoices.filter(x=>x.status==="Draft").length;
+ document.getElementById("paid").textContent=invoices.filter(x=>x.status==="Paid").length;
+ document.getElementById("outstanding").textContent=invoices.filter(x=>x.status!=="Paid"&&x.status!=="Cancelled").reduce((s,x)=>s+Number(x.amount||0),0).toLocaleString("en-US",{style:"currency",currency:"USD"});
+ document.getElementById("rows").innerHTML=list.length?list.map(x=>'<tr><td><strong>'+esc(x.invoice_number)+'</strong></td><td>'+esc(customerName(x.customer_id))+'</td><td>$'+Number(x.amount||0).toFixed(2)+'</td><td><span class="badge '+String(x.status||"Draft").toLowerCase()+'">'+esc(x.status||"Draft")+'</span></td><td>'+esc(x.due_date||"—")+'</td><td><button class="btn danger" onclick="deleteInvoice(\''+x.id+'\')">Delete</button></td></tr>').join(""):'<tr><td colspan="6" class="empty">No invoices found.</td></tr>';
+}
+document.getElementById("search").addEventListener("input",render);document.getElementById("filter").addEventListener("change",render);
+document.getElementById("invoiceForm").addEventListener("submit",async e=>{e.preventDefault();try{
+ const r=await client().from("invoices").insert({company_id:companyId,customer_id:document.getElementById("customerId").value,invoice_number:document.getElementById("invoiceNumber").value.trim(),amount:Number(document.getElementById("amount").value),status:document.getElementById("status").value,due_date:document.getElementById("dueDate").value||null,notes:document.getElementById("notes").value.trim()||null});
+ if(r.error)throw r.error; e.target.reset();await loadInvoices();alert("Invoice created successfully.");
+}catch(x){err("Could not create invoice: "+x.message)}});
+async function deleteInvoice(id){if(!confirm("Delete this invoice?"))return;const r=await client().from("invoices").delete().eq("id",id).eq("company_id",companyId);if(r.error){err(r.error.message);return}await loadInvoices()}
+init();
+</script>
+</body></html>
