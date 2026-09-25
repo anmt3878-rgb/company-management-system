@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI Assistant - CompanyFlow</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:#111827;color:#fff;padding:22px 14px;overflow:auto}.logo{font-size:22px;font-weight:800;padding:0 10px 22px}
+.nav a{display:block;color:#cbd5e1;text-decoration:none;padding:10px 12px;border-radius:8px;margin:3px 0;font-size:14px}.nav a:hover,.nav a.active{background:#1f2937;color:#fff}
+.main{margin-left:240px;padding:28px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.top h1{margin:0}
+.company,.card,.panel,.chat{background:#fff;border-radius:12px;box-shadow:0 2px 12px #0000000b}.company{padding:10px 14px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:22px 0}.card{padding:18px}.card small{color:#64748b}.card strong{display:block;font-size:25px;margin-top:8px}
+.panel{padding:18px;margin-top:18px}.panel h2{margin-top:0;font-size:19px}
+.chat{padding:18px}.messages{height:330px;overflow:auto;border:1px solid #e5e7eb;border-radius:10px;padding:14px;background:#f8fafc}
+.msg{padding:11px 13px;border-radius:10px;margin:8px 0;max-width:85%;line-height:1.5}.bot{background:#e5e7eb}.user{background:#dbeafe;margin-left:auto}
+.ask{display:flex;gap:10px;margin-top:12px}.ask input{flex:1}input{padding:12px;border:1px solid #dbe2ea;border-radius:8px;font:inherit}
+button{border:0;background:#2563eb;color:#fff;padding:11px 16px;border-radius:8px;cursor:pointer;font-weight:700}.quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.quick button{background:#eef2ff;color:#3730a3}
+.status{font-size:13px;color:#64748b;margin-top:8px}
+@media(max-width:1000px){.cards{grid-template-columns:1fr 1fr}}@media(max-width:650px){.sidebar{position:static;width:auto}.main{margin-left:0;padding:16px}.cards{grid-template-columns:1fr}.ask{flex-direction:column}}
+</style>
+</head>
+<body>
+<aside class="sidebar"><div class="logo">CompanyFlow</div><nav class="nav">
+<a href="dashboard.html">Dashboard</a><a href="employees.html">Employees</a><a href="customers.html">Customers</a><a href="projects.html">Projects</a><a href="tasks.html">Tasks</a><a href="finance.html">Finance</a><a href="invoices.html">Invoices</a><a href="sales.html">Sales</a><a href="inventory.html">Inventory</a><a href="documents.html">Documents</a><a href="calendar.html">Calendar</a><a href="attendance.html">Attendance</a><a href="leave.html">Leave Management</a><a href="automation.html">Automation</a><a href="performance.html">Employee Performance</a><a class="active" href="ai.html">AI Assistant</a><a href="reports.html">Reports</a><a href="roles.html">Roles & Permissions</a><a href="notifications.html">Notifications</a><a href="settings.html">Settings</a><a href="index.html">Back to Website</a>
+</nav></aside>
+<main class="main">
+<div class="top"><div><h1>AI Assistant</h1><p>Ask about your company data and get instant business insights.</p></div><div class="company">Company: <strong id="companyName">Loading...</strong></div></div>
+<section class="cards">
+<div class="card"><small>Employees</small><strong id="employees">0</strong></div>
+<div class="card"><small>Customers</small><strong id="customers">0</strong></div>
+<div class="card"><small>Projects</small><strong id="projects">0</strong></div>
+<div class="card"><small>Pending Tasks</small><strong id="tasks">0</strong></div>
+</section>
+<section class="panel"><div class="chat">
+<h2>CompanyFlow Assistant</h2>
+<div id="messages" class="messages"><div class="msg bot">Hello! I can analyze your current CompanyFlow data. Try asking: “Give me a company summary” or “What needs attention?”</div></div>
+<div class="quick">
+<button onclick="quick('Give me a company summary')">Company Summary</button>
+<button onclick="quick('What needs attention?')">What Needs Attention?</button>
+<button onclick="quick('Show me financial insights')">Financial Insights</button>
+<button onclick="quick('How is my team doing?')">Team Overview</button>
+</div>
+<div class="ask"><input id="question" placeholder="Ask a business question..."><button id="send">Ask Assistant</button></div>
+<div class="status" id="status">Connected to your company data.</div>
+</div></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase.js"></script>
+<script>
+const client=()=>window.supabaseClient;let companyId=null;let data={employees:[],customers:[],projects:[],tasks:[],transactions:[],invoices:[],products:[]};
+const $=id=>document.getElementById(id);
+function add(text,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=text;$('messages').appendChild(d);$('messages').scrollTop=$('messages').scrollHeight}
+async function getRows(table,columns='*'){const r=await client().from(table).select(columns).eq('company_id',companyId);if(r.error)throw r.error;return r.data||[]}
+async function init(){
+ try{
+  const c=client();if(!c)throw Error('Supabase connection unavailable.');
+  const {data:{user},error:ue}=await c.auth.getUser();if(ue)throw ue;if(!user){location.href='signin.html';return}
+  const {data:p,error:pe}=await c.from('profiles').select('company_id').eq('id',user.id).single();if(pe)throw pe;
+  companyId=p.company_id;
+  const {data:co,error:ce}=await c.from('companies').select('name').eq('id',companyId).single();if(ce)throw ce;
+  $('companyName').textContent=co?.name||'Company';
+  const [employees,customers,projects,tasks,transactions,invoices,products]=await Promise.all([
+   getRows('employees','id,name,status'),getRows('customers','id,name,status'),getRows('projects','id,name,status'),getRows('tasks','id,title,status'),
+   getRows('transactions','id,amount,type,transaction_date'),getRows('invoices','id,amount,status,due_date'),getRows('products','id,name,stock_quantity,low_stock_alert')
+  ]);
+  data={employees,customers,projects,tasks,transactions,invoices,products};
+  $('employees').textContent=employees.length;$('customers').textContent=customers.length;$('projects').textContent=projects.length;
+  $('tasks').textContent=tasks.filter(x=>String(x.status||'').toLowerCase()!=='completed').length;
+ }catch(e){$('status').textContent='Error: '+e.message}
+}
+function answer(q){
+ const x=q.toLowerCase();
+ const pendingTasks=data.tasks.filter(t=>String(t.status||'').toLowerCase()!=='completed').length;
+ const activeProjects=data.projects.filter(p=>String(p.status||'').toLowerCase()!=='completed').length;
+ const low=data.products.filter(p=>Number(p.stock_quantity||0)<=Number(p.low_stock_alert||0)).length;
+ const unpaid=data.invoices.filter(i=>!['paid','cancelled'].includes(String(i.status||'').toLowerCase())).length;
+ const income=data.transactions.filter(t=>String(t.type||'').toLowerCase()==='income').reduce((a,t)=>a+Number(t.amount||0),0);
+ const expense=data.transactions.filter(t=>String(t.type||'').toLowerCase()==='expense').reduce((a,t)=>a+Number(t.amount||0),0);
+ if(x.includes('summary')||x.includes('overview')) return 'Company summary: '+data.employees.length+' employees, '+data.customers.length+' customers, '+data.projects.length+' projects, and '+pendingTasks+' pending tasks. There are '+activeProjects+' projects that are not completed.';
+ if(x.includes('attention')||x.includes('urgent')) return 'Areas to review: '+pendingTasks+' pending tasks, '+low+' low-stock products, and '+unpaid+' invoices that are not marked Paid or Cancelled. Check these items in their respective modules.';
+ if(x.includes('financial')||x.includes('finance')||x.includes('money')) return 'Financial insight: recorded income is $'+income.toFixed(2)+', recorded expenses are $'+expense.toFixed(2)+', giving a net of $'+(income-expense).toFixed(2)+'. This is based only on transactions currently stored in CompanyFlow.';
+ if(x.includes('team')||x.includes('employee')) return 'Team overview: '+data.employees.length+' employees are currently stored. Use Employee Performance for ratings and reviews, and Attendance for attendance records.';
+ if(x.includes('customer')) return 'Customer overview: '+data.customers.length+' customers are currently stored. You can review and manage them in Customers.';
+ if(x.includes('project')) return 'Project overview: '+data.projects.length+' projects are stored, with '+activeProjects+' not marked Completed.';
+ if(x.includes('task')) return 'Task overview: '+pendingTasks+' tasks are not marked Completed.';
+ if(x.includes('inventory')||x.includes('stock')) return 'Inventory insight: '+data.products.length+' products are stored and '+low+' are at or below their low-stock alert level.';
+ if(x.includes('invoice')) return 'Invoice insight: '+data.invoices.length+' invoices are stored and '+unpaid+' are not marked Paid or Cancelled.';
+ return 'I can currently answer questions about your employees, customers, projects, tasks, finances, invoices, and inventory. Try “Give me a company summary” or “What needs attention?”';
+}
+function ask(q){if(!q.trim())return;add(q,'user');setTimeout(()=>add(answer(q),'bot'),180)}
+$('send').onclick=()=>{const q=$('question').value; $('question').value=''; ask(q)}
+$('question').addEventListener('keydown',e=>{if(e.key==='Enter')$('send').click()});
+function quick(q){ask(q)}
+init();
+</script>
+</body>
+</html>
