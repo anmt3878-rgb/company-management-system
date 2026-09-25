@@ -1,292 +1,362 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - CompanyFlow</title>
 
-<title>CompanyFlow Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
 
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+    body {
+      background: #f4f7fb;
+      color: #172033;
+    }
 
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#f4f7fb;
-  color:#111827;
-}
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
 
-a{
-  text-decoration:none;
-}
+    .sidebar {
+      width: 250px;
+      background: #111827;
+      color: white;
+      padding: 22px 14px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto;
+    }
 
-.layout{
-  display:flex;
-  min-height:100vh;
-}
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      padding: 8px 12px 24px;
+    }
 
-.sidebar{
-  width:250px;
-  background:#111827;
-  color:white;
-  padding:22px 16px;
-  position:fixed;
-  left:0;
-  top:0;
-  bottom:0;
-  overflow-y:auto;
-}
+    .logo span {
+      color: #60a5fa;
+    }
 
-.logo{
-  font-size:24px;
-  font-weight:800;
-  padding:8px 12px 24px;
-}
+    .nav a {
+      display: block;
+      color: #cbd5e1;
+      text-decoration: none;
+      padding: 11px 13px;
+      margin: 3px 0;
+      border-radius: 8px;
+      font-size: 14px;
+    }
 
-.logo span{
-  color:#60a5fa;
-}
+    .nav a:hover,
+    .nav a.active {
+      background: #2563eb;
+      color: white;
+    }
 
-.nav{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-}
+    .main {
+      margin-left: 250px;
+      width: calc(100% - 250px);
+      padding: 30px;
+    }
 
-.nav a{
-  color:#d1d5db;
-  padding:11px 13px;
-  border-radius:9px;
-  font-size:14px;
-}
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
 
-.nav a:hover,
-.nav a.active{
-  background:#1f2937;
-  color:white;
-}
+    h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
 
-.main{
-  margin-left:250px;
-  width:calc(100% - 250px);
-  padding:28px;
-}
+    .subtitle {
+      color: #64748b;
+      font-size: 14px;
+    }
 
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
-  margin-bottom:28px;
-}
+    .company-badge {
+      background: white;
+      border: 1px solid #e2e8f0;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
 
-.topbar h1{
-  font-size:28px;
-}
+    .error-box {
+      display: none;
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
 
-.topbar p{
-  color:#6b7280;
-  margin-top:6px;
-}
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 25px;
+    }
 
-.company-badge{
-  background:white;
-  border:1px solid #e5e7eb;
-  padding:10px 15px;
-  border-radius:10px;
-  font-size:14px;
-}
+    .stat {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.04);
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-  gap:18px;
-  margin-bottom:25px;
-}
+    .stat-title {
+      color: #64748b;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
 
-.card{
-  background:white;
-  border:1px solid #e5e7eb;
-  border-radius:16px;
-  padding:20px;
-  box-shadow:0 5px 20px rgba(0,0,0,.04);
-}
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+    }
 
-.card-title{
-  color:#6b7280;
-  font-size:13px;
-  margin-bottom:10px;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
 
-.card-number{
-  font-size:28px;
-  font-weight:800;
-}
+    .card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.04);
+    }
 
-.section{
-  background:white;
-  border:1px solid #e5e7eb;
-  border-radius:16px;
-  padding:22px;
-  margin-bottom:22px;
-}
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
 
-.section-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  margin-bottom:18px;
-}
+    .financial {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
 
-.section-header h2{
-  font-size:19px;
-}
+    .financial-box {
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 10px;
+    }
 
-.btn{
-  display:inline-block;
-  background:#111827;
-  color:white;
-  padding:10px 15px;
-  border-radius:9px;
-  font-size:13px;
-  font-weight:600;
-}
+    .financial-box small {
+      color: #64748b;
+      display: block;
+      margin-bottom: 7px;
+    }
 
-.btn:hover{
-  background:#2563eb;
-}
+    .financial-box strong {
+      font-size: 20px;
+    }
 
-.list{
-  display:flex;
-  flex-direction:column;
-}
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-.list-item{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  padding:14px 0;
-  border-bottom:1px solid #e5e7eb;
-}
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 9px;
+    }
 
-.list-item:last-child{
-  border-bottom:none;
-}
+    .item-title {
+      font-weight: 700;
+      font-size: 14px;
+    }
 
-.muted{
-  color:#6b7280;
-  font-size:13px;
-}
+    .item-sub {
+      color: #64748b;
+      font-size: 12px;
+      margin-top: 4px;
+    }
 
-.status{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:20px;
-  background:#f3f4f6;
-  font-size:12px;
-}
+    .badge {
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
 
-.finance-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:15px;
-}
+    .blue {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
 
-.finance-box{
-  padding:18px;
-  border-radius:12px;
-  background:#f8fafc;
-}
+    .green {
+      background: #dcfce7;
+      color: #166534;
+    }
 
-.finance-label{
-  color:#6b7280;
-  font-size:13px;
-}
+    .yellow {
+      background: #fef3c7;
+      color: #92400e;
+    }
 
-.finance-number{
-  font-size:22px;
-  font-weight:700;
-  margin-top:6px;
-}
+    .red {
+      background: #fee2e2;
+      color: #991b1b;
+    }
 
-.quick-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:12px;
-}
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
 
-.quick{
-  padding:16px;
-  background:#f8fafc;
-  border:1px solid #e5e7eb;
-  border-radius:12px;
-  color:#111827;
-  font-weight:600;
-  font-size:14px;
-}
+    .quick-actions a {
+      text-decoration: none;
+      background: #f8fafc;
+      color: #172033;
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 13px;
+      border: 1px solid #e5e7eb;
+    }
 
-.quick:hover{
-  background:#eef2ff;
-}
+    .quick-actions a:hover {
+      background: #eff6ff;
+      border-color: #93c5fd;
+    }
 
-.error{
-  display:none;
-  background:#fee2e2;
-  color:#991b1b;
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:20px;
-}
+    .company-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
 
-.loading{
-  padding:30px;
-  text-align:center;
-  color:#6b7280;
-}
+    .info-box {
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 10px;
+    }
 
-@media(max-width:800px){
+    .info-box small {
+      color: #64748b;
+      display: block;
+      margin-bottom: 6px;
+    }
 
-  .sidebar{
-    width:100%;
-    position:relative;
-    min-height:auto;
-  }
+    .empty {
+      color: #64748b;
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+    }
 
-  .layout{
-    display:block;
-  }
+    .refresh {
+      border: none;
+      background: #2563eb;
+      color: white;
+      padding: 9px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
 
-  .main{
-    margin-left:0;
-    width:100%;
-    padding:18px;
-  }
+    .refresh:hover {
+      background: #1d4ed8;
+    }
 
-  .nav{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-  }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
 
-  .topbar{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-}
-</style>
+    @media (max-width: 1100px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 800px) {
+      .sidebar {
+        width: 100%;
+        position: relative;
+        min-height: auto;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 18px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .financial,
+      .company-info {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 550px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="layout">
-
-  <!-- SIDEBAR -->
 
   <aside class="sidebar">
 
@@ -296,3458 +366,968 @@ a{
 
     <nav class="nav">
 
-      <a href="dashboard.html" class="active">
-        Dashboard
-      </a>
-
-      <a href="employees.html">
-        Employees
-      </a>
-
-      <a href="customers.html">
-        Customers
-      </a>
-
-      <a href="projects.html">
-        Projects
-      </a>
-
-      <a href="tasks.html">
-        Tasks
-      </a>
-
-      <a href="finance.html">
-        Finance
-      </a>
-
-      <a href="inventory.html">
-        Inventory
-      </a>
-
-      <a href="documents.html">
-        Documents
-      </a>
-
-      <a href="calendar.html">
-        Calendar
-      </a>
-
-      <a href="reports.html">
-        Reports
-      </a>
-
-      <a href="roles.html">
-        Roles & Permissions
-      </a>
-
-      <a href="notifications.html">
-        Notifications
-      </a>
-
-      <a href="settings.html">
-        Settings
-      </a>
-
-      <a href="index.html">
-        Back to Website
-      </a>
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="employees.html">Employees</a>
+      <a href="customers.html">Customers</a>
+      <a href="projects.html">Projects</a>
+      <a href="tasks.html">Tasks</a>
+      <a href="finance.html">Finance</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="documents.html">Documents</a>
+      <a href="calendar.html">Calendar</a>
+      <a href="attendance.html">Attendance</a>
+      <a href="reports.html">Reports</a>
+      <a href="roles.html">Roles & Permissions</a>
+      <a href="notifications.html">Notifications</a>
+      <a href="settings.html">Settings</a>
+      <a href="index.html">Back to Website</a>
 
     </nav>
 
   </aside>
 
-
-  <!-- MAIN -->
-
   <main class="main">
-
-    <div id="errorBox" class="error"></div>
 
     <div class="topbar">
 
       <div>
-
-        <h1>
-          Dashboard
-        </h1>
-
-        <p>
-          Welcome back. Here's your company overview.
-        </p>
-
+        <h1>Dashboard</h1>
+        <div class="subtitle">
+          Manage your company from one place.
+        </div>
       </div>
 
-      <div
-        id="companyBadge"
-        class="company-badge"
-      >
-        Loading company...
+      <div class="company-badge">
+        Company:
+        <strong id="companyName">Loading...</strong>
+        &nbsp; | &nbsp;
+        Plan:
+        <strong id="companyPlan">Loading...</strong>
       </div>
 
     </div>
 
+    <div id="errorBox" class="error-box"></div>
 
     <!-- STATS -->
 
-    <div class="grid">
+    <section class="stats">
 
-      <div class="card">
-
-        <div class="card-title">
-          Employees
-        </div>
-
-        <div
-          id="employeesCount"
-          class="card-number"
-        >
-          0
-        </div>
-
+      <div class="stat">
+        <div class="stat-title">Employees</div>
+        <div class="stat-value" id="employeesCount">0</div>
       </div>
 
-
-      <div class="card">
-
-        <div class="card-title">
-          Customers
-        </div>
-
-        <div
-          id="customersCount"
-          class="card-number"
-        >
-          0
-        </div>
-
+      <div class="stat">
+        <div class="stat-title">Customers</div>
+        <div class="stat-value" id="customersCount">0</div>
       </div>
 
-
-      <div class="card">
-
-        <div class="card-title">
-          Projects
-        </div>
-
-        <div
-          id="projectsCount"
-          class="card-number"
-        >
-          0
-        </div>
-
+      <div class="stat">
+        <div class="stat-title">Projects</div>
+        <div class="stat-value" id="projectsCount">0</div>
       </div>
 
-
-      <div class="card">
-
-        <div class="card-title">
-          Tasks
-        </div>
-
-        <div
-          id="tasksCount"
-          class="card-number"
-        >
-          0
-        </div>
-
+      <div class="stat">
+        <div class="stat-title">Tasks</div>
+        <div class="stat-value" id="tasksCount">0</div>
       </div>
 
-
-      <div class="card">
-
-        <div class="card-title">
-          Inventory Products
-        </div>
-
-        <div
-          id="inventoryCount"
-          class="card-number"
-        >
-          0
-        </div>
-
+      <div class="stat">
+        <div class="stat-title">Products</div>
+        <div class="stat-value" id="productsCount">0</div>
       </div>
 
-
-      <div class="card">
-
-        <div class="card-title">
-          Documents
-        </div>
-
-        <div
-          id="documentsCount"
-          class="card-number"
-        >
-          0
-        </div>
-
+      <div class="stat">
+        <div class="stat-title">Documents</div>
+        <div class="stat-value" id="documentsCount">0</div>
       </div>
 
-
-      <div class="card">
-
-        <div class="card-title">
-          Unread Notifications
-        </div>
-
-        <div
-          id="notificationsCount"
-          class="card-number"
-        >
-          0
-        </div>
-
+      <div class="stat">
+        <div class="stat-title">Attendance Records</div>
+        <div class="stat-value" id="attendanceCount">0</div>
       </div>
 
-    </div>
+      <div class="stat">
+        <div class="stat-title">Unread Notifications</div>
+        <div class="stat-value" id="notificationsCount">0</div>
+      </div>
 
+    </section>
 
     <!-- QUICK ACTIONS -->
 
-    <section class="section">
+    <section class="card">
 
-      <div class="section-header">
-
-        <h2>
-          Quick Actions
-        </h2>
-
+      <div class="card-title">
+        Quick Actions
       </div>
 
-      <div class="quick-grid">
+      <div class="quick-actions">
 
-        <a
-          class="quick"
-          href="employees.html"
-        >
-          + Add Employee
+        <a href="employees.html">
+          Add Employee
         </a>
 
-        <a
-          class="quick"
-          href="customers.html"
-        >
-          + Add Customer
+        <a href="customers.html">
+          Add Customer
         </a>
 
-        <a
-          class="quick"
-          href="projects.html"
-        >
-          + Add Project
+        <a href="projects.html">
+          Add Project
         </a>
 
-        <a
-          class="quick"
-          href="tasks.html"
-        >
-          + Add Task
+        <a href="tasks.html">
+          Add Task
         </a>
 
-        <a
-          class="quick"
-          href="finance.html"
-        >
-          + Add Transaction
+        <a href="finance.html">
+          Add Transaction
         </a>
 
-        <a
-          class="quick"
-          href="inventory.html"
-        >
-          + Add Product
+        <a href="inventory.html">
+          Add Product
         </a>
 
-        <a
-          class="quick"
-          href="calendar.html"
-        >
-          + Add Meeting
+        <a href="documents.html">
+          Add Document
         </a>
 
-        <a
-          class="quick"
-          href="reports.html"
-        >
-          View Reports
+        <a href="attendance.html">
+          Add Attendance
         </a>
 
       </div>
 
     </section>
 
+    <div class="grid">
 
-    <!-- CALENDAR -->
+      <!-- FINANCE -->
 
-    <section class="section">
+      <section class="card">
 
-      <div class="section-header">
+        <div class="section-header">
 
-        <div>
+          <div class="card-title">
+            Financial Overview
+          </div>
 
-          <h2>
-            Calendar
-          </h2>
+          <button class="refresh" onclick="loadDashboard()">
+            Refresh
+          </button>
 
-          <div class="muted">
-            Company meetings and events
+        </div>
+
+        <div class="financial">
+
+          <div class="financial-box">
+            <small>Total Income</small>
+            <strong id="totalIncome">$0.00</strong>
+          </div>
+
+          <div class="financial-box">
+            <small>Total Expenses</small>
+            <strong id="totalExpenses">$0.00</strong>
+          </div>
+
+          <div class="financial-box">
+            <small>Net Balance</small>
+            <strong id="netBalance">$0.00</strong>
           </div>
 
         </div>
 
-        <a
-          class="btn"
-          href="calendar.html"
-        >
-          Open Calendar
-        </a>
+      </section>
 
-      </div>
+      <!-- COMPANY -->
 
+      <section class="card">
 
-      <div class="finance-grid">
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Total Meetings
-          </div>
-
-          <div
-            id="meetingsCount"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Scheduled
-          </div>
-
-          <div
-            id="scheduledMeetingsCount"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Next Meeting
-          </div>
-
-          <div
-            id="nextMeeting"
-            class="finance-number"
-            style="font-size:16px;"
-          >
-            No upcoming meetings
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div
-        id="meetingsList"
-        class="list"
-        style="margin-top:18px;"
-      ></div>
-
-    </section>
-
-
-    <!-- FINANCE -->
-
-    <section class="section">
-
-      <div class="section-header">
-
-        <h2>
-          Financial Overview
-        </h2>
-
-        <a
-          class="btn"
-          href="finance.html"
-        >
-          Open Finance
-        </a>
-
-      </div>
-
-
-      <div class="finance-grid">
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Total Income
-          </div>
-
-          <div
-            id="totalIncome"
-            class="finance-number"
-          >
-            $0.00
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Total Expenses
-          </div>
-
-          <div
-            id="totalExpenses"
-            class="finance-number"
-          >
-            $0.00
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Net Balance
-          </div>
-
-          <div
-            id="netBalance"
-            class="finance-number"
-          >
-            $0.00
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Transactions
-          </div>
-
-          <div
-            id="transactionsCount"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- PROJECTS / TASKS -->
-
-    <section class="section">
-
-      <div class="section-header">
-
-        <h2>
-          Work Overview
-        </h2>
-
-      </div>
-
-
-      <div class="finance-grid">
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Active Projects
-          </div>
-
-          <div
-            id="activeProjects"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Completed Projects
-          </div>
-
-          <div
-            id="completedProjects"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Completed Tasks
-          </div>
-
-          <div
-            id="completedTasks"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Pending Tasks
-          </div>
-
-          <div
-            id="pendingTasks"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- INVENTORY -->
-
-    <section class="section">
-
-      <div class="section-header">
-
-        <h2>
-          Inventory Overview
-        </h2>
-
-        <a
-          class="btn"
-          href="inventory.html"
-        >
-          Open Inventory
-        </a>
-
-      </div>
-
-
-      <div class="finance-grid">
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Total Stock
-          </div>
-
-          <div
-            id="totalStock"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Low Stock
-          </div>
-
-          <div
-            id="lowStock"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Inventory Value
-          </div>
-
-          <div
-            id="inventoryValue"
-            class="finance-number"
-          >
-            $0.00
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- RECENT TASKS -->
-
-    <section class="section">
-
-      <div class="section-header">
-
-        <h2>
-          Recent Tasks
-        </h2>
-
-        <a
-          class="btn"
-          href="tasks.html"
-        >
-          Open Tasks
-        </a>
-
-      </div>
-
-
-      <div
-        id="recentTasks"
-        class="list"
-      >
-
-        <div class="loading">
-          Loading tasks...
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- COMPANY -->
-
-    <section class="section">
-
-      <div class="section-header">
-
-        <h2>
+        <div class="card-title">
           Company Overview
-        </h2>
+        </div>
 
-      </div>
+        <div class="company-info">
 
-
-      <div class="finance-grid">
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Company
+          <div class="info-box">
+            <small>Company</small>
+            <strong id="overviewCompany">
+              —
+            </strong>
           </div>
 
-          <div
-            id="companyName"
-            class="finance-number"
-            style="font-size:17px;"
-          >
-            -
+          <div class="info-box">
+            <small>Plan</small>
+            <strong id="overviewPlan">
+              —
+            </strong>
+          </div>
+
+          <div class="info-box">
+            <small>Email</small>
+            <strong id="overviewEmail">
+              —
+            </strong>
           </div>
 
         </div>
 
+      </section>
 
-        <div class="finance-box">
+      <!-- RECENT TASKS -->
 
-          <div class="finance-label">
-            Plan
-          </div>
+      <section class="card">
 
-          <div
-            id="companyPlan"
-            class="finance-number"
-            style="font-size:17px;"
-          >
-            -
+        <div class="card-title">
+          Recent Tasks
+        </div>
+
+        <div class="list" id="recentTasks">
+
+          <div class="empty">
+            Loading...
           </div>
 
         </div>
 
+      </section>
 
-        <div class="finance-box">
+      <!-- RECENT MEETINGS -->
 
-          <div class="finance-label">
-            Account Email
-          </div>
+      <section class="card">
 
-          <div
-            id="companyEmail"
-            class="finance-number"
-            style="font-size:15px;word-break:break-word;"
-          >
-            -
+        <div class="card-title">
+          Upcoming Meetings
+        </div>
+
+        <div class="list" id="recentMeetings">
+
+          <div class="empty">
+            Loading...
           </div>
 
         </div>
 
-      </div>
+      </section>
 
-    </section>
+      <!-- ATTENDANCE -->
 
+      <section class="card">
+
+        <div class="card-title">
+          Recent Attendance
+        </div>
+
+        <div class="list" id="recentAttendance">
+
+          <div class="empty">
+            Loading...
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- INVENTORY -->
+
+      <section class="card">
+
+        <div class="card-title">
+          Inventory Overview
+        </div>
+
+        <div class="company-info">
+
+          <div class="info-box">
+            <small>Total Products</small>
+            <strong id="inventoryProducts">
+              0
+            </strong>
+          </div>
+
+          <div class="info-box">
+            <small>Total Stock</small>
+            <strong id="inventoryStock">
+              0
+            </strong>
+          </div>
+
+          <div class="info-box">
+            <small>Low Stock</small>
+            <strong id="inventoryLow">
+              0
+            </strong>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
 
   </main>
 
 </div>
 
-
 <script>
 
-async function loadDashboard(){
+  let currentUser = null;
+  let currentCompanyId = null;
 
-  try{
+  function money(value) {
+
+    const number = Number(value || 0);
+
+    return number.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD"
+    });
+
+  }
+
+  function escapeHtml(value) {
+
+    if (
+      value === null ||
+      value === undefined
+    ) {
+      return "";
+    }
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+  function showError(message) {
+
+    const box =
+      document.getElementById("errorBox");
+
+    box.textContent = message;
+    box.style.display = "block";
+
+  }
+
+  async function getCompany() {
 
     const {
-      data: {
-        user
-      },
-      error: userError
-    } =
-      await supabaseClient.auth.getUser();
+      data: profile,
+      error: profileError
+    } = await supabase
+      .from("profiles")
+      .select("company_id")
+      .eq("id", currentUser.id)
+      .single();
 
-
-    if(userError){
-      throw userError;
-    }
-
-
-    if(!user){
-
-      window.location.href =
-        "signin.html";
-
-      return;
-    }
-
-
-    const currentUser =
-      user;
-
-
-    /* PROFILE */
-
-    const profileResult =
-      await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id", currentUser.id)
-        .single();
-
-
-    if(profileResult.error){
-      throw profileResult.error;
-    }
-
-
-    const profile =
-      profileResult.data;
-
-
-    const currentCompanyId =
-      profile.company_id;
-
-
-    if(!currentCompanyId){
+    if (
+      profileError ||
+      !profile ||
+      !profile.company_id
+    ) {
 
       throw new Error(
-        "Your account is not connected to a company."
+        "Could not find your company profile."
       );
 
     }
 
+    currentCompanyId =
+      profile.company_id;
 
-    /* COMPANY */
+    const {
+      data: company,
+      error: companyError
+    } = await supabase
+      .from("companies")
+      .select("id, name, email, plan")
+      .eq("id", currentCompanyId)
+      .single();
 
-    const companyResult =
-      await supabaseClient
-        .from("companies")
-        .select("*")
-        .eq("id", currentCompanyId)
-        .single();
-
-
-    if(companyResult.error){
-      throw companyResult.error;
+    if (companyError) {
+      throw companyError;
     }
-
-
-    const company =
-      companyResult.data;
-
 
     document.getElementById(
       "companyName"
     ).textContent =
-      company.company_name ||
-      company.name ||
-      "Company";
-
+      company.name || "Company";
 
     document.getElementById(
       "companyPlan"
     ).textContent =
-      company.plan ||
-      "Free";
-
+      company.plan || "Free";
 
     document.getElementById(
-      "companyEmail"
+      "overviewCompany"
     ).textContent =
-      currentUser.email ||
-      "-";
-
+      company.name || "—";
 
     document.getElementById(
-      "companyBadge"
+      "overviewPlan"
     ).textContent =
-      company.company_name ||
-      company.name ||
-      "Company";
+      company.plan || "Free";
 
+    document.getElementById(
+      "overviewEmail"
+    ).textContent =
+      company.email || currentUser.email || "—";
 
-    /* EMPLOYEES */
+  }
 
-    const employeesResult =
-      await supabaseClient
-        .from("employees")
-        .select("id")
-        .eq(
-          "company_id",
-          currentCompanyId
-        );
+  async function countTable(tableName) {
 
+    const {
+      count,
+      error
+    } = await supabase
+      .from(tableName)
+      .select("*", {
+        count: "exact",
+        head: true
+      })
+      .eq(
+        "company_id",
+        currentCompanyId
+      );
 
-    if(employeesResult.error){
-      throw employeesResult.error;
+    if (error) {
+      throw error;
     }
 
+    return count || 0;
+
+  }
+
+  async function loadStats() {
 
     const employees =
-      employeesResult.data || [];
+      await countTable("employees");
 
+    const customers =
+      await countTable("customers");
+
+    const projects =
+      await countTable("projects");
+
+    const tasks =
+      await countTable("tasks");
+
+    const products =
+      await countTable("products");
+
+    const documents =
+      await countTable("documents");
+
+    const attendance =
+      await countTable("attendance");
+
+    const {
+      count: unread,
+      error: notificationError
+    } = await supabase
+      .from("notifications")
+      .select("*", {
+        count: "exact",
+        head: true
+      })
+      .eq(
+        "company_id",
+        currentCompanyId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .eq(
+        "is_read",
+        false
+      );
+
+    if (notificationError) {
+      throw notificationError;
+    }
 
     document.getElementById(
       "employeesCount"
-    ).textContent =
-      employees.length;
-
-
-    /* CUSTOMERS */
-
-    const customersResult =
-      await supabaseClient
-        .from("customers")
-        .select("id")
-        .eq(
-          "company_id",
-          currentCompanyId
-        );
-
-
-    if(customersResult.error){
-      throw customersResult.error;
-    }
-
-
-    const customers =
-      customersResult.data || [];
-
+    ).textContent = employees;
 
     document.getElementById(
       "customersCount"
-    ).textContent =
-      customers.length;
-
-
-    /* PROJECTS */
-
-    const projectsResult =
-      await supabaseClient
-        .from("projects")
-        .select(
-          "id,name,status"
-        )
-        .eq(
-          "company_id",
-          currentCompanyId
-        );
-
-
-    if(projectsResult.error){
-      throw projectsResult.error;
-    }
-
-
-    const projects =
-      projectsResult.data || [];
-
+    ).textContent = customers;
 
     document.getElementById(
       "projectsCount"
-    ).textContent =
-      projects.length;
-
-
-    document.getElementById(
-      "activeProjects"
-    ).textContent =
-      projects.filter(
-        p =>
-          String(
-            p.status || ""
-          ).toLowerCase() ===
-          "active"
-      ).length;
-
-
-    document.getElementById(
-      "completedProjects"
-    ).textContent =
-      projects.filter(
-        p =>
-          String(
-            p.status || ""
-          ).toLowerCase() ===
-          "completed"
-      ).length;
-
-
-    /* TASKS */
-
-    const tasksResult =
-      await supabaseClient
-        .from("tasks")
-        .select(
-          "id,title,status,created_at"
-        )
-        .eq(
-          "company_id",
-          currentCompanyId
-        )
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        );
-
-
-    if(tasksResult.error){
-      throw tasksResult.error;
-    }
-
-
-    const tasks =
-      tasksResult.data || [];
-
+    ).textContent = projects;
 
     document.getElementById(
       "tasksCount"
-    ).textContent =
-      tasks.length;
-
-
-    const completedTasks =
-      tasks.filter(
-        t =>
-          String(
-            t.status || ""
-          ).toLowerCase() ===
-          "completed"
-      ).length;
-
+    ).textContent = tasks;
 
     document.getElementById(
-      "completedTasks"
-    ).textContent =
-      completedTasks;
-
+      "productsCount"
+    ).textContent = products;
 
     document.getElementById(
-      "pendingTasks"
-    ).textContent =
-      tasks.length -
-      completedTasks;
+      "documentsCount"
+    ).textContent = documents;
 
+    document.getElementById(
+      "attendanceCount"
+    ).textContent = attendance;
 
-    const recentTasks =
-      document.getElementById(
-        "recentTasks"
+    document.getElementById(
+      "notificationsCount"
+    ).textContent = unread || 0;
+
+  }
+
+  async function loadFinance() {
+
+    const {
+      data,
+      error
+    } = await supabase
+      .from("transactions")
+      .select(
+        "amount, type"
+      )
+      .eq(
+        "company_id",
+        currentCompanyId
       );
 
-
-    if(tasks.length === 0){
-
-      recentTasks.innerHTML = `
-        <div class="loading">
-          No tasks yet.
-        </div>
-      `;
-
-    }else{
-
-      recentTasks.innerHTML =
-        tasks
-          .slice(0,5)
-          .map(task => `
-
-            <div class="list-item">
-
-              <div>
-
-                <strong>
-                  ${escapeHtml(
-                    task.title ||
-                    "Untitled Task"
-                  )}
-                </strong>
-
-                <div class="muted">
-                  Task
-                </div>
-
-              </div>
-
-              <span class="status">
-                ${escapeHtml(
-                  task.status ||
-                  "Pending"
-                )}
-              </span>
-
-            </div>
-
-          `)
-          .join("");
-
+    if (error) {
+      throw error;
     }
 
+    let income = 0;
+    let expenses = 0;
 
-    /* FINANCE */
+    (data || []).forEach(item => {
 
-    const financeResult =
-      await supabaseClient
-        .from("finance")
-        .select(
-          "id,amount,type"
-        )
-        .eq(
-          "company_id",
-          currentCompanyId
-        );
+      const amount =
+        Number(item.amount || 0);
 
+      const type =
+        String(item.type || "")
+          .toLowerCase();
 
-    if(financeResult.error){
-      throw financeResult.error;
-    }
+      if (
+        type === "income" ||
+        type === "revenue" ||
+        type === "credit"
+      ) {
 
+        income += amount;
 
-    const transactions =
-      financeResult.data || [];
+      } else if (
+        type === "expense" ||
+        type === "expenses" ||
+        type === "debit"
+      ) {
 
-
-    let totalIncome = 0;
-    let totalExpenses = 0;
-
-
-    transactions.forEach(
-      transaction => {
-
-        const amount =
-          Number(
-            transaction.amount || 0
-          );
-
-
-        const type =
-          String(
-            transaction.type || ""
-          ).toLowerCase();
-
-
-        if(
-          type === "income" ||
-          type === "revenue"
-        ){
-
-          totalIncome += amount;
-
-        }else{
-
-          totalExpenses += amount;
-
-        }
+        expenses += amount;
 
       }
-    );
 
+    });
+
+    const balance =
+      income - expenses;
 
     document.getElementById(
       "totalIncome"
     ).textContent =
-      money(totalIncome);
-
+      money(income);
 
     document.getElementById(
       "totalExpenses"
     ).textContent =
-      money(totalExpenses);
-
+      money(expenses);
 
     document.getElementById(
       "netBalance"
     ).textContent =
-      money(
-        totalIncome -
-        totalExpenses
-      );
+      money(balance);
 
+  }
 
-    document.getElementById(
-      "transactionsCount"
-    ).textContent =
-      transactions.length;
+  async function loadTasks() {
 
+    const {
+      data,
+      error
+    } = await supabase
+      .from("tasks")
+      .select("*")
+      .eq(
+        "company_id",
+        currentCompanyId
+      )
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      )
+      .limit(5);
 
-    /* INVENTORY */
-
-    const inventoryResult =
-      await supabaseClient
-        .from("inventory")
-        .select(
-          "id,name,stock_quantity,low_stock_alert,buy_price"
-        )
-        .eq(
-          "company_id",
-          currentCompanyId
-        );
-
-
-    if(inventoryResult.error){
-      throw inventoryResult.error;
+    if (error) {
+      throw error;
     }
 
+    const container =
+      document.getElementById(
+        "recentTasks"
+      );
 
-    const products =
-      inventoryResult.data || [];
+    if (!data || !data.length) {
 
+      container.innerHTML =
+        '<div class="empty">No tasks yet.</div>';
 
-    document.getElementById(
-      "inventoryCount"
-    ).textContent =
-      products.length;
+      return;
 
+    }
+
+    container.innerHTML =
+      data.map(task => {
+
+        const title =
+          task.title ||
+          task.name ||
+          task.task_name ||
+          "Task";
+
+        const status =
+          task.status ||
+          "Pending";
+
+        return `
+          <div class="list-item">
+
+            <div>
+              <div class="item-title">
+                ${escapeHtml(title)}
+              </div>
+
+              <div class="item-sub">
+                ${escapeHtml(
+                  task.description || ""
+                )}
+              </div>
+            </div>
+
+            <span class="badge blue">
+              ${escapeHtml(status)}
+            </span>
+
+          </div>
+        `;
+
+      }).join("");
+
+  }
+
+  async function loadMeetings() {
+
+    const {
+      data,
+      error
+    } = await supabase
+      .from("meetings")
+      .select("*")
+      .eq(
+        "company_id",
+        currentCompanyId
+      )
+      .order(
+        "meeting_date",
+        {
+          ascending: true
+        }
+      )
+      .limit(5);
+
+    if (error) {
+      throw error;
+    }
+
+    const container =
+      document.getElementById(
+        "recentMeetings"
+      );
+
+    if (!data || !data.length) {
+
+      container.innerHTML =
+        '<div class="empty">No meetings yet.</div>';
+
+      return;
+
+    }
+
+    container.innerHTML =
+      data.map(meeting => {
+
+        return `
+          <div class="list-item">
+
+            <div>
+              <div class="item-title">
+                ${escapeHtml(
+                  meeting.title || "Meeting"
+                )}
+              </div>
+
+              <div class="item-sub">
+                ${escapeHtml(
+                  meeting.meeting_date || "No date"
+                )}
+                ${
+                  meeting.meeting_time
+                    ? " • " +
+                      escapeHtml(
+                        meeting.meeting_time
+                          .substring(0,5)
+                      )
+                    : ""
+                }
+              </div>
+            </div>
+
+            <span class="badge green">
+              ${escapeHtml(
+                meeting.status || "Scheduled"
+              )}
+            </span>
+
+          </div>
+        `;
+
+      }).join("");
+
+  }
+
+  async function loadAttendance() {
+
+    const {
+      data,
+      error
+    } = await supabase
+      .from("attendance")
+      .select("*")
+      .eq(
+        "company_id",
+        currentCompanyId
+      )
+      .order(
+        "attendance_date",
+        {
+          ascending: false
+        }
+      )
+      .limit(5);
+
+    if (error) {
+      throw error;
+    }
+
+    const container =
+      document.getElementById(
+        "recentAttendance"
+      );
+
+    if (!data || !data.length) {
+
+      container.innerHTML =
+        '<div class="empty">No attendance records yet.</div>';
+
+      return;
+
+    }
+
+    container.innerHTML =
+      data.map(record => {
+
+        let statusClass = "blue";
+
+        if (
+          record.status === "Present"
+        ) {
+          statusClass = "green";
+        }
+
+        if (
+          record.status === "Absent"
+        ) {
+          statusClass = "red";
+        }
+
+        if (
+          record.status === "Late"
+        ) {
+          statusClass = "yellow";
+        }
+
+        return `
+          <div class="list-item">
+
+            <div>
+              <div class="item-title">
+                Employee
+              </div>
+
+              <div class="item-sub">
+                ${escapeHtml(
+                  record.attendance_date || ""
+                )}
+              </div>
+            </div>
+
+            <span class="badge ${statusClass}">
+              ${escapeHtml(
+                record.status || "Present"
+              )}
+            </span>
+
+          </div>
+        `;
+
+      }).join("");
+
+  }
+
+  async function loadInventory() {
+
+    const {
+      data,
+      error
+    } = await supabase
+      .from("products")
+      .select(
+        "stock_quantity, low_stock_alert"
+      )
+      .eq(
+        "company_id",
+        currentCompanyId
+      );
+
+    if (error) {
+      throw error;
+    }
 
     let totalStock = 0;
     let lowStock = 0;
-    let inventoryValue = 0;
 
+    (data || []).forEach(product => {
 
-    products.forEach(
-      product => {
+      const stock =
+        Number(
+          product.stock_quantity || 0
+        );
 
-        const stock =
-          Number(
-            product.stock_quantity || 0
-          );
+      const alert =
+        Number(
+          product.low_stock_alert || 0
+        );
 
+      totalStock += stock;
 
-        const alert =
-          Number(
-            product.low_stock_alert || 0
-          );
-
-
-        const buyPrice =
-          Number(
-            product.buy_price || 0
-          );
-
-
-        totalStock += stock;
-
-        inventoryValue +=
-          stock * buyPrice;
-
-
-        if(stock <= alert){
-          lowStock++;
-        }
-
+      if (
+        stock <= alert
+      ) {
+        lowStock++;
       }
-    );
 
+    });
 
     document.getElementById(
-      "totalStock"
+      "inventoryProducts"
+    ).textContent =
+      data ? data.length : 0;
+
+    document.getElementById(
+      "inventoryStock"
     ).textContent =
       totalStock;
 
-
     document.getElementById(
-      "lowStock"
+      "inventoryLow"
     ).textContent =
       lowStock;
 
+  }
 
-    document.getElementById(
-      "inventoryValue"
-    ).textContent =
-      money(inventoryValue);
-
-
-    /* DOCUMENTS */
-
-    const documentsResult =
-      await supabaseClient
-        .from("documents")
-        .select("id")
-        .eq(
-          "company_id",
-          currentCompanyId
-        );
-
-
-    if(documentsResult.error){
-      throw documentsResult.error;
-    }
-
-
-    const documents =
-      documentsResult.data || [];
-
-
-    document.getElementById(
-      "documentsCount"
-    ).textContent =
-      documents.length;
-
-
-    /* NOTIFICATIONS */
-
-    const notificationsResult =
-      await supabaseClient
-        .from("notifications")
-        .select(
-          "id,is_read"
-        )
-        .eq(
-          "company_id",
-          currentCompanyId
-        )
-        .eq(
-          "user_id",
-          currentUser.id
-        );
-
-
-    if(notificationsResult.error){
-      throw notificationsResult.error;
-    }
-
-
-    const notifications =
-      notificationsResult.data || [];
-
-
-    document.getElementById(
-      "notificationsCount"
-    ).textContent =
-      notifications.filter(
-        n =>
-          n.is_read === false
-      ).length;
-
-
-    /* CALENDAR */
-
-    const meetingsResult =
-      await supabaseClient
-        .from("meetings")
-        .select(`
-          id,
-          title,
-          meeting_date,
-          meeting_time,
-          location,
-          status
-        `)
-        .eq(
-          "company_id",
-          currentCompanyId
-        )
-        .order(
-          "meeting_date",
-          {
-            ascending:true
-          }
-        )
-        .order(
-          "meeting_time",
-          {
-            ascending:true
-          }
-        );
-
-
-    if(meetingsResult.error){
-      throw meetingsResult.error;
-    }
-
-
-    const meetings =
-      meetingsResult.data || [];
-
-
-    document.getElementById(
-      "meetingsCount"
-    ).textContent =
-      meetings.length;
-
-
-    const scheduledMeetings =
-      meetings.filter(
-        meeting =>
-          String(
-            meeting.status ||
-            ""
-          ).toLowerCase() ===
-          "scheduled"
-      ).length;
-
-
-    document.getElementById(
-      "scheduledMeetingsCount"
-    ).textContent =
-      scheduledMeetings;
-
-
-    const now =
-      new Date();
-
-
-    const upcomingMeetings =
-      meetings.filter(
-        meeting => {
-
-          if(
-            !meeting.meeting_date
-          ){
-            return false;
-          }
-
-
-          const dateTime =
-            new Date(
-              `${meeting.meeting_date}T${
-                meeting.meeting_time ||
-                "00:00"
-              }`
-            );
-
-
-          return dateTime >= now;
-
-        }
-      );
-
-
-    const nextMeeting =
-      upcomingMeetings.length
-        ? upcomingMeetings[0]
-        : null;
-
-
-    if(nextMeeting){
-
-      document.getElementById(
-        "nextMeeting"
-      ).textContent =
-        `${nextMeeting.title || "Meeting"} — ${nextMeeting.meeting_date || ""}${nextMeeting.meeting_time ? " • " + nextMeeting.meeting_time : ""}`;
-
-    }else{
-
-      document.getElementById(
-        "nextMeeting"
-      ).textContent =
-        "No upcoming meetings";
-
-    }
-
-
-    const meetingsList =
-      document.getElementById(
-        "meetingsList"
-      );
-
-
-    if(meetings.length === 0){
-
-      meetingsList.innerHTML = `
-        <div class="loading">
-          No meetings yet.
-          <a
-            href="calendar.html"
-            style="color:#2563eb;font-weight:600;"
-          >
-            Add your first meeting
-          </a>
-        </div>
-      `;
-
-    }else{
-
-      meetingsList.innerHTML =
-        meetings
-          .slice(0,5)
-          .map(
-            meeting => `
-
-              <div class="list-item">
-
-                <div>
-
-                  <strong>
-                    ${escapeHtml(
-                      meeting.title ||
-                      "Untitled Meeting"
-                    )}
-                  </strong>
-
-                  <div class="muted">
-
-                    ${escapeHtml(
-                      meeting.meeting_date ||
-                      "No date"
-                    )}
-
-                    ${
-                      meeting.meeting_time
-                        ? " • " +
-                          escapeHtml(
-                            meeting.meeting_time
-                          )
-                        : ""
-                    }
-
-                    ${
-                      meeting.location
-                        ? " • " +
-                          escapeHtml(
-                            meeting.location
-                          )
-                        : ""
-                    }
-
-                  </div>
-
-                </div>
-
-
-                <span class="status">
-                  ${escapeHtml(
-                    meeting.status ||
-                    "Scheduled"
-                  )}
-                </span>
-
-              </div>
-
-            `
-          )
-          .join("");
-
-    }
-
-
-  }catch(error){
-
-    console.error(error);
-
+  async function loadDashboard() {
 
     const errorBox =
       document.getElementById(
         "errorBox"
       );
 
+    errorBox.style.display = "none";
 
-    errorBox.style.display =
-      "block";
+    try {
 
+      const {
+        data: {
+          user
+        },
+        error: authError
+      } = await supabase.auth.getUser();
 
-    errorBox.textContent =
-      "Dashboard error: " +
-      (
-        error.message ||
-        "Unable to load dashboard."
-      );
+      if (
+        authError ||
+        !user
+      ) {
 
-  }
+        window.location.href =
+          "signin.html";
 
-}
-
-
-/* MONEY */
-
-function money(value){
-
-  return new Intl.NumberFormat(
-    "en-US",
-    {
-      style:"currency",
-      currency:"USD"
-    }
-  ).format(
-    Number(value || 0)
-  );
-
-}
-
-
-/* SECURITY */
-
-function escapeHtml(value){
-
-  return String(value)
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-
-/* START */<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>CompanyFlow Dashboard</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#f4f7fb;
-  color:#111827;
-}
-
-a{
-  text-decoration:none;
-}
-
-.layout{
-  display:flex;
-  min-height:100vh;
-}
-
-.sidebar{
-  width:250px;
-  background:#111827;
-  color:white;
-  padding:22px 16px;
-  position:fixed;
-  left:0;
-  top:0;
-  bottom:0;
-  overflow-y:auto;
-}
-
-.logo{
-  font-size:24px;
-  font-weight:800;
-  padding:8px 12px 24px;
-}
-
-.logo span{
-  color:#60a5fa;
-}
-
-.nav{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-}
-
-.nav a{
-  color:#d1d5db;
-  padding:11px 13px;
-  border-radius:9px;
-  font-size:14px;
-}
-
-.nav a:hover,
-.nav a.active{
-  background:#1f2937;
-  color:white;
-}
-
-.main{
-  margin-left:250px;
-  width:calc(100% - 250px);
-  padding:28px;
-}
-
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
-  margin-bottom:28px;
-}
-
-.topbar h1{
-  font-size:28px;
-}
-
-.topbar p{
-  color:#6b7280;
-  margin-top:6px;
-}
-
-.company-badge{
-  background:white;
-  border:1px solid #e5e7eb;
-  padding:10px 15px;
-  border-radius:10px;
-  font-size:14px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-  gap:18px;
-  margin-bottom:25px;
-}
-
-.card{
-  background:white;
-  border:1px solid #e5e7eb;
-  border-radius:16px;
-  padding:20px;
-  box-shadow:0 5px 20px rgba(0,0,0,.04);
-}
-
-.card-title{
-  color:#6b7280;
-  font-size:13px;
-  margin-bottom:10px;
-}
-
-.card-number{
-  font-size:28px;
-  font-weight:800;
-}
-
-.section{
-  background:white;
-  border:1px solid #e5e7eb;
-  border-radius:16px;
-  padding:22px;
-  margin-bottom:22px;
-}
-
-.section-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  margin-bottom:18px;
-}
-
-.section-header h2{
-  font-size:19px;
-}
-
-.btn{
-  display:inline-block;
-  background:#111827;
-  color:white;
-  padding:10px 15px;
-  border-radius:9px;
-  font-size:13px;
-  font-weight:600;
-}
-
-.btn:hover{
-  background:#2563eb;
-}
-
-.list{
-  display:flex;
-  flex-direction:column;
-}
-
-.list-item{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  padding:14px 0;
-  border-bottom:1px solid #e5e7eb;
-}
-
-.list-item:last-child{
-  border-bottom:none;
-}
-
-.muted{
-  color:#6b7280;
-  font-size:13px;
-}
-
-.status{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:20px;
-  background:#f3f4f6;
-  font-size:12px;
-}
-
-.finance-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:15px;
-}
-
-.finance-box{
-  padding:18px;
-  border-radius:12px;
-  background:#f8fafc;
-}
-
-.finance-label{
-  color:#6b7280;
-  font-size:13px;
-}
-
-.finance-number{
-  font-size:22px;
-  font-weight:700;
-  margin-top:6px;
-}
-
-.quick-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:12px;
-}
-
-.quick{
-  padding:16px;
-  background:#f8fafc;
-  border:1px solid #e5e7eb;
-  border-radius:12px;
-  color:#111827;
-  font-weight:600;
-  font-size:14px;
-}
-
-.quick:hover{
-  background:#eef2ff;
-}
-
-.error{
-  display:none;
-  background:#fee2e2;
-  color:#991b1b;
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:20px;
-}
-
-.loading{
-  padding:30px;
-  text-align:center;
-  color:#6b7280;
-}
-
-@media(max-width:800px){
-
-  .sidebar{
-    width:100%;
-    position:relative;
-    min-height:auto;
-  }
-
-  .layout{
-    display:block;
-  }
-
-  .main{
-    margin-left:0;
-    width:100%;
-    padding:18px;
-  }
-
-  .nav{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .topbar{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div class="layout">
-
-  <!-- SIDEBAR -->
-
-  <aside class="sidebar">
-
-    <div class="logo">
-      Company<span>Flow</span>
-    </div>
-
-    <nav class="nav">
-
-      <a href="dashboard.html" class="active">
-        Dashboard
-      </a>
-
-      <a href="employees.html">
-        Employees
-      </a>
-
-      <a href="customers.html">
-        Customers
-      </a>
-
-      <a href="projects.html">
-        Projects
-      </a>
-
-      <a href="tasks.html">
-        Tasks
-      </a>
-
-      <a href="finance.html">
-        Finance
-      </a>
-
-      <a href="inventory.html">
-        Inventory
-      </a>
-
-      <a href="documents.html">
-        Documents
-      </a>
-
-      <a href="calendar.html">
-        Calendar
-      </a>
-
-      <a href="reports.html">
-        Reports
-      </a>
-
-      <a href="roles.html">
-        Roles & Permissions
-      </a>
-
-      <a href="notifications.html">
-        Notifications
-      </a>
-
-      <a href="settings.html">
-        Settings
-      </a>
-
-      <a href="index.html">
-        Back to Website
-      </a>
-
-    </nav>
-
-  </aside>
-
-
-  <!-- MAIN -->
-
-  <main class="main">
-
-    <div id="errorBox" class="error"></div>
-
-    <div class="topbar">
-
-      <div>
-
-        <h1>
-          Dashboard
-        </h1>
-
-        <p>
-          Welcome back. Here's your company overview.
-        </p>
-
-      </div>
-
-      <div
-        id="companyBadge"
-        class="company-badge"
-      >
-        Loading company...
-      </div>
-
-    </div>
-
-
-    <!-- STATS -->
-
-    <div class="grid">
-
-      <div class="card">
-
-        <div class="card-title">
-          Employees
-        </div>
-
-        <div
-          id="employeesCount"
-          class="card-number"
-        >
-          0
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Customers
-        </div>
-
-        <div
-          id="customersCount"
-          class="card-number"
-        >
-          0
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Projects
-        </div>
-
-        <div
-          id="projectsCount"
-          class="card-number"
-        >
-          0
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Tasks
-        </div>
-
-        <div
-          id="tasksCount"
-          class="card-number"
-        >
-          0
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Inventory Products
-        </div>
-
-        <div
-          id="inventoryCount"
-          class="card-number"
-        >
-          0
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Documents
-        </div>
-
-        <div
-          id="documentsCount"
-          class="card-number"
-        >
-          0
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Unread Notifications
-        </div>
-
-        <div
-          id="notificationsCount"
-          class="card-number"
-        >
-          0
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- QUICK ACTIONS -->
-
-    <section class="section">
-
-      <div class="section-header">
-
-        <h2>
-          Quick Actions
-        </h2>
-
-      </div>
-
-      <div class="quick-grid">
-
-        <a
-          class="quick"
-          href="employees.html"
-        >
-          + Add Employee
-        </a>
-
-        <a
-          class="quick"
-          href="customers.html"
-        >
-          + Add Customer
-        </a>
-
-        <a
-          class="quick"
-          href="projects.html"
-        >
-          + Add Project
-        </a>
-
-        <a
-          class="quick"
-          href="tasks.html"
-        >
-          + Add Task
-        </a>
-
-        <a
-          class="quick"
-          href="finance.html"
-        >
-          + Add Transaction
-        </a>
-
-        <a
-          class="quick"
-          href="inventory.html"
-        >
-          + Add Product
-        </a>
-
-        <a
-          class="quick"
-          href="calendar.html"
-        >
-          + Add Meeting
-        </a>
-
-        <a
-          class="quick"
-          href="reports.html"
-        >
-          View Reports
-        </a>
-
-      </div>
-
-    </section>
-
-
-    <!-- CALENDAR -->
-
-    <section class="section">
-
-      <div class="section-header">
-
-        <div>
-
-          <h2>
-            Calendar
-          </h2>
-
-          <div class="muted">
-            Company meetings and events
-          </div>
-
-        </div>
-
-        <a
-          class="btn"
-          href="calendar.html"
-        >
-          Open Calendar
-        </a>
-
-      </div>
-
-
-      <div class="finance-grid">
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Total Meetings
-          </div>
-
-          <div
-            id="meetingsCount"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Scheduled
-          </div>
-
-          <div
-            id="scheduledMeetingsCount"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Next Meeting
-          </div>
-
-          <div
-            id="nextMeeting"
-            class="finance-number"
-            style="font-size:16px;"
-          >
-            No upcoming meetings
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div
-        id="meetingsList"
-        class="list"
-        style="margin-top:18px;"
-      ></div>
-
-    </section>
-
-
-    <!-- FINANCE -->
-
-    <section class="section">
-
-      <div class="section-header">
-
-        <h2>
-          Financial Overview
-        </h2>
-
-        <a
-          class="btn"
-          href="finance.html"
-        >
-          Open Finance
-        </a>
-
-      </div>
-
-
-      <div class="finance-grid">
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Total Income
-          </div>
-
-          <div
-            id="totalIncome"
-            class="finance-number"
-          >
-            $0.00
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Total Expenses
-          </div>
-
-          <div
-            id="totalExpenses"
-            class="finance-number"
-          >
-            $0.00
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Net Balance
-          </div>
-
-          <div
-            id="netBalance"
-            class="finance-number"
-          >
-            $0.00
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Transactions
-          </div>
-
-          <div
-            id="transactionsCount"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- PROJECTS / TASKS -->
-
-    <section class="section">
-
-      <div class="section-header">
-
-        <h2>
-          Work Overview
-        </h2>
-
-      </div>
-
-
-      <div class="finance-grid">
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Active Projects
-          </div>
-
-          <div
-            id="activeProjects"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Completed Projects
-          </div>
-
-          <div
-            id="completedProjects"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Completed Tasks
-          </div>
-
-          <div
-            id="completedTasks"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Pending Tasks
-          </div>
-
-          <div
-            id="pendingTasks"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- INVENTORY -->
-
-    <section class="section">
-
-      <div class="section-header">
-
-        <h2>
-          Inventory Overview
-        </h2>
-
-        <a
-          class="btn"
-          href="inventory.html"
-        >
-          Open Inventory
-        </a>
-
-      </div>
-
-
-      <div class="finance-grid">
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Total Stock
-          </div>
-
-          <div
-            id="totalStock"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Low Stock
-          </div>
-
-          <div
-            id="lowStock"
-            class="finance-number"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Inventory Value
-          </div>
-
-          <div
-            id="inventoryValue"
-            class="finance-number"
-          >
-            $0.00
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- RECENT TASKS -->
-
-    <section class="section">
-
-      <div class="section-header">
-
-        <h2>
-          Recent Tasks
-        </h2>
-
-        <a
-          class="btn"
-          href="tasks.html"
-        >
-          Open Tasks
-        </a>
-
-      </div>
-
-
-      <div
-        id="recentTasks"
-        class="list"
-      >
-
-        <div class="loading">
-          Loading tasks...
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- COMPANY -->
-
-    <section class="section">
-
-      <div class="section-header">
-
-        <h2>
-          Company Overview
-        </h2>
-
-      </div>
-
-
-      <div class="finance-grid">
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Company
-          </div>
-
-          <div
-            id="companyName"
-            class="finance-number"
-            style="font-size:17px;"
-          >
-            -
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Plan
-          </div>
-
-          <div
-            id="companyPlan"
-            class="finance-number"
-            style="font-size:17px;"
-          >
-            -
-          </div>
-
-        </div>
-
-
-        <div class="finance-box">
-
-          <div class="finance-label">
-            Account Email
-          </div>
-
-          <div
-            id="companyEmail"
-            class="finance-number"
-            style="font-size:15px;word-break:break-word;"
-          >
-            -
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-  </main>
-
-</div>
-
-
-<script>
-
-async function loadDashboard(){
-
-  try{
-
-    const {
-      data: {
-        user
-      },
-      error: userError
-    } =
-      await supabaseClient.auth.getUser();
-
-
-    if(userError){
-      throw userError;
-    }
-
-
-    if(!user){
-
-      window.location.href =
-        "signin.html";
-
-      return;
-    }
-
-
-    const currentUser =
-      user;
-
-
-    /* PROFILE */
-
-    const profileResult =
-      await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id", currentUser.id)
-        .single();
-
-
-    if(profileResult.error){
-      throw profileResult.error;
-    }
-
-
-    const profile =
-      profileResult.data;
-
-
-    const currentCompanyId =
-      profile.company_id;
-
-
-    if(!currentCompanyId){
-
-      throw new Error(
-        "Your account is not connected to a company."
-      );
-
-    }
-
-
-    /* COMPANY */
-
-    const companyResult =
-      await supabaseClient
-        .from("companies")
-        .select("*")
-        .eq("id", currentCompanyId)
-        .single();
-
-
-    if(companyResult.error){
-      throw companyResult.error;
-    }
-
-
-    const company =
-      companyResult.data;
-
-
-    document.getElementById(
-      "companyName"
-    ).textContent =
-      company.company_name ||
-      company.name ||
-      "Company";
-
-
-    document.getElementById(
-      "companyPlan"
-    ).textContent =
-      company.plan ||
-      "Free";
-
-
-    document.getElementById(
-      "companyEmail"
-    ).textContent =
-      currentUser.email ||
-      "-";
-
-
-    document.getElementById(
-      "companyBadge"
-    ).textContent =
-      company.company_name ||
-      company.name ||
-      "Company";
-
-
-    /* EMPLOYEES */
-
-    const employeesResult =
-      await supabaseClient
-        .from("employees")
-        .select("id")
-        .eq(
-          "company_id",
-          currentCompanyId
-        );
-
-
-    if(employeesResult.error){
-      throw employeesResult.error;
-    }
-
-
-    const employees =
-      employeesResult.data || [];
-
-
-    document.getElementById(
-      "employeesCount"
-    ).textContent =
-      employees.length;
-
-
-    /* CUSTOMERS */
-
-    const customersResult =
-      await supabaseClient
-        .from("customers")
-        .select("id")
-        .eq(
-          "company_id",
-          currentCompanyId
-        );
-
-
-    if(customersResult.error){
-      throw customersResult.error;
-    }
-
-
-    const customers =
-      customersResult.data || [];
-
-
-    document.getElementById(
-      "customersCount"
-    ).textContent =
-      customers.length;
-
-
-    /* PROJECTS */
-
-    const projectsResult =
-      await supabaseClient
-        .from("projects")
-        .select(
-          "id,name,status"
-        )
-        .eq(
-          "company_id",
-          currentCompanyId
-        );
-
-
-    if(projectsResult.error){
-      throw projectsResult.error;
-    }
-
-
-    const projects =
-      projectsResult.data || [];
-
-
-    document.getElementById(
-      "projectsCount"
-    ).textContent =
-      projects.length;
-
-
-    document.getElementById(
-      "activeProjects"
-    ).textContent =
-      projects.filter(
-        p =>
-          String(
-            p.status || ""
-          ).toLowerCase() ===
-          "active"
-      ).length;
-
-
-    document.getElementById(
-      "completedProjects"
-    ).textContent =
-      projects.filter(
-        p =>
-          String(
-            p.status || ""
-          ).toLowerCase() ===
-          "completed"
-      ).length;
-
-
-    /* TASKS */
-
-    const tasksResult =
-      await supabaseClient
-        .from("tasks")
-        .select(
-          "id,title,status,created_at"
-        )
-        .eq(
-          "company_id",
-          currentCompanyId
-        )
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        );
-
-
-    if(tasksResult.error){
-      throw tasksResult.error;
-    }
-
-
-    const tasks =
-      tasksResult.data || [];
-
-
-    document.getElementById(
-      "tasksCount"
-    ).textContent =
-      tasks.length;
-
-
-    const completedTasks =
-      tasks.filter(
-        t =>
-          String(
-            t.status || ""
-          ).toLowerCase() ===
-          "completed"
-      ).length;
-
-
-    document.getElementById(
-      "completedTasks"
-    ).textContent =
-      completedTasks;
-
-
-    document.getElementById(
-      "pendingTasks"
-    ).textContent =
-      tasks.length -
-      completedTasks;
-
-
-    const recentTasks =
-      document.getElementById(
-        "recentTasks"
-      );
-
-
-    if(tasks.length === 0){
-
-      recentTasks.innerHTML = `
-        <div class="loading">
-          No tasks yet.
-        </div>
-      `;
-
-    }else{
-
-      recentTasks.innerHTML =
-        tasks
-          .slice(0,5)
-          .map(task => `
-
-            <div class="list-item">
-
-              <div>
-
-                <strong>
-                  ${escapeHtml(
-                    task.title ||
-                    "Untitled Task"
-                  )}
-                </strong>
-
-                <div class="muted">
-                  Task
-                </div>
-
-              </div>
-
-              <span class="status">
-                ${escapeHtml(
-                  task.status ||
-                  "Pending"
-                )}
-              </span>
-
-            </div>
-
-          `)
-          .join("");
-
-    }
-
-
-    /* FINANCE */
-
-    const financeResult =
-      await supabaseClient
-        .from("finance")
-        .select(
-          "id,amount,type"
-        )
-        .eq(
-          "company_id",
-          currentCompanyId
-        );
-
-
-    if(financeResult.error){
-      throw financeResult.error;
-    }
-
-
-    const transactions =
-      financeResult.data || [];
-
-
-    let totalIncome = 0;
-    let totalExpenses = 0;
-
-
-    transactions.forEach(
-      transaction => {
-
-        const amount =
-          Number(
-            transaction.amount || 0
-          );
-
-
-        const type =
-          String(
-            transaction.type || ""
-          ).toLowerCase();
-
-
-        if(
-          type === "income" ||
-          type === "revenue"
-        ){
-
-          totalIncome += amount;
-
-        }else{
-
-          totalExpenses += amount;
-
-        }
+        return;
 
       }
-    );
 
+      currentUser = user;
 
-    document.getElementById(
-      "totalIncome"
-    ).textContent =
-      money(totalIncome);
+      await getCompany();
 
+      await Promise.all([
+        loadStats(),
+        loadFinance(),
+        loadTasks(),
+        loadMeetings(),
+        loadAttendance(),
+        loadInventory()
+      ]);
 
-    document.getElementById(
-      "totalExpenses"
-    ).textContent =
-      money(totalExpenses);
+    } catch (error) {
 
-
-    document.getElementById(
-      "netBalance"
-    ).textContent =
-      money(
-        totalIncome -
-        totalExpenses
+      console.error(
+        "Dashboard error:",
+        error
       );
 
-
-    document.getElementById(
-      "transactionsCount"
-    ).textContent =
-      transactions.length;
-
-
-    /* INVENTORY */
-
-    const inventoryResult =
-      await supabaseClient
-        .from("inventory")
-        .select(
-          "id,name,stock_quantity,low_stock_alert,buy_price"
+      showError(
+        "Dashboard error: " +
+        (
+          error.message ||
+          "Could not load dashboard data."
         )
-        .eq(
-          "company_id",
-          currentCompanyId
-        );
-
-
-    if(inventoryResult.error){
-      throw inventoryResult.error;
-    }
-
-
-    const products =
-      inventoryResult.data || [];
-
-
-    document.getElementById(
-      "inventoryCount"
-    ).textContent =
-      products.length;
-
-
-    let totalStock = 0;
-    let lowStock = 0;
-    let inventoryValue = 0;
-
-
-    products.forEach(
-      product => {
-
-        const stock =
-          Number(
-            product.stock_quantity || 0
-          );
-
-
-        const alert =
-          Number(
-            product.low_stock_alert || 0
-          );
-
-
-        const buyPrice =
-          Number(
-            product.buy_price || 0
-          );
-
-
-        totalStock += stock;
-
-        inventoryValue +=
-          stock * buyPrice;
-
-
-        if(stock <= alert){
-          lowStock++;
-        }
-
-      }
-    );
-
-
-    document.getElementById(
-      "totalStock"
-    ).textContent =
-      totalStock;
-
-
-    document.getElementById(
-      "lowStock"
-    ).textContent =
-      lowStock;
-
-
-    document.getElementById(
-      "inventoryValue"
-    ).textContent =
-      money(inventoryValue);
-
-
-    /* DOCUMENTS */
-
-    const documentsResult =
-      await supabaseClient
-        .from("documents")
-        .select("id")
-        .eq(
-          "company_id",
-          currentCompanyId
-        );
-
-
-    if(documentsResult.error){
-      throw documentsResult.error;
-    }
-
-
-    const documents =
-      documentsResult.data || [];
-
-
-    document.getElementById(
-      "documentsCount"
-    ).textContent =
-      documents.length;
-
-
-    /* NOTIFICATIONS */
-
-    const notificationsResult =
-      await supabaseClient
-        .from("notifications")
-        .select(
-          "id,is_read"
-        )
-        .eq(
-          "company_id",
-          currentCompanyId
-        )
-        .eq(
-          "user_id",
-          currentUser.id
-        );
-
-
-    if(notificationsResult.error){
-      throw notificationsResult.error;
-    }
-
-
-    const notifications =
-      notificationsResult.data || [];
-
-
-    document.getElementById(
-      "notificationsCount"
-    ).textContent =
-      notifications.filter(
-        n =>
-          n.is_read === false
-      ).length;
-
-
-    /* CALENDAR */
-
-    const meetingsResult =
-      await supabaseClient
-        .from("meetings")
-        .select(`
-          id,
-          title,
-          meeting_date,
-          meeting_time,
-          location,
-          status
-        `)
-        .eq(
-          "company_id",
-          currentCompanyId
-        )
-        .order(
-          "meeting_date",
-          {
-            ascending:true
-          }
-        )
-        .order(
-          "meeting_time",
-          {
-            ascending:true
-          }
-        );
-
-
-    if(meetingsResult.error){
-      throw meetingsResult.error;
-    }
-
-
-    const meetings =
-      meetingsResult.data || [];
-
-
-    document.getElementById(
-      "meetingsCount"
-    ).textContent =
-      meetings.length;
-
-
-    const scheduledMeetings =
-      meetings.filter(
-        meeting =>
-          String(
-            meeting.status ||
-            ""
-          ).toLowerCase() ===
-          "scheduled"
-      ).length;
-
-
-    document.getElementById(
-      "scheduledMeetingsCount"
-    ).textContent =
-      scheduledMeetings;
-
-
-    const now =
-      new Date();
-
-
-    const upcomingMeetings =
-      meetings.filter(
-        meeting => {
-
-          if(
-            !meeting.meeting_date
-          ){
-            return false;
-          }
-
-
-          const dateTime =
-            new Date(
-              `${meeting.meeting_date}T${
-                meeting.meeting_time ||
-                "00:00"
-              }`
-            );
-
-
-          return dateTime >= now;
-
-        }
       );
 
-
-    const nextMeeting =
-      upcomingMeetings.length
-        ? upcomingMeetings[0]
-        : null;
-
-
-    if(nextMeeting){
-
-      document.getElementById(
-        "nextMeeting"
-      ).textContent =
-        `${nextMeeting.title || "Meeting"} — ${nextMeeting.meeting_date || ""}${nextMeeting.meeting_time ? " • " + nextMeeting.meeting_time : ""}`;
-
-    }else{
-
-      document.getElementById(
-        "nextMeeting"
-      ).textContent =
-        "No upcoming meetings";
-
     }
-
-
-    const meetingsList =
-      document.getElementById(
-        "meetingsList"
-      );
-
-
-    if(meetings.length === 0){
-
-      meetingsList.innerHTML = `
-        <div class="loading">
-          No meetings yet.
-          <a
-            href="calendar.html"
-            style="color:#2563eb;font-weight:600;"
-          >
-            Add your first meeting
-          </a>
-        </div>
-      `;
-
-    }else{
-
-      meetingsList.innerHTML =
-        meetings
-          .slice(0,5)
-          .map(
-            meeting => `
-
-              <div class="list-item">
-
-                <div>
-
-                  <strong>
-                    ${escapeHtml(
-                      meeting.title ||
-                      "Untitled Meeting"
-                    )}
-                  </strong>
-
-                  <div class="muted">
-
-                    ${escapeHtml(
-                      meeting.meeting_date ||
-                      "No date"
-                    )}
-
-                    ${
-                      meeting.meeting_time
-                        ? " • " +
-                          escapeHtml(
-                            meeting.meeting_time
-                          )
-                        : ""
-                    }
-
-                    ${
-                      meeting.location
-                        ? " • " +
-                          escapeHtml(
-                            meeting.location
-                          )
-                        : ""
-                    }
-
-                  </div>
-
-                </div>
-
-
-                <span class="status">
-                  ${escapeHtml(
-                    meeting.status ||
-                    "Scheduled"
-                  )}
-                </span>
-
-              </div>
-
-            `
-          )
-          .join("");
-
-    }
-
-
-  }catch(error){
-
-    console.error(error);
-
-
-    const errorBox =
-      document.getElementById(
-        "errorBox"
-      );
-
-
-    errorBox.style.display =
-      "block";
-
-
-    errorBox.textContent =
-      "Dashboard error: " +
-      (
-        error.message ||
-        "Unable to load dashboard."
-      );
 
   }
 
-}
-
-
-/* MONEY */
-
-function money(value){
-
-  return new Intl.NumberFormat(
-    "en-US",
-    {
-      style:"currency",
-      currency:"USD"
-    }
-  ).format(
-    Number(value || 0)
-  );
-
-}
-
-
-/* SECURITY */
-
-function escapeHtml(value){
-
-  return String(value)
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-
-/* START */
-
-loadDashboard();
-
-</script>
-
-</body>
-</html>
-
-loadDashboard();
+  loadDashboard();
 
 </script>
 
