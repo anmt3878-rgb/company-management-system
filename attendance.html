@@ -1,1907 +1,1433 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance - CompanyFlow</title>
 
-  <title>Attendance - CompanyFlow</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js"></script>
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+body{
+  background:#f4f7fb;
+  color:#172033;
+}
 
-    body {
-      background: #f4f7fb;
-      color: #172033;
-    }
+.layout{
+  display:flex;
+  min-height:100vh;
+}
 
-    .layout {
-      display: flex;
-      min-height: 100vh;
-    }
+.sidebar{
+  width:250px;
+  background:#111827;
+  color:white;
+  padding:22px 14px;
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  overflow-y:auto;
+}
 
-    .sidebar {
-      width: 250px;
-      background: #111827;
-      color: white;
-      padding: 22px 14px;
-      position: fixed;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      overflow-y: auto;
-    }
+.logo{
+  font-size:24px;
+  font-weight:800;
+  padding:8px 12px 24px;
+}
 
-    .logo {
-      font-size: 24px;
-      font-weight: 800;
-      padding: 8px 12px 24px;
-    }
+.logo span{
+  color:#60a5fa;
+}
 
-    .logo span {
-      color: #60a5fa;
-    }
+.nav a{
+  display:block;
+  color:#cbd5e1;
+  text-decoration:none;
+  padding:11px 13px;
+  margin:3px 0;
+  border-radius:8px;
+  font-size:14px;
+}
 
-    .nav a {
-      display: block;
-      color: #cbd5e1;
-      text-decoration: none;
-      padding: 11px 13px;
-      margin: 3px 0;
-      border-radius: 8px;
-      font-size: 14px;
-    }
+.nav a:hover,
+.nav a.active{
+  background:#2563eb;
+  color:white;
+}
 
-    .nav a:hover,
-    .nav a.active {
-      background: #2563eb;
-      color: white;
-    }
+.main{
+  margin-left:250px;
+  width:calc(100% - 250px);
+  padding:30px;
+}
 
-    .main {
-      margin-left: 250px;
-      width: calc(100% - 250px);
-      padding: 30px;
-    }
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+  gap:15px;
+}
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-      gap: 15px;
-    }
+h1{
+  font-size:30px;
+  margin-bottom:6px;
+}
 
-    h1 {
-      font-size: 30px;
-      margin-bottom: 6px;
-    }
+.subtitle{
+  color:#64748b;
+  font-size:14px;
+}
 
-    .subtitle {
-      color: #64748b;
-      font-size: 14px;
-    }
+.company-badge{
+  background:white;
+  border:1px solid #e2e8f0;
+  padding:10px 15px;
+  border-radius:10px;
+  font-size:13px;
+}
 
-    .company-badge {
-      background: white;
-      border: 1px solid #e2e8f0;
-      padding: 10px 15px;
-      border-radius: 10px;
-      font-size: 13px;
-    }
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:25px;
+}
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 25px;
-    }
+.stat{
+  background:white;
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 3px 12px rgba(0,0,0,.04);
+}
 
-    .stat {
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 3px 12px rgba(0,0,0,.04);
-    }
+.stat-title{
+  color:#64748b;
+  font-size:13px;
+  margin-bottom:10px;
+}
 
-    .stat-title {
-      color: #64748b;
-      font-size: 13px;
-      margin-bottom: 10px;
-    }
+.stat-value{
+  font-size:28px;
+  font-weight:800;
+}
 
-    .stat-value {
-      font-size: 28px;
-      font-weight: 800;
-    }
+.card{
+  background:white;
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:22px;
+  margin-bottom:22px;
+  box-shadow:0 3px 12px rgba(0,0,0,.04);
+}
 
-    .card {
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 22px;
-      margin-bottom: 22px;
-      box-shadow: 0 3px 12px rgba(0,0,0,.04);
-    }
+.card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+  gap:12px;
+  flex-wrap:wrap;
+}
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+.card-title{
+  font-size:18px;
+  font-weight:700;
+}
 
-    .card-title {
-      font-size: 18px;
-      font-weight: 700;
-    }
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-    }
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
 
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
+.field label{
+  font-size:13px;
+  font-weight:600;
+  color:#475569;
+}
 
-    .field label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #475569;
-    }
+input,
+select,
+textarea{
+  width:100%;
+  border:1px solid #dbe2ea;
+  border-radius:9px;
+  padding:11px 12px;
+  font-size:14px;
+  outline:none;
+  background:white;
+}
 
-    input,
-    select,
-    textarea {
-      width: 100%;
-      border: 1px solid #dbe2ea;
-      border-radius: 9px;
-      padding: 11px 12px;
-      font-size: 14px;
-      outline: none;
-      background: white;
-    }
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:#2563eb;
+}
 
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #2563eb;
-    }
+textarea{
+  min-height:80px;
+  resize:vertical;
+}
 
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
+.full{
+  grid-column:1/-1;
+}
 
-    .full {
-      grid-column: 1 / -1;
-    }
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:15px;
+}
 
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 5px;
-    }
+button{
+  border:none;
+  border-radius:9px;
+  padding:11px 16px;
+  cursor:pointer;
+  font-weight:700;
+  font-size:14px;
+}
 
-    button {
-      border: none;
-      border-radius: 9px;
-      padding: 11px 16px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 14px;
-    }
+.btn-primary{
+  background:#2563eb;
+  color:white;
+}
 
-    .btn-primary {
-      background: #2563eb;
-      color: white;
-    }
+.btn-primary:hover{
+  background:#1d4ed8;
+}
 
-    .btn-primary:hover {
-      background: #1d4ed8;
-    }
+.btn-secondary{
+  background:#e2e8f0;
+  color:#1e293b;
+}
 
-    .btn-secondary {
-      background: #e2e8f0;
-      color: #1e293b;
-    }
+.btn-danger{
+  background:#fee2e2;
+  color:#b91c1c;
+  padding:8px 12px;
+}
 
-    .btn-danger {
-      background: #fee2e2;
-      color: #b91c1c;
-      padding: 8px 12px;
-    }
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+.toolbar input,
+.toolbar select{
+  width:auto;
+  min-width:180px;
+}
 
-    .toolbar input,
-    .toolbar select {
-      width: auto;
-      min-width: 180px;
-    }
+.table-wrap{
+  overflow-x:auto;
+}
 
-    .table-wrap {
-      overflow-x: auto;
-    }
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:850px;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 850px;
-    }
+th,
+td{
+  padding:13px 10px;
+  border-bottom:1px solid #edf0f4;
+  text-align:left;
+  font-size:13px;
+}
 
-    th,
-    td {
-      padding: 13px 10px;
-      border-bottom: 1px solid #edf0f4;
-      text-align: left;
-      font-size: 13px;
-    }
+th{
+  background:#f8fafc;
+  color:#475569;
+  font-weight:700;
+}
 
-    th {
-      background: #f8fafc;
-      color: #475569;
-      font-weight: 700;
-    }
+.status{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+}
 
-    .status {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-    }
+.present{
+  background:#dcfce7;
+  color:#166534;
+}
 
-    .present {
-      background: #dcfce7;
-      color: #166534;
-    }
+.absent{
+  background:#fee2e2;
+  color:#991b1b;
+}
 
-    .absent {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+.late{
+  background:#fef3c7;
+  color:#92400e;
+}
 
-    .late {
-      background: #fef3c7;
-      color: #92400e;
-    }
+.leave{
+  background:#dbeafe;
+  color:#1d4ed8;
+}
 
-    .leave {
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
+.message{
+  display:none;
+  margin-bottom:18px;
+  padding:12px 15px;
+  border-radius:9px;
+  font-size:14px;
+}
 
-    .message {
-      display: none;
-      margin-bottom: 18px;
-      padding: 12px 15px;
-      border-radius: 9px;
-      font-size: 14px;
-      line-height: 1.5;
-    }
+.success{
+  display:block;
+  background:#dcfce7;
+  color:#166534;
+}
 
-    .success {
-      display: block;
-      background: #dcfce7;
-      color: #166534;
-    }
+.error{
+  display:block;
+  background:#fee2e2;
+  color:#991b1b;
+}
 
-    .error {
-      display: block;
-      background: #fee2e2;
-      color: #991b1b;
-    }
+.empty{
+  text-align:center;
+  padding:35px;
+  color:#64748b;
+}
 
-    .empty {
-      text-align: center;
-      padding: 35px;
-      color: #64748b;
-    }
+@media(max-width:1000px){
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
 
-    .loading {
-      color: #64748b;
-      font-size: 14px;
-    }
+  .form-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
 
-    @media (max-width: 1000px) {
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
+@media(max-width:700px){
+  .sidebar{
+    width:100%;
+    position:relative;
+    min-height:auto;
+  }
 
-      .form-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
+  .layout{
+    display:block;
+  }
 
-    @media (max-width: 700px) {
-      .sidebar {
-        width: 100%;
-        position: relative;
-        min-height: auto;
-      }
+  .main{
+    margin-left:0;
+    width:100%;
+    padding:18px;
+  }
 
-      .layout {
-        display: block;
-      }
+  .stats,
+  .form-grid{
+    grid-template-columns:1fr;
+  }
 
-      .main {
-        margin-left: 0;
-        width: 100%;
-        padding: 18px;
-      }
-
-      .stats,
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .company-badge {
-        width: 100%;
-      }
-    }
-  </style>
+  .topbar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <div class="layout">
 
-  <aside class="sidebar">
-
-    <div class="logo">
-      Company<span>Flow</span>
-    </div>
-
-    <nav class="nav">
-
-      <a href="dashboard.html">Dashboard</a>
-      <a href="employees.html">Employees</a>
-      <a href="customers.html">Customers</a>
-      <a href="projects.html">Projects</a>
-      <a href="tasks.html">Tasks</a>
-      <a href="finance.html">Finance</a>
-      <a href="inventory.html">Inventory</a>
-      <a href="documents.html">Documents</a>
-      <a href="calendar.html">Calendar</a>
-      <a href="attendance.html" class="active">Attendance</a>
-      <a href="reports.html">Reports</a>
-      <a href="roles.html">Roles & Permissions</a>
-      <a href="notifications.html">Notifications</a>
-      <a href="settings.html">Settings</a>
-      <a href="index.html">Back to Website</a>
-
-    </nav>
-
-  </aside>
-
-
-  <main class="main">
-
-    <div class="topbar">
-
-      <div>
-        <h1>Attendance</h1>
-
-        <div class="subtitle">
-          Track employee attendance and working hours.
-        </div>
-      </div>
-
-      <div class="company-badge">
-
-        Company:
-        <strong id="companyName">
-          Loading...
-        </strong>
-
-      </div>
-
-    </div>
-
-
-    <div id="message" class="message"></div>
-
-
-    <section class="stats">
-
-      <div class="stat">
-        <div class="stat-title">
-          Total Records
-        </div>
-
-        <div
-          class="stat-value"
-          id="totalRecords">
-          0
-        </div>
-      </div>
-
-
-      <div class="stat">
-        <div class="stat-title">
-          Present
-        </div>
-
-        <div
-          class="stat-value"
-          id="presentCount">
-          0
-        </div>
-      </div>
-
-
-      <div class="stat">
-        <div class="stat-title">
-          Late
-        </div>
-
-        <div
-          class="stat-value"
-          id="lateCount">
-          0
-        </div>
-      </div>
-
-
-      <div class="stat">
-        <div class="stat-title">
-          Absent
-        </div>
-
-        <div
-          class="stat-value"
-          id="absentCount">
-          0
-        </div>
-      </div>
-
-    </section>
-
-
-    <section class="card">
-
-      <div class="card-header">
-
-        <div class="card-title">
-          Add Attendance Record
-        </div>
-
-      </div>
-
-
-      <form id="attendanceForm">
-
-        <div class="form-grid">
-
-          <div class="field">
-
-            <label>
-              Employee
-            </label>
-
-            <select
-              id="employeeId"
-              required>
-
-              <option value="">
-                Loading employees...
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <div class="field">
-
-            <label>
-              Date
-            </label>
-
-            <input
-              type="date"
-              id="attendanceDate"
-              required>
-
-          </div>
-
-
-          <div class="field">
-
-            <label>
-              Status
-            </label>
-
-            <select id="status">
-
-              <option value="Present">
-                Present
-              </option>
-
-              <option value="Absent">
-                Absent
-              </option>
-
-              <option value="Late">
-                Late
-              </option>
-
-              <option value="Leave">
-                Leave
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <div class="field">
-
-            <label>
-              Check In
-            </label>
-
-            <input
-              type="time"
-              id="checkIn">
-
-          </div>
-
-
-          <div class="field">
-
-            <label>
-              Check Out
-            </label>
-
-            <input
-              type="time"
-              id="checkOut">
-
-          </div>
-
-
-          <div class="field full">
-
-            <label>
-              Notes
-            </label>
-
-            <textarea
-              id="notes"
-              placeholder="Optional notes..."></textarea>
-
-          </div>
-
-        </div>
-
-
-        <div class="actions">
-
-          <button
-            type="submit"
-            class="btn-primary">
-
-            Add Attendance
-
-          </button>
-
-
-          <button
-            type="button"
-            class="btn-secondary"
-            onclick="resetForm()">
-
-            Clear
-
-          </button>
-
-        </div>
-
-      </form>
-
-    </section>
-
-
-    <section class="card">
-
-      <div class="card-header">
-
-        <div class="card-title">
-          Attendance Records
-        </div>
-
-
-        <div class="toolbar">
-
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Search employee...">
-
-
-          <input
-            type="date"
-            id="filterDate">
-
-
-          <select id="filterStatus">
-
-            <option value="">
-              All Statuses
-            </option>
-
-            <option value="Present">
-              Present
-            </option>
-
-            <option value="Absent">
-              Absent
-            </option>
-
-            <option value="Late">
-              Late
-            </option>
-
-            <option value="Leave">
-              Leave
-            </option>
-
-          </select>
-
-
-          <button
-            class="btn-secondary"
-            type="button"
-            onclick="loadAttendance()">
-
-            Refresh
-
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>
-                Employee
-              </th>
-
-              <th>
-                Date
-              </th>
-
-              <th>
-                Check In
-              </th>
-
-              <th>
-                Check Out
-              </th>
-
-              <th>
-                Status
-              </th>
-
-              <th>
-                Notes
-              </th>
-
-              <th>
-                Action
-              </th>
-
-            </tr>
-
-          </thead>
-
-
-          <tbody id="attendanceTable">
-
-            <tr>
-
-              <td
-                colspan="7"
-                class="empty">
-
-                Loading...
-
-              </td>
-
-            </tr>
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </section>
-
-  </main>
+<aside class="sidebar">
+
+<div class="logo">
+Company<span>Flow</span>
+</div>
+
+<nav class="nav">
+
+<a href="dashboard.html">Dashboard</a>
+<a href="employees.html">Employees</a>
+<a href="customers.html">Customers</a>
+<a href="projects.html">Projects</a>
+<a href="tasks.html">Tasks</a>
+<a href="finance.html">Finance</a>
+<a href="inventory.html">Inventory</a>
+<a href="documents.html">Documents</a>
+<a href="calendar.html">Calendar</a>
+<a href="attendance.html" class="active">Attendance</a>
+<a href="reports.html">Reports</a>
+<a href="roles.html">Roles & Permissions</a>
+<a href="notifications.html">Notifications</a>
+<a href="settings.html">Settings</a>
+<a href="index.html">Back to Website</a>
+
+</nav>
+</aside>
+
+<main class="main">
+
+<div class="topbar">
+
+<div>
+<h1>Attendance</h1>
+<div class="subtitle">
+Track employee attendance and working hours.
+</div>
+</div>
+
+<div class="company-badge">
+Company:
+<strong id="companyName">Loading...</strong>
+</div>
 
 </div>
 
+<div id="message" class="message"></div>
+
+<section class="stats">
+
+<div class="stat">
+<div class="stat-title">Total Records</div>
+<div class="stat-value" id="totalRecords">0</div>
+</div>
+
+<div class="stat">
+<div class="stat-title">Present</div>
+<div class="stat-value" id="presentCount">0</div>
+</div>
+
+<div class="stat">
+<div class="stat-title">Late</div>
+<div class="stat-value" id="lateCount">0</div>
+</div>
+
+<div class="stat">
+<div class="stat-title">Absent</div>
+<div class="stat-value" id="absentCount">0</div>
+</div>
+
+</section>
+
+<section class="card">
+
+<div class="card-header">
+<div class="card-title">Add Attendance Record</div>
+</div>
+
+<form id="attendanceForm">
+
+<div class="form-grid">
+
+<div class="field">
+<label>Employee</label>
+
+<select id="employeeId" required>
+<option value="">Select employee</option>
+</select>
+
+</div>
+
+<div class="field">
+<label>Date</label>
+<input type="date" id="attendanceDate" required>
+</div>
+
+<div class="field">
+<label>Status</label>
+
+<select id="status">
+
+<option value="Present">Present</option>
+<option value="Absent">Absent</option>
+<option value="Late">Late</option>
+<option value="Leave">Leave</option>
+
+</select>
+
+</div>
+
+<div class="field">
+<label>Check In</label>
+<input type="time" id="checkIn">
+</div>
+
+<div class="field">
+<label>Check Out</label>
+<input type="time" id="checkOut">
+</div>
+
+<div class="field full">
+<label>Notes</label>
+<textarea id="notes" placeholder="Optional notes..."></textarea>
+</div>
+
+</div>
+
+<div class="actions">
+
+<button type="submit" class="btn-primary">
+Add Attendance
+</button>
+
+<button
+type="button"
+class="btn-secondary"
+onclick="resetForm()">
+Clear
+</button>
+
+</div>
+
+</form>
+
+</section>
+
+<section class="card">
+
+<div class="card-header">
+
+<div class="card-title">
+Attendance Records
+</div>
+
+<div class="toolbar">
+
+<input
+type="text"
+id="searchInput"
+placeholder="Search employee..."
+>
+
+<input
+type="date"
+id="filterDate"
+>
+
+<select id="filterStatus">
+
+<option value="">All Statuses</option>
+<option value="Present">Present</option>
+<option value="Absent">Absent</option>
+<option value="Late">Late</option>
+<option value="Leave">Leave</option>
+
+</select>
+
+<button
+type="button"
+class="btn-secondary"
+onclick="loadAttendance()">
+Refresh
+</button>
+
+</div>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Employee</th>
+<th>Date</th>
+<th>Check In</th>
+<th>Check Out</th>
+<th>Status</th>
+<th>Notes</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="attendanceTable">
+
+<tr>
+<td colspan="7" class="empty">
+Loading...
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+</main>
+</div>
 
 <script>
 
-  let currentUser = null;
+let currentUser = null;
+let currentCompanyId = null;
+let currentCompanyName = "";
+let employees = [];
+let attendanceRecords = [];
 
-  let currentCompanyId = null;
+const today =
+new Date().toISOString().split("T")[0];
 
-  let currentCompanyName = "";
+document.getElementById("attendanceDate").value = today;
 
-  let employees = [];
 
-  let attendanceRecords = [];
+/* MESSAGE */
 
+function showMessage(message,type="success"){
 
-  const today =
-    new Date()
-      .toISOString()
-      .split("T")[0];
+const box =
+document.getElementById("message");
 
+box.textContent = message;
 
-  document
-    .getElementById("attendanceDate")
-    .value = today;
+box.className =
+"message " + type;
 
+setTimeout(function(){
 
-  function showMessage(message, type = "success") {
+box.className = "message";
 
-    const box =
-      document.getElementById("message");
+},4000);
 
-    box.textContent = message;
+}
 
-    box.className =
-      "message " + type;
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+/* SECURITY */
 
-    setTimeout(() => {
+function escapeHtml(value){
 
-      box.className = "message";
+if(value === null || value === undefined){
+return "";
+}
 
-    }, 6000);
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
-  }
+}
 
 
-  function escapeHtml(value) {
+/* TIME */
 
-    if (
-      value === null ||
-      value === undefined
-    ) {
-      return "";
-    }
+function formatTime(value){
 
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+if(!value){
+return "—";
+}
 
-  }
+return String(value).substring(0,5);
 
+}
 
-  function getEmployeeName(employee) {
 
-    if (!employee) {
-      return "Employee";
-    }
+/* STATUS */
 
-    return (
-      employee.name ||
-      employee.full_name ||
-      employee.employee_name ||
-      employee.first_name ||
-      employee.email ||
-      "Employee"
-    );
+function statusClass(status){
 
-  }
+if(status === "Present"){
+return "present";
+}
 
+if(status === "Absent"){
+return "absent";
+}
 
-  function employeeName(employeeId) {
+if(status === "Late"){
+return "late";
+}
 
-    const employee =
-      employees.find(
-        item => item.id === employeeId
-      );
+if(status === "Leave"){
+return "leave";
+}
 
-    return getEmployeeName(employee);
+return "";
 
-  }
+}
 
 
-  function formatTime(value) {
+/* EMPLOYEE NAME */
 
-    if (!value) {
-      return "—";
-    }
+function employeeName(employeeId){
 
-    return String(value).substring(0, 5);
+const employee =
+employees.find(function(item){
 
-  }
+return item.id === employeeId;
 
+});
 
-  function statusClass(status) {
+if(!employee){
+return "Employee";
+}
 
-    if (status === "Present") {
-      return "present";
-    }
+return (
+employee.name ||
+employee.full_name ||
+employee.employee_name ||
+employee.first_name ||
+employee.email ||
+"Employee"
+);
 
-    if (status === "Absent") {
-      return "absent";
-    }
+}
 
-    if (status === "Late") {
-      return "late";
-    }
 
-    if (status === "Leave") {
-      return "leave";
-    }
+/* INITIALIZE */
 
-    return "";
+async function initialize(){
 
-  }
+try{
 
+if(
+typeof supabaseClient === "undefined" ||
+!supabaseClient
+){
 
-  async function initialize() {
+throw new Error(
+"Supabase client is not available."
+);
 
-    try {
+}
 
-      /*
-       * 1. Check logged-in user
-       */
 
-      const {
-        data,
-        error
-      } =
-        await supabase.auth.getUser();
+/* USER */
 
+const {
+data:{
+user
+},
+error:authError
+} =
+await supabaseClient.auth.getUser();
 
-      if (error) {
+if(authError || !user){
 
-        console.error(
-          "Auth error:",
-          error
-        );
+window.location.href =
+"signin.html";
 
-        showMessage(
-          "Authentication error: " +
-          error.message,
-          "error"
-        );
+return;
 
-        return;
-      }
+}
 
+currentUser = user;
 
-      const user =
-        data?.user;
 
+/* PROFILE */
 
-      if (!user) {
+const {
+data:profile,
+error:profileError
+} =
+await supabaseClient
+.from("profiles")
+.select("company_id")
+.eq("id",user.id)
+.single();
 
-        window.location.href =
-          "signin.html";
+if(profileError || !profile){
 
-        return;
-      }
+showMessage(
+"Company profile could not be loaded.",
+"error"
+);
 
+return;
 
-      currentUser = user;
+}
 
+currentCompanyId =
+profile.company_id;
 
-      /*
-       * 2. Get user's company
-       */
+if(!currentCompanyId){
 
-      const {
-        data: profile,
-        error: profileError
-      } =
-        await supabase
-          .from("profiles")
-          .select("company_id")
-          .eq("id", user.id)
-          .maybeSingle();
+showMessage(
+"No company is linked to this account.",
+"error"
+);
 
+return;
 
-      if (profileError) {
+}
 
-        console.error(
-          "Profile error:",
-          profileError
-        );
 
-        showMessage(
-          "Could not load your profile: " +
-          profileError.message,
-          "error"
-        );
+/* COMPANY */
 
-        return;
-      }
+const {
+data:company,
+error:companyError
+} =
+await supabaseClient
+.from("companies")
+.select("id,name,plan")
+.eq("id",currentCompanyId)
+.single();
 
+if(companyError){
 
-      if (
-        !profile ||
-        !profile.company_id
-      ) {
+console.error(companyError);
 
-        showMessage(
-          "Your account is not connected to a company.",
-          "error"
-        );
+showMessage(
+"Company information could not be loaded.",
+"error"
+);
 
-        return;
-      }
+return;
 
+}
 
-      currentCompanyId =
-        profile.company_id;
+if(company){
 
+currentCompanyName =
+company.name || "Company";
 
-      /*
-       * 3. Get company information
-       */
+document.getElementById(
+"companyName"
+).textContent =
+currentCompanyName;
 
-      const {
-        data: company,
-        error: companyError
-      } =
-        await supabase
-          .from("companies")
-          .select("id,name,plan")
-          .eq(
-            "id",
-            currentCompanyId
-          )
-          .maybeSingle();
+}
 
 
-      if (companyError) {
+/* LOAD DATA */
 
-        console.error(
-          "Company error:",
-          companyError
-        );
+await loadEmployees();
 
-        showMessage(
-          "Could not load company: " +
-          companyError.message,
-          "error"
-        );
+await loadAttendance();
 
-        return;
-      }
+}
+catch(error){
 
+console.error(error);
 
-      if (!company) {
+showMessage(
+"Attendance could not load: " +
+(error.message || "Unknown error"),
+"error"
+);
 
-        showMessage(
-          "Company could not be found.",
-          "error"
-        );
+}
 
-        return;
-      }
+}
 
 
-      currentCompanyName =
-        company.name ||
-        "Company";
+/* LOAD EMPLOYEES */
 
+async function loadEmployees(){
 
-      document
-        .getElementById("companyName")
-        .textContent =
-          currentCompanyName;
+try{
 
+const {
+data,
+error
+} =
+await supabaseClient
+.from("employees")
+.select("*")
+.eq("company_id",currentCompanyId)
+.order("created_at",{
+ascending:false
+});
 
-      /*
-       * 4. Load employees
-       */
+if(error){
 
-      await loadEmployees();
+console.error(error);
 
+showMessage(
+"Employees could not be loaded.",
+"error"
+);
 
-      /*
-       * 5. Load attendance
-       */
+return;
 
-      await loadAttendance();
+}
 
+employees = data || [];
 
-    } catch (error) {
+const select =
+document.getElementById(
+"employeeId"
+);
 
-      console.error(
-        "Attendance initialize error:",
-        error
-      );
+select.innerHTML =
+'<option value="">Select employee</option>';
 
-      showMessage(
-        "Attendance could not load: " +
-        (
-          error.message ||
-          "Unknown error"
-        ),
-        "error"
-      );
+employees.forEach(function(employee){
 
-    }
+const name =
+employee.name ||
+employee.full_name ||
+employee.employee_name ||
+employee.first_name ||
+employee.email ||
+"Employee";
 
-  }
+const option =
+document.createElement("option");
 
+option.value = employee.id;
 
-  async function loadEmployees() {
+option.textContent = name;
 
-    const select =
-      document.getElementById(
-        "employeeId"
-      );
+select.appendChild(option);
 
+});
 
-    select.innerHTML =
-      `<option value="">
-        Loading employees...
-      </option>`;
+}
+catch(error){
 
+console.error(error);
 
-    try {
+showMessage(
+"Employees could not be loaded.",
+"error"
+);
 
-      const {
-        data,
-        error
-      } =
-        await supabase
-          .from("employees")
-          .select("*")
-          .eq(
-            "company_id",
-            currentCompanyId
-          );
+}
 
+}
 
-      if (error) {
 
-        console.error(
-          "Employees error:",
-          error
-        );
+/* LOAD ATTENDANCE */
 
-        select.innerHTML =
-          `<option value="">
-            Could not load employees
-          </option>`;
+async function loadAttendance(){
 
-        showMessage(
-          "Could not load employees: " +
-          error.message,
-          "error"
-        );
+if(!currentCompanyId){
+return;
+}
 
-        return;
-      }
+try{
 
+const {
+data,
+error
+} =
+await supabaseClient
+.from("attendance")
+.select("*")
+.eq("company_id",currentCompanyId)
+.order("attendance_date",{
+ascending:false
+})
+.order("created_at",{
+ascending:false
+});
 
-      employees =
-        data || [];
+if(error){
 
+console.error(error);
 
-      select.innerHTML =
-        `<option value="">
-          Select employee
-        </option>`;
+showMessage(
+error.message ||
+"Could not load attendance records.",
+"error"
+);
 
+return;
 
-      employees.forEach(employee => {
+}
 
-        const option =
-          document.createElement(
-            "option"
-          );
+attendanceRecords =
+data || [];
 
+updateStats();
 
-        option.value =
-          employee.id;
+renderAttendance();
 
+}
+catch(error){
 
-        option.textContent =
-          getEmployeeName(
-            employee
-          );
+console.error(error);
 
+showMessage(
+error.message ||
+"Could not load attendance records.",
+"error"
+);
 
-        select.appendChild(
-          option
-        );
+}
 
-      });
+}
 
 
-      if (!employees.length) {
+/* STATS */
 
-        select.innerHTML =
-          `<option value="">
-            No employees found
-          </option>`;
+function updateStats(){
 
-        showMessage(
-          "No employees have been added to this company yet.",
-          "error"
-        );
+document.getElementById(
+"totalRecords"
+).textContent =
+attendanceRecords.length;
 
-      }
+document.getElementById(
+"presentCount"
+).textContent =
+attendanceRecords.filter(function(item){
 
-    } catch (error) {
+return item.status === "Present";
 
-      console.error(
-        "Employee loading error:",
-        error
-      );
+}).length;
 
-      select.innerHTML =
-        `<option value="">
-          Could not load employees
-        </option>`;
+document.getElementById(
+"lateCount"
+).textContent =
+attendanceRecords.filter(function(item){
 
-      showMessage(
-        "Employee loading failed: " +
-        (
-          error.message ||
-          "Unknown error"
-        ),
-        "error"
-      );
+return item.status === "Late";
 
-    }
+}).length;
 
-  }
+document.getElementById(
+"absentCount"
+).textContent =
+attendanceRecords.filter(function(item){
 
+return item.status === "Absent";
 
-  async function loadAttendance() {
+}).length;
 
-    if (!currentCompanyId) {
+}
 
-      return;
-    }
 
+/* RENDER */
 
-    const tbody =
-      document.getElementById(
-        "attendanceTable"
-      );
+function renderAttendance(){
 
+const tbody =
+document.getElementById(
+"attendanceTable"
+);
 
-    tbody.innerHTML =
-      `<tr>
-        <td
-          colspan="7"
-          class="empty">
-          Loading attendance...
-        </td>
-      </tr>`;
+const search =
+document.getElementById(
+"searchInput"
+).value
+.toLowerCase()
+.trim();
 
+const filterDate =
+document.getElementById(
+"filterDate"
+).value;
 
-    try {
+const filterStatus =
+document.getElementById(
+"filterStatus"
+).value;
 
-      const {
-        data,
-        error
-      } =
-        await supabase
-          .from("attendance")
-          .select("*")
-          .eq(
-            "company_id",
-            currentCompanyId
-          );
+const filtered =
+attendanceRecords.filter(function(record){
 
+const name =
+employeeName(
+record.employee_id
+).toLowerCase();
 
-      if (error) {
+const matchesSearch =
+!search ||
+name.includes(search);
 
-        console.error(
-          "Attendance query error:",
-          error
-        );
+const matchesDate =
+!filterDate ||
+record.attendance_date === filterDate;
 
-        attendanceRecords = [];
+const matchesStatus =
+!filterStatus ||
+record.status === filterStatus;
 
-        updateStats();
+return (
+matchesSearch &&
+matchesDate &&
+matchesStatus
+);
 
-        tbody.innerHTML =
-          `<tr>
-            <td
-              colspan="7"
-              class="empty">
-              Could not load attendance records.
-            </td>
-          </tr>`;
+});
 
 
-        showMessage(
-          "Could not load attendance: " +
-          error.message,
-          "error"
-        );
+if(!filtered.length){
 
-        return;
-      }
+tbody.innerHTML = `
+<tr>
+<td colspan="7" class="empty">
+No attendance records found.
+</td>
+</tr>
+`;
 
+return;
 
-      attendanceRecords =
-        data || [];
+}
 
 
-      /*
-       * Sort newest first
-       */
+tbody.innerHTML =
+filtered.map(function(record){
 
-      attendanceRecords.sort(
-        (a, b) => {
+const name =
+employeeName(
+record.employee_id
+);
 
-          const dateA =
-            String(
-              a.attendance_date || ""
-            );
+const status =
+record.status || "Present";
 
-          const dateB =
-            String(
-              b.attendance_date || ""
-            );
+return `
 
-          if (dateA !== dateB) {
+<tr>
 
-            return dateB.localeCompare(
-              dateA
-            );
+<td>
+<strong>
+${escapeHtml(name)}
+</strong>
+</td>
 
-          }
+<td>
+${escapeHtml(
+record.attendance_date || "—"
+)}
+</td>
 
+<td>
+${escapeHtml(
+formatTime(record.check_in)
+)}
+</td>
 
-          const createdA =
-            String(
-              a.created_at || ""
-            );
+<td>
+${escapeHtml(
+formatTime(record.check_out)
+)}
+</td>
 
-          const createdB =
-            String(
-              b.created_at || ""
-            );
+<td>
 
-          return createdB.localeCompare(
-            createdA
-          );
+<span class="status ${statusClass(status)}">
+${escapeHtml(status)}
+</span>
 
-        }
-      );
+</td>
 
+<td>
+${escapeHtml(
+record.notes || "—"
+)}
+</td>
 
-      updateStats();
+<td>
 
-      renderAttendance();
+<button
+type="button"
+class="btn-danger"
+onclick="deleteAttendance('${record.id}')">
 
+Delete
 
-    } catch (error) {
+</button>
 
-      console.error(
-        "Attendance loading error:",
-        error
-      );
+</td>
 
-      showMessage(
-        "Attendance loading failed: " +
-        (
-          error.message ||
-          "Unknown error"
-        ),
-        "error"
-      );
+</tr>
 
-    }
+`;
 
-  }
+}).join("");
 
+}
 
-  function updateStats() {
 
-    document
-      .getElementById(
-        "totalRecords"
-      )
-      .textContent =
-        attendanceRecords.length;
+/* ADD ATTENDANCE */
 
+document
+.getElementById("attendanceForm")
+.addEventListener(
+"submit",
+async function(event){
 
-    document
-      .getElementById(
-        "presentCount"
-      )
-      .textContent =
-        attendanceRecords.filter(
-          item =>
-            item.status === "Present"
-        ).length;
+event.preventDefault();
 
 
-    document
-      .getElementById(
-        "lateCount"
-      )
-      .textContent =
-        attendanceRecords.filter(
-          item =>
-            item.status === "Late"
-        ).length;
+if(!currentCompanyId){
 
+showMessage(
+"Company information is not available.",
+"error"
+);
 
-    document
-      .getElementById(
-        "absentCount"
-      )
-      .textContent =
-        attendanceRecords.filter(
-          item =>
-            item.status === "Absent"
-        ).length;
+return;
 
-  }
+}
 
 
-  function renderAttendance() {
+const employeeId =
+document.getElementById(
+"employeeId"
+).value;
 
-    const tbody =
-      document.getElementById(
-        "attendanceTable"
-      );
+const attendanceDate =
+document.getElementById(
+"attendanceDate"
+).value;
 
+const status =
+document.getElementById(
+"status"
+).value;
 
-    const search =
-      document
-        .getElementById(
-          "searchInput"
-        )
-        .value
-        .toLowerCase()
-        .trim();
+const checkIn =
+document.getElementById(
+"checkIn"
+).value || null;
 
+const checkOut =
+document.getElementById(
+"checkOut"
+).value || null;
 
-    const filterDate =
-      document
-        .getElementById(
-          "filterDate"
-        )
-        .value;
+const notes =
+document.getElementById(
+"notes"
+).value.trim();
 
 
-    const filterStatus =
-      document
-        .getElementById(
-          "filterStatus"
-        )
-        .value;
+if(!employeeId){
 
+showMessage(
+"Please select an employee.",
+"error"
+);
 
-    const filtered =
-      attendanceRecords.filter(
-        record => {
+return;
 
-          const name =
-            employeeName(
-              record.employee_id
-            )
-              .toLowerCase();
+}
 
 
-          const matchesSearch =
-            !search ||
-            name.includes(search);
+if(!attendanceDate){
 
+showMessage(
+"Please select a date.",
+"error"
+);
 
-          const matchesDate =
-            !filterDate ||
-            record.attendance_date ===
-              filterDate;
+return;
 
+}
 
-          const matchesStatus =
-            !filterStatus ||
-            record.status ===
-              filterStatus;
 
+try{
 
-          return (
-            matchesSearch &&
-            matchesDate &&
-            matchesStatus
-          );
+const {
+error
+} =
+await supabaseClient
+.from("attendance")
+.insert([{
 
-        }
-      );
+company_id:
+currentCompanyId,
 
+employee_id:
+employeeId,
 
-    if (!filtered.length) {
+attendance_date:
+attendanceDate,
 
-      tbody.innerHTML =
-        `<tr>
-          <td
-            colspan="7"
-            class="empty">
+check_in:
+checkIn,
 
-            No attendance records found.
+check_out:
+checkOut,
 
-          </td>
-        </tr>`;
+status:
+status,
 
-      return;
+notes:
+notes || null
 
-    }
+}]);
 
 
-    tbody.innerHTML =
-      filtered
-        .map(record => {
+if(error){
 
-          const name =
-            employeeName(
-              record.employee_id
-            );
+console.error(error);
 
+showMessage(
+error.message ||
+"Could not add attendance record.",
+"error"
+);
 
-          const status =
-            record.status ||
-            "Present";
+return;
 
+}
 
-          return `
-            <tr>
 
-              <td>
-                <strong>
-                  ${escapeHtml(name)}
-                </strong>
-              </td>
+showMessage(
+"Attendance record added successfully."
+);
 
-              <td>
-                ${escapeHtml(
-                  record.attendance_date ||
-                  "—"
-                )}
-              </td>
+resetForm();
 
-              <td>
-                ${escapeHtml(
-                  formatTime(
-                    record.check_in
-                  )
-                )}
-              </td>
+await loadAttendance();
 
-              <td>
-                ${escapeHtml(
-                  formatTime(
-                    record.check_out
-                  )
-                )}
-              </td>
+}
+catch(error){
 
-              <td>
-                <span
-                  class="status ${statusClass(
-                    status
-                  )}">
+console.error(error);
 
-                  ${escapeHtml(status)}
+showMessage(
+error.message ||
+"Something went wrong.",
+"error"
+);
 
-                </span>
-              </td>
+}
 
-              <td>
-                ${escapeHtml(
-                  record.notes ||
-                  "—"
-                )}
-              </td>
+}
+);
 
-              <td>
 
-                <button
-                  type="button"
-                  class="btn-danger"
-                  onclick="deleteAttendance('${record.id}')">
+/* DELETE */
 
-                  Delete
+async function deleteAttendance(id){
 
-                </button>
+const confirmed =
+confirm(
+"Are you sure you want to delete this attendance record?"
+);
 
-              </td>
+if(!confirmed){
+return;
+}
 
-            </tr>
-          `;
 
-        })
-        .join("");
+try{
 
-  }
+const {
+error
+} =
+await supabaseClient
+.from("attendance")
+.delete()
+.eq("id",id)
+.eq("company_id",currentCompanyId);
 
 
-  /*
-   * ADD ATTENDANCE
-   */
+if(error){
 
-  document
-    .getElementById(
-      "attendanceForm"
-    )
-    .addEventListener(
-      "submit",
-      async function(event) {
+console.error(error);
 
-        event.preventDefault();
+showMessage(
+error.message ||
+"Could not delete attendance record.",
+"error"
+);
 
+return;
 
-        if (!currentCompanyId) {
+}
 
-          showMessage(
-            "Company information is not available.",
-            "error"
-          );
 
-          return;
-        }
+showMessage(
+"Attendance record deleted successfully."
+);
 
+await loadAttendance();
 
-        const employeeId =
-          document
-            .getElementById(
-              "employeeId"
-            )
-            .value;
+}
+catch(error){
 
+console.error(error);
 
-        const attendanceDate =
-          document
-            .getElementById(
-              "attendanceDate"
-            )
-            .value;
+showMessage(
+error.message ||
+"Something went wrong.",
+"error"
+);
 
+}
 
-        const status =
-          document
-            .getElementById(
-              "status"
-            )
-            .value;
+}
 
 
-        const checkIn =
-          document
-            .getElementById(
-              "checkIn"
-            )
-            .value ||
-          null;
+/* RESET */
 
+function resetForm(){
 
-        const checkOut =
-          document
-            .getElementById(
-              "checkOut"
-            )
-            .value ||
-          null;
+document
+.getElementById("attendanceForm")
+.reset();
 
+document
+.getElementById("attendanceDate")
+.value = today;
 
-        const notes =
-          document
-            .getElementById(
-              "notes"
-            )
-            .value
-            .trim();
+document
+.getElementById("status")
+.value = "Present";
 
+}
 
-        if (!employeeId) {
 
-          showMessage(
-            "Please select an employee.",
-            "error"
-          );
+/* SEARCH */
 
-          return;
-        }
+document
+.getElementById("searchInput")
+.addEventListener(
+"input",
+renderAttendance
+);
 
 
-        if (!attendanceDate) {
+/* DATE FILTER */
 
-          showMessage(
-            "Please select a date.",
-            "error"
-          );
+document
+.getElementById("filterDate")
+.addEventListener(
+"change",
+renderAttendance
+);
 
-          return;
-        }
 
+/* STATUS FILTER */
 
-        try {
+document
+.getElementById("filterStatus")
+.addEventListener(
+"change",
+renderAttendance
+);
 
-          const {
-            error
-          } =
-            await supabase
-              .from("attendance")
-              .insert([{
 
-                company_id:
-                  currentCompanyId,
+/* START */
 
-                employee_id:
-                  employeeId,
-
-                attendance_date:
-                  attendanceDate,
-
-                check_in:
-                  checkIn,
-
-                check_out:
-                  checkOut,
-
-                status:
-                  status,
-
-                notes:
-                  notes || null
-
-              }]);
-
-
-          if (error) {
-
-            console.error(
-              "Insert attendance error:",
-              error
-            );
-
-            showMessage(
-              "Could not add attendance: " +
-              error.message,
-              "error"
-            );
-
-            return;
-          }
-
-
-          showMessage(
-            "Attendance record added successfully."
-          );
-
-
-          resetForm();
-
-
-          await loadAttendance();
-
-        } catch (error) {
-
-          console.error(
-            "Add attendance error:",
-            error
-          );
-
-          showMessage(
-            "Something went wrong: " +
-            (
-              error.message ||
-              "Unknown error"
-            ),
-            "error"
-          );
-
-        }
-
-      }
-    );
-
-
-  /*
-   * DELETE ATTENDANCE
-   */
-
-  async function deleteAttendance(id) {
-
-    const confirmed =
-      confirm(
-        "Are you sure you want to delete this attendance record?"
-      );
-
-
-    if (!confirmed) {
-
-      return;
-    }
-
-
-    try {
-
-      const {
-        error
-      } =
-        await supabase
-          .from("attendance")
-          .delete()
-          .eq(
-            "id",
-            id
-          )
-          .eq(
-            "company_id",
-            currentCompanyId
-          );
-
-
-      if (error) {
-
-        console.error(
-          "Delete attendance error:",
-          error
-        );
-
-        showMessage(
-          "Could not delete attendance: " +
-          error.message,
-          "error"
-        );
-
-        return;
-      }
-
-
-      showMessage(
-        "Attendance record deleted successfully."
-      );
-
-
-      await loadAttendance();
-
-
-    } catch (error) {
-
-      console.error(
-        "Delete error:",
-        error
-      );
-
-      showMessage(
-        "Something went wrong: " +
-        (
-          error.message ||
-          "Unknown error"
-        ),
-        "error"
-      );
-
-    }
-
-  }
-
-
-  /*
-   * RESET FORM
-   */
-
-  function resetForm() {
-
-    document
-      .getElementById(
-        "attendanceForm"
-      )
-      .reset();
-
-
-    document
-      .getElementById(
-        "attendanceDate"
-      )
-      .value =
-        today;
-
-
-    document
-      .getElementById(
-        "status"
-      )
-      .value =
-        "Present";
-
-  }
-
-
-  /*
-   * FILTERS
-   */
-
-  document
-    .getElementById(
-      "searchInput"
-    )
-    .addEventListener(
-      "input",
-      renderAttendance
-    );
-
-
-  document
-    .getElementById(
-      "filterDate"
-    )
-    .addEventListener(
-      "change",
-      renderAttendance
-    );
-
-
-  document
-    .getElementById(
-      "filterStatus"
-    )
-    .addEventListener(
-      "change",
-      renderAttendance
-    );
-
-
-  /*
-   * START
-   */
-
-  initialize();
+initialize();
 
 </script>
 
