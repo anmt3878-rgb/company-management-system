@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Audit Log | CompanyFlow</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}.sidebar{position:fixed;left:0;top:0;width:240px;height:100vh;background:#111827;color:#fff;padding:25px 15px;overflow-y:auto}.logo{font-size:25px;font-weight:bold;text-align:center;margin-bottom:30px}.logo span{color:#2563eb}.nav a{display:block;color:#cbd5e1;text-decoration:none;padding:13px 15px;border-radius:8px;margin-bottom:5px;font-size:15px}.nav a:hover,.nav a.active{background:#2563eb;color:#fff}.main{margin-left:240px;padding:30px}.top{margin-bottom:25px}.top h1{font-size:30px;margin-bottom:7px}.top p{color:#64748b}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px}.stat,.card{background:#fff;border-radius:14px;box-shadow:0 3px 15px rgba(0,0,0,.05)}.stat{padding:18px}.stat small{color:#64748b}.stat strong{display:block;font-size:25px;margin-top:7px}.card{padding:25px;margin-bottom:20px}.filters{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}.field input,.field select{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;background:#f8fafc}.table-wrap{overflow:auto;margin-top:18px}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px;border-bottom:1px solid #e5e7eb;white-space:nowrap}th{background:#f8fafc;color:#475569}.empty{text-align:center;color:#64748b;padding:25px}.tag{padding:5px 9px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:12px;font-weight:bold}.danger{color:#b91c1c}.btn{border:0;border-radius:8px;padding:10px 15px;font-weight:bold;cursor:pointer;background:#2563eb;color:#fff}.refresh{margin-top:15px}@media(max-width:900px){.filters{grid-template-columns:1fr}.stats{grid-template-columns:1fr}}@media(max-width:650px){.sidebar{position:relative;width:100%;height:auto}.main{margin-left:0;padding:18px}}
+</style>
+</head>
+<body>
+<aside class="sidebar"><div class="logo">Company<span>Flow</span></div><nav class="nav">
+<a href="dashboard.html">Dashboard</a><a href="employees.html">Employees</a><a href="customers.html">Customers</a><a href="projects.html">Projects</a><a href="tasks.html">Tasks</a><a href="finance.html">Finance</a><a href="inventory.html">Inventory</a><a href="documents.html">Documents</a><a href="calendar.html">Calendar</a><a href="attendance.html">Attendance</a><a href="leave.html">Leave Management</a><a href="invoices.html">Invoices</a><a href="sales.html">Sales</a><a href="automation.html">Automation</a><a href="performance.html">Employee Performance</a><a href="ai.html">AI Assistant</a><a href="reports.html">Reports</a><a href="custom-reports.html">Custom Reports</a><a href="approvals.html">Approval Workflow</a><a href="audit.html" class="active">Audit Log</a><a href="roles.html">Roles & Permissions</a><a href="notifications.html">Notifications</a><a href="api.html">API Management</a><a href="integrations.html">Integrations</a><a href="settings.html">Settings</a><a href="index.html">Back to Website</a>
+</nav></aside>
+<main class="main">
+<div class="top"><h1>Audit Log</h1><p>Track important activity across your company.</p></div>
+<div class="stats"><div class="stat"><small>Total Activity</small><strong id="total">0</strong></div><div class="stat"><small>Today</small><strong id="today">0</strong></div><div class="stat"><small>Activity Types</small><strong id="types">0</strong></div></div>
+<div class="card">
+<h2>Activity Log</h2>
+<div class="filters">
+<div class="field"><input id="search" placeholder="Search activity..."></div>
+<div class="field"><select id="action"><option value="">All Actions</option></select></div>
+<div class="field"><select id="user"><option value="">All Users</option></select></div>
+</div>
+<button class="btn refresh" onclick="loadLogs()">Refresh</button>
+<div class="table-wrap"><table><thead><tr><th>Date</th><th>User</th><th>Action</th><th>Module</th><th>Description</th></tr></thead><tbody id="rows"><tr><td colspan="5" class="empty">Loading...</td></tr></tbody></table></div>
+</div>
+</main>
+<script>
+let companyId=null,logs=[];
+const client=()=>window.supabaseClient;
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function render(){
+ const q=document.getElementById('search').value.toLowerCase(),a=document.getElementById('action').value,u=document.getElementById('user').value;
+ const filtered=logs.filter(x=>(!q||[x.action,x.module,x.description,x.user_name,x.user_email].join(' ').toLowerCase().includes(q))&&(!a||x.action===a)&&(!u||x.user_id===u));
+ document.getElementById('rows').innerHTML=filtered.length?filtered.map(x=>'<tr><td>'+new Date(x.created_at).toLocaleString()+'</td><td>'+esc(x.user_name||x.user_email||'Unknown')+'</td><td><span class="tag">'+esc(x.action)+'</span></td><td>'+esc(x.module)+'</td><td>'+esc(x.description)+'</td></tr>').join(''):'<tr><td colspan="5" class="empty">No activity found.</td></tr>';
+}
+async function loadLogs(){
+ const {data,error}=await client().from('audit_logs').select('*').eq('company_id',companyId).order('created_at',{ascending:false});
+ if(error){document.getElementById('rows').innerHTML='<tr><td colspan="5" class="empty danger">'+esc(error.message)+'</td></tr>';return}
+ logs=data||[];document.getElementById('total').textContent=logs.length;
+ const today=new Date().toDateString();document.getElementById('today').textContent=logs.filter(x=>new Date(x.created_at).toDateString()===today).length;
+ document.getElementById('types').textContent=new Set(logs.map(x=>x.action)).size;
+ const acts=[...new Set(logs.map(x=>x.action))].sort();document.getElementById('action').innerHTML='<option value="">All Actions</option>'+acts.map(x=>'<option>'+esc(x)+'</option>').join('');
+ const users=[...new Map(logs.map(x=>[x.user_id,{id:x.user_id,name:x.user_name||x.user_email||'Unknown'}])).values()];
+ document.getElementById('user').innerHTML='<option value="">All Users</option>'+users.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join('');
+ render();
+}
+async function start(){
+ const {data:{user},error}=await client().auth.getUser();if(error||!user){location.href='signin.html';return}
+ const {data:p,error:pe}=await client().from('profiles').select('company_id').eq('id',user.id).single();
+ if(pe||!p){document.getElementById('rows').innerHTML='<tr><td colspan="5" class="empty danger">Could not load your company.</td></tr>';return}
+ companyId=p.company_id;await loadLogs();
+}
+document.getElementById('search').addEventListener('input',render);document.getElementById('action').addEventListener('change',render);document.getElementById('user').addEventListener('change',render);
+start();
+</script>
+</body>
+</html>
