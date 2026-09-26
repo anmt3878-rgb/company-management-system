@@ -1,4 +1,4 @@
-const CACHE_NAME="companyflow-v1";
+const CACHE_NAME="companyflow-v2";
 const APP_SHELL=[
  "./",
  "./index.html",
