@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Enterprise Features | CompanyFlow</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}.sidebar{position:fixed;left:0;top:0;width:240px;height:100vh;background:#111827;color:#fff;padding:25px 15px;overflow-y:auto}.logo{font-size:25px;font-weight:bold;text-align:center;margin-bottom:30px}.logo span{color:#2563eb}.nav a{display:block;color:#cbd5e1;text-decoration:none;padding:13px 15px;border-radius:8px;margin-bottom:5px;font-size:15px}.nav a:hover,.nav a.active{background:#2563eb;color:#fff}.main{margin-left:240px;padding:30px}.top{margin-bottom:25px}.top h1{font-size:30px;margin-bottom:7px}.top p{color:#64748b}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.card{background:#fff;border-radius:14px;padding:25px;box-shadow:0 3px 15px rgba(0,0,0,.05)}.card h2{margin-bottom:10px}.card p{color:#64748b;line-height:1.6}.badge{display:inline-block;margin-top:15px;padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:12px;font-weight:bold}.field{margin-top:16px}.field label{display:block;font-weight:bold;margin-bottom:7px}.field input,.field select{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;background:#f8fafc}.btn{border:0;border-radius:8px;padding:11px 17px;font-weight:bold;cursor:pointer;margin-top:16px}.primary{background:#2563eb;color:#fff}.status{margin-top:12px;color:#166534;font-weight:bold}.notice{margin-top:20px;background:#fff7ed;border:1px solid #fed7aa;padding:15px;border-radius:10px;color:#9a3412}@media(max-width:800px){.sidebar{position:relative;width:100%;height:auto}.main{margin-left:0;padding:18px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside class="sidebar"><div class="logo">Company<span>Flow</span></div><nav class="nav">
+<a href="dashboard.html">Dashboard</a><a href="employees.html">Employees</a><a href="customers.html">Customers</a><a href="projects.html">Projects</a><a href="tasks.html">Tasks</a><a href="finance.html">Finance</a><a href="inventory.html">Inventory</a><a href="documents.html">Documents</a><a href="calendar.html">Calendar</a><a href="attendance.html">Attendance</a><a href="leave.html">Leave Management</a><a href="invoices.html">Invoices</a><a href="sales.html">Sales</a><a href="automation.html">Automation</a><a href="performance.html">Employee Performance</a><a href="ai.html">AI Assistant</a><a href="reports.html">Reports</a><a href="custom-reports.html">Custom Reports</a><a href="approvals.html">Approval Workflow</a><a href="audit.html">Audit Log</a><a href="roles.html">Roles & Permissions</a><a href="notifications.html">Notifications</a><a href="api.html">API Management</a><a href="integrations.html">Integrations</a><a href="enterprise.html" class="active">Enterprise</a><a href="settings.html">Settings</a><a href="index.html">Back to Website</a>
+</nav></aside>
+<main class="main">
+<div class="top"><h1>Enterprise Features</h1><p>Manage advanced security and enterprise configuration.</p></div>
+<div class="grid">
+<div class="card"><h2>Single Sign-On (SSO)</h2><p>Configure the identity provider your organization plans to use for enterprise sign-in.</p><span class="badge">Configuration</span>
+<div class="field"><label>Identity Provider</label><select id="provider"><option>Microsoft Entra ID</option><option>Google Workspace</option><option>Okta</option><option>Custom SAML 2.0</option></select></div>
+<div class="field"><label>Organization Domain</label><input id="domain" placeholder="company.com"></div>
+<button class="btn primary" onclick="saveSSO()">Save SSO Configuration</button><div id="ssoStatus"></div></div>
+<div class="card"><h2>Enterprise Security</h2><p>Enterprise controls for larger organizations.</p>
+<div class="field"><label>Session Policy</label><select id="session"><option>Standard</option><option>8 hours</option><option>4 hours</option><option>1 hour</option></select></div>
+<div class="field"><label>Require MFA</label><select id="mfa"><option value="yes">Enabled</option><option value="no">Disabled</option></select></div>
+<button class="btn primary" onclick="saveSecurity()">Save Security Settings</button><div id="securityStatus"></div></div>
+<div class="card"><h2>Enterprise Support</h2><p>Dedicated account management, onboarding, training, custom reports, deployment assistance, and priority support can be requested for Enterprise customers.</p><span class="badge">Enterprise Plan</span></div>
+<div class="card"><h2>Deployment & Compliance</h2><p>Use this area to prepare requirements for custom deployment, security reviews, compliance documentation, and enterprise integrations.</p><span class="badge">Advanced</span></div>
+</div>
+<div class="notice">Note: SSO and MFA controls on this page currently save configuration preferences only. Real identity-provider authentication requires backend OAuth/SAML integration.</div>
+</main>
+<script>
+let companyId=null;
+const key=()=>companyId?'companyflow_enterprise_'+companyId:'companyflow_enterprise';
+function loadSettings(){try{const x=JSON.parse(localStorage.getItem(key())||'{}');if(x.provider)document.getElementById('provider').value=x.provider;if(x.domain)document.getElementById('domain').value=x.domain;if(x.session)document.getElementById('session').value=x.session;if(x.mfa)document.getElementById('mfa').value=x.mfa}catch(e){}}
+function saveSSO(){const x=JSON.parse(localStorage.getItem(key())||'{}');x.provider=document.getElementById('provider').value;x.domain=document.getElementById('domain').value.trim();localStorage.setItem(key(),JSON.stringify(x));document.getElementById('ssoStatus').textContent='SSO configuration saved.';document.getElementById('ssoStatus').className='status'}
+function saveSecurity(){const x=JSON.parse(localStorage.getItem(key())||'{}');x.session=document.getElementById('session').value;x.mfa=document.getElementById('mfa').value;localStorage.setItem(key(),JSON.stringify(x));document.getElementById('securityStatus').textContent='Security settings saved.';document.getElementById('securityStatus').className='status'}
+async function start(){const {data:{user},error}=await window.supabaseClient.auth.getUser();if(error||!user){location.href='signin.html';return}const {data:p}=await window.supabaseClient.from('profiles').select('company_id').eq('id',user.id).single();companyId=p?.company_id||user.id;loadSettings()}
+start();
+</script>
+</body>
+</html>
