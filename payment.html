@@ -3,376 +3,92 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Complete Subscription | CompanyFlow</title>
-
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-    background: #f8fafc;
-    color: #0f172a;
-}
-
-header {
-    background: white;
-    border-bottom: 1px solid #e2e8f0;
-    padding: 18px 7%;
-}
-
-.logo {
-    color: #2563eb;
-    font-size: 25px;
-    font-weight: 800;
-}
-
-.container {
-    max-width: 1000px;
-    margin: 50px auto;
-    padding: 20px;
-}
-
-h1 {
-    text-align: center;
-    font-size: 34px;
-    margin-bottom: 10px;
-}
-
-.subtitle {
-    text-align: center;
-    color: #64748b;
-    margin-bottom: 35px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 25px;
-}
-
-.card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 28px;
-}
-
-.card h2 {
-    margin-bottom: 20px;
-    font-size: 21px;
-}
-
-.plan-box {
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    padding: 22px;
-    border-radius: 12px;
-}
-
-.plan-name {
-    color: #2563eb;
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.price {
-    font-size: 36px;
-    font-weight: 800;
-    margin-top: 10px;
-}
-
-.price span {
-    font-size: 14px;
-    color: #64748b;
-    font-weight: normal;
-}
-
-.notice {
-    margin-top: 20px;
-    background: #fff7ed;
-    border: 1px solid #fed7aa;
-    color: #9a3412;
-    padding: 15px;
-    border-radius: 10px;
-    line-height: 1.6;
-    font-size: 14px;
-}
-
-.form-group {
-    margin-bottom: 18px;
-}
-
-label {
-    display: block;
-    margin-bottom: 7px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #334155;
-}
-
-input,
-textarea {
-    width: 100%;
-    padding: 13px;
-    border: 1px solid #cbd5e1;
-    border-radius: 9px;
-    font-size: 15px;
-    outline: none;
-}
-
-input:focus,
-textarea:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
-}
-
-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.button {
-    width: 100%;
-    border: none;
-    background: #2563eb;
-    color: white;
-    padding: 14px;
-    border-radius: 9px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.button:hover {
-    background: #1d4ed8;
-}
-
-.back {
-    display: block;
-    text-align: center;
-    margin-top: 25px;
-    color: #64748b;
-    text-decoration: none;
-}
-
-@media (max-width: 750px) {
-    .grid {
-        grid-template-columns: 1fr;
-    }
-
-    .container {
-        margin: 25px auto;
-    }
-
-    h1 {
-        font-size: 28px;
-    }
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{background:#f8fafc;color:#0f172a}
+header{background:white;border-bottom:1px solid #e2e8f0;padding:18px 7%}.logo{color:#2563eb;font-size:25px;font-weight:800}
+.container{max-width:1000px;margin:50px auto;padding:20px}h1{text-align:center;font-size:34px;margin-bottom:10px}.subtitle{text-align:center;color:#64748b;margin-bottom:35px}
+.grid{display:grid;grid-template-columns:1fr 1.4fr;gap:25px}.card{background:white;border:1px solid #e2e8f0;border-radius:16px;padding:28px}.card h2{margin-bottom:20px;font-size:21px}
+.plan-box{background:#eff6ff;border:1px solid #bfdbfe;padding:22px;border-radius:12px}.plan-name{color:#2563eb;font-size:22px;font-weight:bold}.price{font-size:36px;font-weight:800;margin-top:10px}.price span{font-size:14px;color:#64748b;font-weight:normal}
+.notice{margin-top:20px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:15px;border-radius:10px;line-height:1.6;font-size:14px}
+.form-group{margin-bottom:18px}label{display:block;margin-bottom:7px;font-size:14px;font-weight:600;color:#334155}input,textarea{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:9px;font-size:15px;outline:none}input:focus,textarea:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}textarea{min-height:100px;resize:vertical}
+.button{width:100%;border:none;background:#2563eb;color:white;padding:14px;border-radius:9px;font-size:16px;font-weight:bold;cursor:pointer}.button:disabled{opacity:.65;cursor:not-allowed}
+.message{display:none;margin-bottom:18px;padding:12px;border-radius:9px;line-height:1.5}.success{display:block;background:#dcfce7;color:#166534}.error{display:block;background:#fee2e2;color:#991b1b}
+.back{display:block;text-align:center;margin-top:25px;color:#64748b;text-decoration:none}
+@media(max-width:750px){.grid{grid-template-columns:1fr}.container{margin:25px auto}h1{font-size:28px}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
 </head>
-
 <body>
-
-<header>
-    <div class="logo">CompanyFlow</div>
-</header>
-
+<header><div class="logo">CompanyFlow</div></header>
 <div class="container">
-
-    <h1>Complete Your Subscription</h1>
-
-    <p class="subtitle">
-        Submit your business information and our team will contact you about activation.
-    </p>
-
-    <div class="grid">
-
-        <!-- PLAN -->
-
-        <div class="card">
-
-            <h2>Selected Plan</h2>
-
-            <div class="plan-box">
-
-                <div class="plan-name" id="planName">
-                    Business
-                </div>
-
-                <div class="price">
-                    $<span id="planPrice">49</span>
-                    <span>/month</span>
-                </div>
-
-            </div>
-
-            <div class="notice">
-                <strong>Payment method</strong><br><br>
-
-                Online payment is currently being prepared.
-                Please submit this request and our team will contact
-                you with the available payment instructions.
-            </div>
-
-        </div>
-
-
-        <!-- FORM -->
-
-        <div class="card">
-
-            <h2>Business Information</h2>
-
-            <form id="paymentForm">
-
-                <div class="form-group">
-
-                    <label for="name">
-                        Your Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="name"
-                        placeholder="Enter your full name"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="company">
-                        Company Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="company"
-                        placeholder="Enter your company name"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="phone">
-                        Phone / WhatsApp
-                    </label>
-
-                    <input
-                        type="tel"
-                        id="phone"
-                        placeholder="+1 555 123 4567"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="message">
-                        Message (Optional)
-                    </label>
-
-                    <textarea
-                        id="message"
-                        placeholder="Tell us anything about your business or subscription."
-                    ></textarea>
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    class="button">
-                    Submit Subscription Request
-                </button>
-
-            </form>
-
-        </div>
-
-    </div>
-
-    <a href="pricing.html" class="back">
-        ← Back to Pricing
-    </a>
-
+<h1>Complete Your Subscription</h1>
+<p class="subtitle">Submit your business information and our team will contact you about activation.</p>
+<div class="grid">
+<div class="card">
+<h2>Selected Plan</h2>
+<div class="plan-box"><div class="plan-name" id="planName">Business</div><div class="price">$<span id="planPrice">49</span><span>/month</span></div></div>
+<div class="notice"><strong>Payment method</strong><br><br>Online payment is currently being prepared. Please submit this request and our team will contact you with the available payment instructions.</div>
 </div>
-
-
+<div class="card">
+<h2>Business Information</h2>
+<div id="messageBox" class="message"></div>
+<form id="paymentForm">
+<div class="form-group"><label for="name">Your Name</label><input type="text" id="name" placeholder="Enter your full name" required></div>
+<div class="form-group"><label for="company">Company Name</label><input type="text" id="company" placeholder="Enter your company name" required></div>
+<div class="form-group"><label for="phone">Phone / WhatsApp</label><input type="tel" id="phone" placeholder="+1 555 123 4567" required></div>
+<div class="form-group"><label for="message">Message (Optional)</label><textarea id="message" placeholder="Tell us anything about your business or subscription."></textarea></div>
+<button id="submitButton" type="submit" class="button">Submit Subscription Request</button>
+</form>
+</div>
+</div>
+<a href="pricing.html" class="back">← Back to Pricing</a>
+</div>
 <script>
-
-const selectedPlan =
-    localStorage.getItem("selectedPlan") || "Business";
-
-const selectedPrice =
-    localStorage.getItem("selectedPrice") || "49";
-
-document.getElementById("planName").textContent =
-    selectedPlan;
-
-document.getElementById("planPrice").textContent =
-    selectedPrice;
-
-
-document.getElementById("paymentForm")
-.addEventListener("submit", function(event) {
-
-    event.preventDefault();
-
-    const request = {
-
-        name:
-            document.getElementById("name").value,
-
-        company:
-            document.getElementById("company").value,
-
-        phone:
-            document.getElementById("phone").value,
-
-        message:
-            document.getElementById("message").value,
-
-        plan:
-            selectedPlan,
-
-        price:
-            selectedPrice,
-
-        status:
-            "pending",
-
-        createdAt:
-            new Date().toISOString()
-
-    };
-
-    localStorage.setItem(
-        "subscriptionRequest",
-        JSON.stringify(request)
-    );
-
-    alert(
-        "Your subscription request has been submitted successfully. Our team will contact you."
-    );
-
-    window.location.href = "dashboard.html";
-
-});
-
+const selectedPlan=localStorage.getItem("selectedPlan")||"Business";
+const selectedPrice=localStorage.getItem("selectedPrice")||"49";
+document.getElementById("planName").textContent=selectedPlan;
+document.getElementById("planPrice").textContent=selectedPrice;
+const form=document.getElementById("paymentForm");
+const button=document.getElementById("submitButton");
+const box=document.getElementById("messageBox");
+function showMessage(text,type){box.textContent=text;box.className="message "+type}
+async function submitRequest(event){
+ event.preventDefault();
+ button.disabled=true;button.textContent="Submitting...";
+ try{
+  const client=window.supabaseClient;
+  if(!client) throw new Error("Supabase connection is not available.");
+  const {data:{user},error:userError}=await client.auth.getUser();
+  if(userError) throw userError;
+  if(!user) throw new Error("Please sign in before submitting a subscription request.");
+  const {data:profile,error:profileError}=await client.from("profiles").select("company_id").eq("id",user.id).single();
+  if(profileError||!profile) throw profileError||new Error("Company profile not found.");
+  const payload={
+   company_id:profile.company_id,
+   customer_name:document.getElementById("name").value.trim(),
+   company_name:document.getElementById("company").value.trim(),
+   phone:document.getElementById("phone").value.trim(),
+   plan:selectedPlan,
+   price:Number(selectedPrice)||0,
+   message:document.getElementById("message").value.trim(),
+   status:"Pending"
+  };
+  const {error}=await client.from("subscription_requests").insert(payload);
+  if(error) throw error;
+  localStorage.removeItem("subscriptionRequest");
+  showMessage("Your subscription request has been submitted successfully. Our team will review it and contact you.","success");
+  form.reset();
+ }catch(error){
+  console.error(error);
+  showMessage(error.message||"Could not submit the request. Please try again.","error");
+ }finally{
+  button.disabled=false;button.textContent="Submit Subscription Request";
+ }
+}
+form.addEventListener("submit",submitRequest);
 </script>
-
 </body>
 </html>
