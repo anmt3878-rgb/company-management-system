@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Subscriptions | CompanyFlow</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}.sidebar{position:fixed;left:0;top:0;width:240px;height:100vh;background:#111827;color:#fff;padding:25px 15px;overflow-y:auto}.logo{font-size:25px;font-weight:bold;text-align:center;margin-bottom:30px}.logo span{color:#2563eb}.nav a{display:block;color:#cbd5e1;text-decoration:none;padding:13px 15px;border-radius:8px;margin-bottom:5px;font-size:15px}.nav a:hover,.nav a.active{background:#2563eb;color:#fff}.main{margin-left:240px;padding:30px}.top{margin-bottom:25px}.top h1{font-size:30px;margin-bottom:7px}.top p{color:#64748b}.card{background:#fff;border-radius:14px;padding:25px;margin-bottom:20px;box-shadow:0 3px 15px rgba(0,0,0,.05)}.plan{display:inline-block;padding:6px 12px;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:bold}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{margin-top:15px}.field label{display:block;font-weight:bold;margin-bottom:7px}.field select{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;background:#f8fafc}.btn{border:0;border-radius:8px;padding:12px 18px;font-weight:bold;cursor:pointer;background:#2563eb;color:#fff;margin-top:18px}.message{margin-top:15px;padding:12px;border-radius:8px;display:none}.success{display:block;background:#dcfce7;color:#166534}.error{display:block;background:#fee2e2;color:#991b1b}.note{color:#64748b;line-height:1.6;margin-top:10px}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{text-align:left;padding:12px;border-bottom:1px solid #e5e7eb}th{background:#f8fafc;color:#475569}@media(max-width:700px){.sidebar{position:relative;width:100%;height:auto}.main{margin-left:0;padding:18px}.grid{grid-template-columns:1fr}.table-wrap{overflow:auto}}
+</style>
+</head>
+<body>
+<aside class="sidebar"><div class="logo">Company<span>Flow</span></div><nav class="nav">
+<a href="dashboard.html">Dashboard</a><a href="employees.html">Employees</a><a href="customers.html">Customers</a><a href="projects.html">Projects</a><a href="tasks.html">Tasks</a><a href="finance.html">Finance</a><a href="inventory.html">Inventory</a><a href="documents.html">Documents</a><a href="calendar.html">Calendar</a><a href="attendance.html">Attendance</a><a href="leave.html">Leave Management</a><a href="invoices.html">Invoices</a><a href="sales.html">Sales</a><a href="automation.html">Automation</a><a href="performance.html">Employee Performance</a><a href="ai.html">AI Assistant</a><a href="reports.html">Reports</a><a href="custom-reports.html">Custom Reports</a><a href="approvals.html">Approval Workflow</a><a href="audit.html">Audit Log</a><a href="roles.html">Roles & Permissions</a><a href="notifications.html">Notifications</a><a href="api.html">API Management</a><a href="integrations.html">Integrations</a><a href="enterprise.html">Enterprise</a><a href="subscriptions.html" class="active">Subscriptions</a><a href="settings.html">Settings</a><a href="index.html">Back to Website</a>
+</nav></aside>
+<main class="main">
+<div class="top"><h1>Subscription Management</h1><p>View and update the subscription plan for your company.</p></div>
+<div class="card"><h2>Current Subscription</h2><div class="grid"><div><p class="note">Company</p><h3 id="companyName">Loading...</h3></div><div><p class="note">Current Plan</p><span class="plan" id="currentPlan">Loading...</span></div></div>
+<div class="field"><label>Change Plan</label><select id="plan"><option>Free</option><option>Starter</option><option>Business</option><option>Professional</option><option>Enterprise</option></select></div>
+<button class="btn" id="save">Update Subscription</button><div id="message" class="message"></div></div>
+<div class="card"><h2>Plan Reference</h2><table><thead><tr><th>Plan</th><th>Monthly Price</th><th>Employee Limit</th></tr></thead><tbody><tr><td>Free</td><td>$0</td><td>3</td></tr><tr><td>Starter</td><td>$19</td><td>10</td></tr><tr><td>Business</td><td>$49</td><td>50</td></tr><tr><td>Professional</td><td>$99</td><td>200</td></tr><tr><td>Enterprise</td><td>Custom</td><td>Unlimited</td></tr></tbody></table></div>
+<div class="card"><h2>Important</h2><p class="note">This page changes the plan stored in your company record. It does not process payments. Payment activation can be connected later to an approved payment provider.</p></div>
+</main>
+<script>
+let companyId=null;
+const client=()=>window.supabaseClient;
+function show(t,e=false){const x=document.getElementById('message');x.textContent=t;x.className='message '+(e?'error':'success')}
+async function start(){
+ const {data:{user},error}=await client().auth.getUser();if(error||!user){location.href='signin.html';return}
+ const {data:p,error:pe}=await client().from('profiles').select('company_id').eq('id',user.id).single();
+ if(pe||!p){show('Could not load your company.',true);return}
+ companyId=p.company_id;
+ const {data:c,error:ce}=await client().from('companies').select('id,name,plan').eq('id',companyId).single();
+ if(ce||!c){show('Could not load subscription.',true);return}
+ document.getElementById('companyName').textContent=c.name||'Company';
+ document.getElementById('currentPlan').textContent=c.plan||'Free';
+ document.getElementById('plan').value=c.plan||'Free';
+}
+document.getElementById('save').addEventListener('click',async()=>{
+ const b=document.getElementById('save');b.disabled=true;b.textContent='Updating...';
+ const newPlan=document.getElementById('plan').value;
+ const {error}=await client().from('companies').update({plan:newPlan}).eq('id',companyId);
+ b.disabled=false;b.textContent='Update Subscription';
+ if(error){show(error.message,true);return}
+ document.getElementById('currentPlan').textContent=newPlan;
+ show('Subscription plan updated successfully.');
+});
+start();
+</script>
+</body>
+</html>
