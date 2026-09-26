@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Management | CompanyFlow</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}.sidebar{position:fixed;left:0;top:0;width:240px;height:100vh;background:#111827;color:#fff;padding:25px 15px;overflow-y:auto}.logo{font-size:25px;font-weight:bold;text-align:center;margin-bottom:30px}.logo span{color:#2563eb}.nav a{display:block;color:#cbd5e1;text-decoration:none;padding:13px 15px;border-radius:8px;margin-bottom:5px;font-size:15px}.nav a:hover,.nav a.active{background:#2563eb;color:#fff}.main{margin-left:240px;padding:30px}.top{margin-bottom:25px}.top h1{font-size:30px;margin-bottom:7px}.top p{color:#64748b}.card{background:#fff;border-radius:14px;padding:25px;margin-bottom:20px;box-shadow:0 3px 15px rgba(0,0,0,.05)}.card h2{font-size:20px;margin-bottom:12px}.info{color:#64748b;line-height:1.6}..keybox{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:18px;margin-top:18px}.keyrow{display:flex;gap:10px;align-items:center}.keyrow input{flex:1;padding:12px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-family:monospace}.btn{border:0;border-radius:8px;padding:12px 18px;font-weight:bold;cursor:pointer}.primary{background:#2563eb;color:#fff}.danger{background:#fee2e2;color:#991b1b}.status{margin-top:15px;padding:12px;border-radius:8px;display:none}.success{display:block;background:#dcfce7;color:#166534}.error{display:block;background:#fee2e2;color:#991b1b}.code{background:#111827;color:#e5e7eb;padding:18px;border-radius:10px;overflow:auto;font-family:monospace;font-size:13px;line-height:1.6}@media(max-width:800px){.sidebar{position:relative;width:100%;height:auto}.main{margin-left:0;padding:18px}.keyrow{flex-direction:column;align-items:stretch}}
+</style>
+</head>
+<body>
+<aside class="sidebar"><div class="logo">Company<span>Flow</span></div><nav class="nav">
+<a href="dashboard.html">Dashboard</a><a href="employees.html">Employees</a><a href="customers.html">Customers</a><a href="projects.html">Projects</a><a href="tasks.html">Tasks</a><a href="finance.html">Finance</a><a href="inventory.html">Inventory</a><a href="documents.html">Documents</a><a href="calendar.html">Calendar</a><a href="attendance.html">Attendance</a><a href="leave.html">Leave Management</a><a href="invoices.html">Invoices</a><a href="sales.html">Sales</a><a href="automation.html">Automation</a><a href="performance.html">Employee Performance</a><a href="ai.html">AI Assistant</a><a href="reports.html">Reports</a><a href="roles.html">Roles & Permissions</a><a href="notifications.html">Notifications</a><a href="api.html" class="active">API Management</a><a href="settings.html">Settings</a><a href="index.html">Back to Website</a>
+</nav></aside>
+<main class="main">
+<div class="top"><h1>API Management</h1><p>Manage API access for your CompanyFlow account.</p></div>
+<div class="card"><h2>API Access</h2><p class="info">API access lets approved integrations connect to your company data. Keep API credentials private and rotate them when needed.</p><div class="keybox"><strong>API Key</strong><div class="keyrow" style="margin-top:10px"><input id="apiKey" type="password" value="" readonly placeholder="No API key generated"><button class="btn primary" onclick="generateKey()">Generate Key</button><button class="btn danger" onclick="revokeKey()">Revoke</button></div><div id="status" class="status"></div></div></div>
+<div class="card"><h2>API Status</h2><p class="info" id="apiStatus">Loading...</p></div>
+<div class="card"><h2>Example Request</h2><div class="code">GET /api/v1/company<br>Authorization: Bearer YOUR_API_KEY<br>Content-Type: application/json</div></div>
+</main>
+<script>
+let companyId=null;
+function makeKey(){return 'cf_'+crypto.randomUUID().replaceAll('-','')+crypto.randomUUID().replaceAll('-','');}
+function show(message,error=false){const s=document.getElementById('status');s.textContent=message;s.className='status '+(error?'error':'success');}
+async function load(){
+ const {data:{user},error}=await supabaseClient.auth.getUser();
+ if(error||!user){location.href='signin.html';return}
+ const {data:profile}=await supabaseClient.from('profiles').select('company_id,role').eq('id',user.id).single();
+ if(!profile){show('Could not load your profile.',true);return}
+ companyId=profile.company_id;
+ const saved=localStorage.getItem('companyflow_api_key_'+companyId);
+ document.getElementById('apiKey').value=saved||'';
+ document.getElementById('apiStatus').textContent=saved?'API access is enabled for this company.':'No API key has been generated yet.';
+}
+function generateKey(){if(!companyId){show('Please sign in again.',true);return}const key=makeKey();localStorage.setItem('companyflow_api_key_'+companyId,key);document.getElementById('apiKey').value=key;document.getElementById('apiKey').type='text';document.getElementById('apiStatus').textContent='API access is enabled for this company.';show('API key generated. Store it securely.');}
+function revokeKey(){if(!companyId)return;localStorage.removeItem('companyflow_api_key_'+companyId);document.getElementById('apiKey').value='';document.getElementById('apiKey').type='password';document.getElementById('apiStatus').textContent='No API key has been generated yet.';show('API key revoked.');}
+load();
+</script>
+</body>
+</html>
