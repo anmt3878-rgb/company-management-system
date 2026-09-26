@@ -1,573 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel | CompanyFlow</title>
-
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-    background: #f8fafc;
-    color: #0f172a;
-}
-
-header {
-    background: #0f172a;
-    color: white;
-    padding: 18px 7%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    color: #60a5fa;
-    font-size: 24px;
-    font-weight: 800;
-}
-
-.admin-label {
-    color: #cbd5e1;
-    font-size: 14px;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 35px auto;
-    padding: 0 20px;
-}
-
-h1 {
-    font-size: 30px;
-    margin-bottom: 8px;
-}
-
-.subtitle {
-    color: #64748b;
-    margin-bottom: 30px;
-}
-
-/* STATS */
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-    margin-bottom: 25px;
-}
-
-.stat {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 22px;
-}
-
-.stat-title {
-    color: #64748b;
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-.stat-value {
-    font-size: 28px;
-    font-weight: 800;
-}
-
-/* REQUEST */
-
-.request-card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 25px;
-}
-
-.request-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 22px;
-}
-
-.request-header h2 {
-    font-size: 20px;
-}
-
-.status {
-    padding: 7px 13px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.pending {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.approved {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.rejected {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-}
-
-.info {
-    background: #f8fafc;
-    padding: 15px;
-    border-radius: 9px;
-}
-
-.info-label {
-    color: #64748b;
-    font-size: 12px;
-    margin-bottom: 5px;
-}
-
-.info-value {
-    font-weight: 600;
-    word-break: break-word;
-}
-
-.message {
-    margin-top: 18px;
-    background: #f8fafc;
-    padding: 15px;
-    border-radius: 9px;
-    line-height: 1.6;
-    color: #475569;
-}
-
-/* BUTTONS */
-
-.actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 22px;
-}
-
-button {
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.approve {
-    background: #16a34a;
-    color: white;
-}
-
-.reject {
-    background: #dc2626;
-    color: white;
-}
-
-.clear {
-    background: #e2e8f0;
-    color: #334155;
-}
-
-.empty {
-    text-align: center;
-    padding: 50px 20px;
-    color: #64748b;
-}
-
-footer {
-    text-align: center;
-    color: #64748b;
-    padding: 30px;
-}
-
-/* MOBILE */
-
-@media (max-width: 800px) {
-
-    .stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .info-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 550px) {
-
-    header {
-        padding: 16px 20px;
-    }
-
-    .stats {
-        grid-template-columns: 1fr;
-    }
-
-    .request-header {
-        align-items: flex-start;
-        gap: 10px;
-        flex-direction: column;
-    }
-
-    .actions {
-        flex-direction: column;
-    }
-
-    button {
-        width: 100%;
-    }
-}
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}body{margin:0;background:#f8fafc;color:#0f172a}
+header{background:#0f172a;color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center}.logo{color:#60a5fa;font-size:24px;font-weight:800}.admin-label{color:#cbd5e1;font-size:14px}
+.container{max-width:1200px;margin:35px auto;padding:0 20px}h1{font-size:30px;margin-bottom:8px}.subtitle{color:#64748b;margin-bottom:30px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:25px}.stat{background:white;border:1px solid #e2e8f0;border-radius:14px;padding:22px}.stat-title{color:#64748b;font-size:14px;margin-bottom:10px}.stat-value{font-size:28px;font-weight:800}
+.request-card{background:white;border:1px solid #e2e8f0;border-radius:16px;padding:25px;margin-bottom:18px}.request-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.request-header h2{font-size:20px;margin:0}
+.status{padding:7px 13px;border-radius:20px;font-size:12px;font-weight:bold}.pending{background:#fef3c7;color:#92400e}.approved{background:#dcfce7;color:#166534}.rejected{background:#fee2e2;color:#991b1b}
+.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.info{background:#f8fafc;padding:15px;border-radius:9px}.info-label{color:#64748b;font-size:12px;margin-bottom:5px}.info-value{font-weight:600;word-break:break-word}.message{margin-top:18px;background:#f8fafc;padding:15px;border-radius:9px;line-height:1.6;color:#475569}
+.actions{display:flex;gap:10px;margin-top:22px}button{border:none;padding:12px 20px;border-radius:8px;font-weight:bold;cursor:pointer}.approve{background:#16a34a;color:white}.reject{background:#dc2626;color:white}.clear{background:#e2e8f0;color:#334155}.refresh{background:#2563eb;color:white;margin-bottom:20px}.empty{text-align:center;padding:50px 20px;color:#64748b}
+@media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr}}@media(max-width:550px){header{padding:16px 20px}.stats{grid-template-columns:1fr}.request-header{align-items:flex-start;gap:10px;flex-direction:column}.actions{flex-direction:column}button{width:100%}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase.js"></script>
 </head>
-
 <body>
-
-<header>
-
-    <div class="logo">
-        CompanyFlow
-    </div>
-
-    <div class="admin-label">
-        Admin Panel
-    </div>
-
-</header>
-
-
+<header><div class="logo">CompanyFlow</div><div class="admin-label">Admin Panel</div></header>
 <div class="container">
-
-    <h1>
-        Subscription Management
-    </h1>
-
-    <p class="subtitle">
-        Review and manage customer subscription requests.
-    </p>
-
-
-    <!-- STATS -->
-
-    <div class="stats">
-
-        <div class="stat">
-
-            <div class="stat-title">
-                Total Requests
-            </div>
-
-            <div class="stat-value" id="totalRequests">
-                0
-            </div>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-title">
-                Pending
-            </div>
-
-            <div class="stat-value" id="pendingRequests">
-                0
-            </div>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-title">
-                Approved
-            </div>
-
-            <div class="stat-value" id="approvedRequests">
-                0
-            </div>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-title">
-                Rejected
-            </div>
-
-            <div class="stat-value" id="rejectedRequests">
-                0
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- REQUEST -->
-
-    <div id="requestContainer"></div>
-
+<h1>Subscription Management</h1><p class="subtitle">Review customer subscription requests and activate approved plans.</p>
+<div class="stats">
+<div class="stat"><div class="stat-title">Total Requests</div><div class="stat-value" id="totalRequests">0</div></div>
+<div class="stat"><div class="stat-title">Pending</div><div class="stat-value" id="pendingRequests">0</div></div>
+<div class="stat"><div class="stat-title">Approved</div><div class="stat-value" id="approvedRequests">0</div></div>
+<div class="stat"><div class="stat-title">Rejected</div><div class="stat-value" id="rejectedRequests">0</div></div>
 </div>
-
-
-<footer>
-    © 2026 CompanyFlow. Admin Panel
-</footer>
-
-
+<button class="refresh" onclick="loadRequests()">Refresh Requests</button>
+<div id="requestContainer"></div>
+</div>
 <script>
-
-function loadRequest() {
-
-    const saved =
-        localStorage.getItem("subscriptionRequest");
-
-    const container =
-        document.getElementById("requestContainer");
-
-    if (!saved) {
-
-        document.getElementById("totalRequests").textContent = "0";
-        document.getElementById("pendingRequests").textContent = "0";
-        document.getElementById("approvedRequests").textContent = "0";
-        document.getElementById("rejectedRequests").textContent = "0";
-
-        container.innerHTML = `
-            <div class="request-card empty">
-                <h2>No subscription requests yet</h2>
-                <p>
-                    New customer requests will appear here.
-                </p>
-            </div>
-        `;
-
-        return;
-    }
-
-
-    const request = JSON.parse(saved);
-
-    let status =
-        request.status || "pending";
-
-
-    document.getElementById("totalRequests").textContent = "1";
-
-    document.getElementById("pendingRequests").textContent =
-        status === "pending" ? "1" : "0";
-
-    document.getElementById("approvedRequests").textContent =
-        status === "approved" ? "1" : "0";
-
-    document.getElementById("rejectedRequests").textContent =
-        status === "rejected" ? "1" : "0";
-
-
-    const date = request.createdAt
-        ? new Date(request.createdAt).toLocaleString()
-        : "Not available";
-
-
-    container.innerHTML = `
-
-        <div class="request-card">
-
-            <div class="request-header">
-
-                <h2>
-                    Subscription Request
-                </h2>
-
-                <span class="status ${status}">
-                    ${status.toUpperCase()}
-                </span>
-
-            </div>
-
-
-            <div class="info-grid">
-
-                <div class="info">
-
-                    <div class="info-label">
-                        Customer Name
-                    </div>
-
-                    <div class="info-value">
-                        ${request.name || "-"}
-                    </div>
-
-                </div>
-
-
-                <div class="info">
-
-                    <div class="info-label">
-                        Company
-                    </div>
-
-                    <div class="info-value">
-                        ${request.company || "-"}
-                    </div>
-
-                </div>
-
-
-                <div class="info">
-
-                    <div class="info-label">
-                        Phone / WhatsApp
-                    </div>
-
-                    <div class="info-value">
-                        ${request.phone || "-"}
-                    </div>
-
-                </div>
-
-
-                <div class="info">
-
-                    <div class="info-label">
-                        Selected Plan
-                    </div>
-
-                    <div class="info-value">
-                        ${request.plan || "-"}
-                    </div>
-
-                </div>
-
-
-                <div class="info">
-
-                    <div class="info-label">
-                        Price
-                    </div>
-
-                    <div class="info-value">
-                        $${request.price || "0"} / month
-                    </div>
-
-                </div>
-
-
-                <div class="info">
-
-                    <div class="info-label">
-                        Submitted
-                    </div>
-
-                    <div class="info-value">
-                        ${date}
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="message">
-
-                <strong>Customer Message:</strong><br>
-
-                ${request.message || "No message provided."}
-
-            </div>
-
-
-            <div class="actions">
-
-                <button
-                    class="approve"
-                    onclick="updateStatus('approved')">
-                    Approve Request
-                </button>
-
-                <button
-                    class="reject"
-                    onclick="updateStatus('rejected')">
-                    Reject Request
-                </button>
-
-                <button
-                    class="clear"
-                    onclick="clearRequest()">
-                    Clear Request
-                </button>
-
-            </div>
-
-        </div>
-
-    `;
-
+const client=()=>window.supabaseClient;
+let requests=[];
+function esc(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+function updateStats(){document.getElementById("totalRequests").textContent=requests.length;document.getElementById("pendingRequests").textContent=requests.filter(x=>x.status==="Pending").length;document.getElementById("approvedRequests").textContent=requests.filter(x=>x.status==="Approved").length;document.getElementById("rejectedRequests").textContent=requests.filter(x=>x.status==="Rejected").length;}
+async function loadRequests(){
+ const box=document.getElementById("requestContainer");box.innerHTML='<div class="request-card empty">Loading requests...</div>';
+ try{
+  const {data,error}=await client().from("subscription_requests").select("*").order("created_at",{ascending:false});
+  if(error) throw error;requests=data||[];updateStats();
+  if(!requests.length){box.innerHTML='<div class="request-card empty"><h2>No subscription requests yet</h2><p>New customer requests will appear here.</p></div>';return;}
+  box.innerHTML=requests.map(r=>{const date=r.created_at?new Date(r.created_at).toLocaleString():"Not available";const status=(r.status||"Pending").toLowerCase();return `
+   <div class="request-card">
+    <div class="request-header"><h2>Subscription Request — ${esc(r.plan)}</h2><span class="status ${status}">${esc(r.status||"Pending").toUpperCase()}</span></div>
+    <div class="info-grid">
+     <div class="info"><div class="info-label">Customer Name</div><div class="info-value">${esc(r.customer_name)}</div></div>
+     <div class="info"><div class="info-label">Company</div><div class="info-value">${esc(r.company_name)}</div></div>
+     <div class="info"><div class="info-label">Phone / WhatsApp</div><div class="info-value">${esc(r.phone||"-")}</div></div>
+     <div class="info"><div class="info-label">Selected Plan</div><div class="info-value">${esc(r.plan)}</div></div>
+     <div class="info"><div class="info-label">Price</div><div class="info-value">$${esc(r.price||0)} / month</div></div>
+     <div class="info"><div class="info-label">Submitted</div><div class="info-value">${esc(date)}</div></div>
+    </div>
+    <div class="message"><strong>Customer Message:</strong><br>${esc(r.message||"No message provided.")}</div>
+    <div class="actions">
+     ${r.status==="Pending"?'<button class="approve" onclick="setStatus(\''+r.id+'\',\'Approved\')">Approve & Activate Plan</button><button class="reject" onclick="setStatus(\''+r.id+'\',\'Rejected\')">Reject Request</button>':""}
+    </div>
+   </div>`;}).join("");
+ }catch(error){console.error(error);box.innerHTML='<div class="request-card empty"><h2>Could not load requests</h2><p>'+esc(error.message)+'</p></div>';}
 }
-
-
-function updateStatus(newStatus) {
-
-    const saved =
-        localStorage.getItem("subscriptionRequest");
-
-    if (!saved) return;
-
-    const request =
-        JSON.parse(saved);
-
-    request.status = newStatus;
-
-    localStorage.setItem(
-        "subscriptionRequest",
-        JSON.stringify(request)
-    );
-
-    loadRequest();
-
+async function setStatus(id,status){
+ const request=requests.find(x=>x.id===id);if(!request)return;
+ if(!confirm(status==="Approved"?"Approve this request and activate the selected plan?":"Reject this subscription request?"))return;
+ try{
+  if(status==="Approved"){
+   if(!request.company_id)throw new Error("This request is not linked to a company.");
+   const {error:companyError}=await client().from("companies").update({plan:request.plan}).eq("id",request.company_id);
+   if(companyError)throw companyError;
+  }
+  const {error}=await client().from("subscription_requests").update({status}).eq("id",id);
+  if(error)throw error;
+  alert(status==="Approved"?"Request approved and plan activated.":"Request rejected.");
+  loadRequests();
+ }catch(error){console.error(error);alert(error.message||"Could not update request.");}
 }
-
-
-function clearRequest() {
-
-    const confirmed =
-        confirm(
-            "Are you sure you want to clear this request?"
-        );
-
-    if (!confirmed) return;
-
-    localStorage.removeItem(
-        "subscriptionRequest"
-    );
-
-    loadRequest();
-
-}
-
-
-loadRequest();
-
+loadRequests();
 </script>
-
-</body>
-</html>
+</body></html>
