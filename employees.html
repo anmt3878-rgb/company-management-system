@@ -362,14 +362,7 @@
             placeholder="Department"
           >
 
-          <input
-            type="number"
-            id="salary"
-            placeholder="Salary"
-            min="0"
-          >
-
-          <select id="status">
+<select id="status">
 
             <option value="Active">
               Active
@@ -427,8 +420,7 @@
               <th>Email</th>
               <th>Phone</th>
               <th>Department</th>
-              <th>Salary</th>
-              <th>Status</th>
+<th>Status</th>
               <th>Action</th>
             </tr>
 
@@ -789,12 +781,6 @@
         ).value.trim();
 
 
-      const salary =
-        document.getElementById(
-          "salary"
-        ).value;
-
-
       const status =
         document.getElementById(
           "status"
@@ -855,11 +841,6 @@
 
             department:
               department || null,
-
-            salary:
-              salary
-                ? Number(salary)
-                : null,
 
             status:
               status
@@ -1002,7 +983,7 @@
       tbody.innerHTML =
         `
         <tr>
-          <td colspan="8" style="text-align:center;">
+          <td colspan="7" style="text-align:center;">
             No employees found.
           </td>
         </tr>
@@ -1027,17 +1008,6 @@
               .toLowerCase() === "active"
               ? "status-active"
               : "status-inactive";
-
-
-          const salary =
-            employee.salary !== null &&
-            employee.salary !== undefined &&
-            employee.salary !== ""
-              ? "$" +
-                Number(
-                  employee.salary
-                ).toLocaleString()
-              : "-";
 
 
           return `
@@ -1078,10 +1048,6 @@
                   employee.department ||
                   "-"
                 )}
-              </td>
-
-              <td>
-                ${salary}
               </td>
 
               <td class="${statusClass}">
