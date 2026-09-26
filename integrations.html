@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Integrations | CompanyFlow</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}.sidebar{position:fixed;left:0;top:0;width:240px;height:100vh;background:#111827;color:#fff;padding:25px 15px;overflow-y:auto}.logo{font-size:25px;font-weight:bold;text-align:center;margin-bottom:30px}.logo span{color:#2563eb}.nav a{display:block;color:#cbd5e1;text-decoration:none;padding:13px 15px;border-radius:8px;margin-bottom:5px;font-size:15px}.nav a:hover,.nav a.active{background:#2563eb;color:#fff}.main{margin-left:240px;padding:30px}.top{margin-bottom:25px}.top h1{font-size:30px;margin-bottom:7px}.top p{color:#64748b}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:#fff;border-radius:14px;padding:22px;box-shadow:0 3px 15px rgba(0,0,0,.05)}.icon{font-size:30px;margin-bottom:12px}.card h2{font-size:19px;margin-bottom:8px}.card p{color:#64748b;line-height:1.5;font-size:14px;min-height:44px}.btn{margin-top:18px;border:0;border-radius:8px;padding:11px 17px;font-weight:bold;cursor:pointer;background:#2563eb;color:#fff}.btn.connected{background:#16a34a}.status{margin-top:12px;font-size:13px;color:#64748b}.note{margin-top:20px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:16px;color:#1e40af}@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:650px){.sidebar{position:relative;width:100%;height:auto}.main{margin-left:0;padding:18px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside class="sidebar"><div class="logo">Company<span>Flow</span></div><nav class="nav">
+<a href="dashboard.html">Dashboard</a><a href="employees.html">Employees</a><a href="customers.html">Customers</a><a href="projects.html">Projects</a><a href="tasks.html">Tasks</a><a href="finance.html">Finance</a><a href="inventory.html">Inventory</a><a href="documents.html">Documents</a><a href="calendar.html">Calendar</a><a href="attendance.html">Attendance</a><a href="leave.html">Leave Management</a><a href="invoices.html">Invoices</a><a href="sales.html">Sales</a><a href="automation.html">Automation</a><a href="performance.html">Employee Performance</a><a href="ai.html">AI Assistant</a><a href="reports.html">Reports</a><a href="roles.html">Roles & Permissions</a><a href="notifications.html">Notifications</a><a href="api.html">API Management</a><a href="integrations.html" class="active">Integrations</a><a href="settings.html">Settings</a><a href="index.html">Back to Website</a>
+</nav></aside>
+<main class="main"><div class="top"><h1>Integrations</h1><p>Connect CompanyFlow with the tools your business uses.</p></div>
+<div class="grid" id="grid"></div>
+<div class="note">Integration connections are currently managed as local company preferences. Real OAuth connections can be added when provider credentials are available.</div>
+</main>
+<script>
+let companyId=null;
+const apps=[['Google Calendar','📅','Sync meetings and calendar events.'],['Gmail','✉️','Connect email workflows and notifications.'],['Slack','💬','Send company notifications to Slack.'],['Microsoft Teams','👥','Connect team communication workflows.'],['Stripe','💳','Prepare payment and billing integrations.'],['QuickBooks','📊','Prepare accounting data integrations.']];
+function key(name){return 'companyflow_integration_'+companyId+'_'+name.replaceAll(' ','_')}
+function render(){document.getElementById('grid').innerHTML=apps.map(a=>{const on=localStorage.getItem(key(a[0]))==='connected';return '<div class="card"><div class="icon">'+a[1]+'</div><h2>'+a[0]+'</h2><p>'+a[2]+'</p><button class="btn '+(on?'connected':'')+'" onclick="toggle(\''+a[0]+'\')">'+(on?'Connected':'Connect')+'</button><div class="status">'+(on?'Connection enabled for this company.':'Not connected')+'</div></div>'}).join('')}
+function toggle(name){const k=key(name);if(localStorage.getItem(k)==='connected'){localStorage.removeItem(k)}else{localStorage.setItem(k,'connected')}render()}
+async function load(){const {data:{user},error}=await supabaseClient.auth.getUser();if(error||!user){location.href='signin.html';return}const {data:p}=await supabaseClient.from('profiles').select('company_id').eq('id',user.id).single();if(!p){return}companyId=p.company_id;render()}
+load();
+</script>
+</body></html>
