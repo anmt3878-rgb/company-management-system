@@ -24,14 +24,24 @@ section{padding:95px 0}.center{text-align:center;max-width:780px;margin:0 auto 5
 footer{border-top:1px solid var(--line);padding:32px 0;color:#65798e;text-align:center;font-size:13px}
 @media(max-width:900px){.links{display:none}.heroGrid,.showcase{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}.industry-grid{grid-template-columns:1fr 1fr}.hero{padding-top:75px}h1{letter-spacing:-2.5px}.visual{min-height:360px}}
 @media(max-width:600px){.grid,.industry-grid{grid-template-columns:1fr}.title{font-size:34px}.cta .title{font-size:35px}.wrap{padding:0 18px}}
+
+/* Premium motion layer */
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #73e7ff22}50%{box-shadow:0 0 0 12px #73e7ff00}}
+.reveal{animation:rise .8s ease both}.float{animation:float 5s ease-in-out infinite}.pulse{animation:pulse 2.8s ease-in-out infinite}
+.portfolio-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:18px}.project{position:relative;min-height:300px;padding:30px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:linear-gradient(145deg,#0d1e30,#07111c);transition:.35s}.project:hover{transform:translateY(-7px);border-color:#47718e}.project:after{content:"";position:absolute;inset:auto -60px -100px auto;width:260px;height:260px;border-radius:50%;background:#73e7ff12;filter:blur(18px)}.project h3{font-size:28px;margin:9px 0}.project p{color:var(--muted);max-width:570px}.project-tag{display:inline-block;border:1px solid #31536c;border-radius:99px;padding:5px 9px;color:#91efff;font-size:11px;font-weight:800;letter-spacing:.8px}.project small{display:block;margin-top:28px;color:#6f8498}.demo{border:1px solid #29455d;border-radius:24px;padding:20px;background:#07111d;box-shadow:0 25px 80px #0006}.demo-head{display:flex;align-items:center;justify-content:space-between;padding:4px 4px 16px;color:#8fa2b6;font-size:12px}.demo-screen{border:1px solid #20374d;border-radius:16px;background:#091724;overflow:hidden}.demo-bar{height:44px;border-bottom:1px solid #20374d;display:flex;align-items:center;padding:0 14px;gap:7px}.demo-content{display:grid;grid-template-columns:150px 1fr;min-height:250px}.demo-side{border-right:1px solid #20374d;padding:18px 12px}.demo-side span{display:block;color:#71869b;font-size:11px;padding:9px;border-radius:7px}.demo-side span:first-child{background:#10283a;color:#dffaff}.demo-main{padding:20px}.demo-main h4{font-size:20px;margin-bottom:12px}.demo-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.demo-card{padding:13px;border:1px solid #20374d;border-radius:10px;background:#0d1b2a}.demo-card b{display:block;font-size:18px}.demo-card span{color:#71869b;font-size:10px}.demo-actions{margin-top:15px;display:flex;gap:8px}.demo-actions button{border:1px solid #31536c;background:#0c1b2a;color:#dffaff;border-radius:8px;padding:9px 12px;cursor:pointer}.demo-actions button:hover{border-color:#73e7ff;color:#73e7ff}
+@media(max-width:900px){.portfolio-grid{grid-template-columns:1fr}.demo-content{grid-template-columns:105px 1fr}}
+@media(max-width:600px){.demo-cards{grid-template-columns:1fr}.demo-content{grid-template-columns:1fr}.demo-side{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<nav><div class="wrap navin"><div class="logo">NEXORA<i>.</i></div><div class="links"><a href="#experience">Experience</a><a href="#services">Services</a><a href="#industries">Industries</a><a href="#faq">FAQ</a></div><a class="btn" href="#contact">Contact</a></div></nav>
+<nav><div class="wrap navin"><div class="logo">NEXORA<i>.</i></div><div class="links"><a href="#experience">Experience</a><a href="#services">Services</a><a href="#portfolio">Portfolio</a><a href="#demo">Demo</a><a href="#faq">FAQ</a></div><a class="btn" href="#contact">Contact</a></div></nav>
 
 <header class="hero"><div class="wrap heroGrid">
 <div><span class="eyebrow">PREMIUM DIGITAL BUSINESS ASSET</span><h1>Turn your digital presence into a <span class="accent">business advantage.</span></h1><p>NEXORA is a polished, conversion-focused digital foundation designed for modern companies that want stronger branding, clearer communication and room to grow.</p><a class="btn" href="#experience">Explore NEXORA</a><a class="btn ghost" href="#contact">Request Details</a></div>
-<div class="visual"><div class="kicker">NEXORA / BUSINESS VIEW</div><div class="window"><div class="windowTop"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="stat"><div class="mini"><small>Digital Presence</small><strong>01</strong></div><div class="mini"><small>Growth Ready</small><strong>✓</strong></div><div class="mini"><small>Responsive</small><strong>100%</strong></div><div class="mini"><small>Modern UI</small><strong>24/7</strong></div></div></div></div>
+<div class="visual float reveal"><div class="kicker">NEXORA / BUSINESS VIEW</div><div class="window"><div class="windowTop"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="stat"><div class="mini"><small>Digital Presence</small><strong>01</strong></div><div class="mini"><small>Growth Ready</small><strong>✓</strong></div><div class="mini"><small>Responsive</small><strong>100%</strong></div><div class="mini"><small>Modern UI</small><strong>24/7</strong></div></div></div></div>
 </div></header>
 
 <section id="experience"><div class="wrap"><div class="center"><span class="kicker">THE EXPERIENCE</span><h2 class="title">Built to make a company look established.</h2><p class="sub">Every section is designed around clarity, trust and business communication rather than simply filling a page with content.</p></div><div class="grid">
@@ -39,6 +49,15 @@ footer{border-top:1px solid var(--line);padding:32px 0;color:#65798e;text-align:
 <div class="card"><span class="num">02</span><h3>Conversion-Focused Structure</h3><p>Clear sections and calls-to-action guide visitors toward learning more and starting a conversation.</p></div>
 <div class="card"><span class="num">03</span><h3>Mobile-First Experience</h3><p>A responsive layout designed to remain polished across phones, tablets and desktop screens.</p></div>
 </div></div></section>
+
+<section id="portfolio"><div class="wrap"><div class="center"><span class="kicker">PORTFOLIO</span><h2 class="title">A concept built for real business use cases.</h2><p class="sub">Explore examples of how the NEXORA foundation can be shaped around different commercial goals.</p></div><div class="portfolio-grid">
+<div class="project reveal"><span class="project-tag">01 / CORPORATE</span><h3>Executive Company Presence</h3><p>A premium corporate experience focused on credibility, services, leadership communication and high-quality inquiries.</p><small>Brand → Services → Trust → Contact</small></div>
+<div class="project reveal"><span class="project-tag">02 / SERVICES</span><h3>Lead Generation</h3><p>A focused structure for companies that want visitors to understand their offer and start a conversation.</p><small>Offer → Value → Action</small></div>
+<div class="project reveal"><span class="project-tag">03 / DIGITAL</span><h3>Product Showcase</h3><p>A flexible presentation layer for technology products, digital platforms and new business concepts.</p><small>Product → Experience → Expansion</small></div>
+</div></div></section>
+
+<section id="demo"><div class="wrap"><div class="center"><span class="kicker">LIVE PREVIEW</span><h2 class="title">See the business dashboard concept.</h2><p class="sub">This interactive preview demonstrates how the visual language can extend beyond the public website into a business interface.</p></div>
+<div class="demo reveal"><div class="demo-head"><span>NEXORA / PRODUCT PREVIEW</span><span>LIVE CONCEPT</span></div><div class="demo-screen"><div class="demo-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="demo-content"><div class="demo-side"><span>Overview</span><span>Customers</span><span>Projects</span><span>Reports</span></div><div class="demo-main"><h4>Business Overview</h4><div class="demo-cards"><div class="demo-card"><b id="metric1">128</b><span>Customers</span></div><div class="demo-card"><b id="metric2">24</b><span>Projects</span></div><div class="demo-card"><b id="metric3">92%</b><span>Growth</span></div></div><div class="demo-actions"><button onclick="setDemo('overview')">Overview</button><button onclick="setDemo('growth')">Growth</button><button onclick="setDemo('operations')">Operations</button></div></div></div></div></div></div></section>
 
 <section id="services"><div class="wrap"><div class="center"><span class="kicker">SERVICES</span><h2 class="title">A digital platform ready to communicate the business.</h2><p class="sub">The structure can present a company's offer clearly today and support additional digital experiences tomorrow.</p></div><div class="showcase">
 <div class="panel"><span class="kicker">BUSINESS PRESENCE</span><h3>Present the company clearly</h3><ul class="list"><li>Company and service presentation</li><li>Professional brand storytelling</li><li>Lead-generation sections</li><li>Clear customer calls-to-action</li></ul></div>
@@ -68,5 +87,12 @@ footer{border-top:1px solid var(--line);padding:32px 0;color:#65798e;text-align:
 <section id="contact"><div class="wrap"><div class="cta"><span class="kicker">NEXORA</span><h2 class="title">Ready to explore the full concept?</h2><p class="sub" style="max-width:650px;margin:0 auto 28px">Request the demonstration and full acquisition information to review what NEXORA can become for your business.</p><a class="btn" href="tel:0789155454">Call 0789155454</a><br><a class="contact-number" href="tel:0789155454">0789155454</a></div></div></section>
 
 <footer>© 2026 NEXORA. Premium digital business asset.</footer>
-</body>
+<script>
+function setDemo(mode){
+ const a=document.getElementById('metric1'),b=document.getElementById('metric2'),d=document.getElementById('metric3');
+ if(mode==='growth'){a.textContent='156';b.textContent='31';d.textContent='97%'}
+ else if(mode==='operations'){a.textContent='142';b.textContent='28';d.textContent='94%'}
+ else {a.textContent='128';b.textContent='24';d.textContent='92%'}
+}
+</script></body>
 </html>
